@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="CMakePresetLoader"><![CDATA[{
-  "useNewFormat": true
-}]]></component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
   <component name="CMakeSettings">
     <configurations>
       <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3e63864a-a0dc-41cc-bc71-8c4108367753" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/data_structure/array_linked_list.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/network/TCP_3_4_handshake.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +22,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2KGzntaR6iheT8pdp7SCYClHDIe" />
   <component name="ProjectLevelVcsManager">
@@ -39,7 +42,7 @@
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "/home/wslee/all-codes/CS-study",
+    "last_opened_file_path": "C:/Users/poiu5/CS-study",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -53,6 +56,7 @@
       <option name="presentableId" value="Default" />
       <updated>1673615877555</updated>
       <workItem from="1673615878641" duration="129000" />
+      <workItem from="1673616988481" duration="123000" />
     </task>
     <servers />
   </component>
