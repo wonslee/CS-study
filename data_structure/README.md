@@ -1,18 +1,18 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Array (배열)](#array--배열-)
-- [Linked List (연결 리스트)](#linked-list--연결-리스트-)
-- [Stack (스택)](#스택--stack-)
-- [Queue (큐)](#큐--queue-)
-- [Deque (데크)](#데크--deque-double-ended-queue-)
+- [array(배열)](#array)
+- [Linked List(연결리스트)](#linked-list)
+- [Stack (스택)](#stack)
+- [Queue (큐)](#queue)
+- [Deque (데크)](#deque)
 - [Tree (트리)]()
 - [Binary Tree (이진 트리)]()
 - [Graph (그래프)]()
 
 </details>
 
-# Array (배열)
+# Array
 
 ## 배열이란?
 
@@ -91,7 +91,7 @@ class 동적배열 {
 
 `append()` 가 `O(1)` 인 이유는, 처음에 메모리를 할당받을 때 배열의 크기가 커질 때를 대비해 **여유분**의 메모리를 미리 할당받아두기 때문이다. 즉, 실제로는 용량이 더 있으면서 배열의 크기(size)는 현재 가진 원소의 개수만큼만 인식하게 된다.
 
-# Linked List (연결 리스트)
+# Linked List
 
 정적이든 동적이든, 결국 배열의 단점은 삽입과 삭제시의 **이동 과정**이다.
 
@@ -161,7 +161,7 @@ struct node{
 
 이 세 자료 구조들간의 **차이점**은, 데이터를 **어느쪽 끝에서** 넣고 뺄 수 있는가이다.
 
-# 스택(stack)
+# Stack
 
 스택은 **한 방향에서만** 자료를 넣고 뺄 수 있다. 이 속성에 따라서, 가장 늦게 들어간 자료를 가장 먼저 꺼내게 된다(**후입선출, LIFO**).
 
@@ -193,7 +193,7 @@ struct node{
 
 등이 있다.
 
-# 큐(queue)
+# Queue
 
 큐에서는 **한 쪽 끝**에서 자료를 넣고 **반대 쪽 끝**에서 자료를 꺼낼 수 있다. 이 속성에 따라서, 가장 먼저 들어간 자료가 가장 먼저 나오게 된다(**선입선출, FIFO**).
 
@@ -219,7 +219,7 @@ struct node{
 - 프린터 큐 (스풀링)
 
 
-# 데크(deque, double ended queue)
+# Deque
 
 데크는 **양쪽 방향에서** 자료들을 넣고 뺄 수 있는 자료구조를 말한다. 데크에서 FIFO, LIFO는 골라서 쓰면 된다. 데크를 스택과 큐의 상위집합이라고 볼 수 있고, 데크를 이용해서 스택과 큐를 모두 구현할 수 있다.
 
@@ -235,7 +235,7 @@ struct node{
 
 데크는 스택과 큐의 연산을 모두 쓸 수 있기 때문에, 스택과 큐로 구현할 수 있는 것들을 모두 구현할 수 있다.
 
-## 더 배울 부분들
+# 더 배울 부분들
 
 - [ ]  배열과 **Cache hit rate**
 - [ ]  동적 배열과 **overhead**
