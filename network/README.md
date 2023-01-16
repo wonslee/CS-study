@@ -4,6 +4,7 @@
 
 - [OSI 7 계층](#osi-7-계층)
 - [TCP 3-way-handshake & 4-way-handshake](#tcp-3-way-handshake--4-way-handshake)
+- [TCP와 UDP의 차이점](#tcp와-udp의-차이점)
 
 </details>
 
@@ -252,3 +253,102 @@ FIN (Finish) - TCP 연결을 종료하겠다는 메시지
 [https://github.com/Seogeurim/CS-study/tree/main/contents/network](https://github.com/Seogeurim/CS-study/tree/main/contents/network)
 
 [https://seongonion.tistory.com/74](https://seongonion.tistory.com/74)
+
+
+---
+## TCP와 UDP의 차이점
+
+### TCP (Transmission Control Protocol)
+
+![https://blog.kakaocdn.net/dn/nL7P3/btrWpY6tDAk/IAtnZSf9jZjwgW0XDmGYwk/img.png](https://blog.kakaocdn.net/dn/nL7P3/btrWpY6tDAk/IAtnZSf9jZjwgW0XDmGYwk/img.png)
+
+TCP segment의 구조
+
+### TCP 특징
+
+**연결형 서비스**
+
+연결형 서비스로 가상회선방식을 사용한다. ex) [3-way-handshaking, 4-way-handshaking](https://woo0doo.tistory.com/6)
+
+자세한 내용은 위에 링크를 클릭해주길 바란다.
+
+**흐름제어 (Flow Control)**
+
+데이터의 처리속도를 제어한다.
+
+이를 제어함으로써, 수신자가 데이터를 받는 데에 있어 오버플로우 발생을 방지한다.
+
+segment 구조에서 receive window가 receiver가 얼만큼의 데이터를 받을 수 있는지에 대한 정보를 나타낸다.
+
+**혼잡제어 (Congestion Control)**
+
+네트워크 내에서의 데이터 양을 제어함으로써 통신의 혼잡/부하가 생기는 것을 방지한다.
+
+**전이중,점대점 방식**
+
+전이중 방식: 양방향으로 전송/수신이 가능한 쌍방향 통신방식
+
+점대점 방식: 통신을 하는 두 객체간 1:1 연결이 되어있는 방식
+
+즉, 멀티캐스팅이나 브로드캐스팅을 지원하지 않는다.
+
+**신뢰성이 높은 전송(Reliable tansmission)**
+
+- Dupack-based retransmission
+- 정상적인 상황에서는 ACK 값이 연속적으로 전송되어야 한다.
+- 그러나 ACK값이 중복으로 올 경우 패킷 이상을 감지하고 재전송을 요청한다.
+- Timeout-based retransmission
+- 일정시간동안 ACK 값이 수신을 못할 경우 재전송을 요청한다.
+---
+### UDP(User Datagram Protocol)
+
+![https://blog.kakaocdn.net/dn/9zxAF/btrWjluKwsd/CkqxV0u5WOj9H2LU9YNE60/img.png](https://blog.kakaocdn.net/dn/9zxAF/btrWjluKwsd/CkqxV0u5WOj9H2LU9YNE60/img.png)
+
+UDP의 구조
+
+### UDP 특징
+
+**비연결형 서비스**
+
+- 비연결(Counnectionless)한 특징을 갖는다. (데이터그램 방식)
+- TCP와 달리, 논리적인 경로를 수립할 필요가 없으므로 3-way-handshaking 같은 절차가 존재하지 않는다.
+
+※데이터그램 : 데이터 전송 간에 송/수신자 사이에 가상 회선이라 불리는 논리적 경로를 설정하지 않고, 패킷들이 각기 독립적으로 전송되는 방식이다.
+
+**흐름제어X, 혼잡제어X, 데이터 전송보장X, 순서 보장X**
+
+- TCP에서 제공하는 안정성과 관련된 기능을 제공하지 않는다.
+- Checksum을 활용해서 최소한의 오류만을 검출한다.
+
+이러한 이유로, TCP와 달리 빠른 속도와 적은부하를 갖는다.
+
+활용되는 예 -> 실시간 스트리밍, DNS 등
+
+**점대점, 브로드캐스팅, 멀티캐스팅**
+
+TCP와 달리, 점대점 통신뿐만 아니라 1:N 관계 / N:M 관계의 멀티캐스팅 방식 모두 지원한다.
+
+---
+
+### TCP vs UDP
+
+TCP의 데이터 송신 과정
+
+![https://blog.kakaocdn.net/dn/79hl0/btrWq8UOAb4/RYBnr5gAQMO45QkpP1DHCk/img.png](https://blog.kakaocdn.net/dn/79hl0/btrWq8UOAb4/RYBnr5gAQMO45QkpP1DHCk/img.png)
+
+반면 UDP는 쌍방향 의사소통이 아닌 일방적 의사소통이다.
+
+UDP의 데이터 송신 과정
+
+![https://blog.kakaocdn.net/dn/cQO7qX/btrWpppwpud/tkKwEeIq0gJClJKdolGx70/img.png](https://blog.kakaocdn.net/dn/cQO7qX/btrWpppwpud/tkKwEeIq0gJClJKdolGx70/img.png)
+
+상대방이 데이터를 수신했는지 말았는지 여부는 UDP에서 중요하지 않다.
+
+그저 보냈다는 것이 중요할 뿐이다.
+
+따라서 신뢰성이 요구되는 애플리케이션에서는 TCP를 사용하고, 간단한 데이터를 빠른 속도로 전송하고자 하는 애플리케이션에서는 UDP를 사용한다.
+
+---
+
+### **요약**
+![https://blog.kakaocdn.net/dn/CRqrQ/btrWrrNlRpN/fUaJw2PEMugqAhDVX2acNK/img.png](https://blog.kakaocdn.net/dn/CRqrQ/btrWrrNlRpN/fUaJw2PEMugqAhDVX2acNK/img.png)
