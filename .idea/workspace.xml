@@ -13,8 +13,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3e63864a-a0dc-41cc-bc71-8c4108367753" name="Changes" comment="Changes">
+<<<<<<< HEAD
+      <change afterPath="$PROJECT_DIR$/data_structure/images/img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structure/images/img_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structure/images/img_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structure/img_3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_structure/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/data_structure/README.md" afterDir="false" />
+=======
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/network/README.md" afterDir="false" />
+>>>>>>> master
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +41,9 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/network" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/data_structure/README.md" root0="FORCE_HIGHLIGHTING" root1="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -64,7 +77,16 @@
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
+<<<<<<< HEAD
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data_structure/images" />
+    </key>
+  </component>
+=======
 }]]></component>
+>>>>>>> master
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -79,7 +101,12 @@
       <workItem from="1673844218930" duration="2478000" />
       <workItem from="1673846820687" duration="829000" />
       <workItem from="1673847904824" duration="1681000" />
+<<<<<<< HEAD
+      <workItem from="1673933949624" duration="96000" />
+      <workItem from="1673945006917" duration="10391000" />
+=======
       <workItem from="1673856715377" duration="1952000" />
+>>>>>>> master
     </task>
     <servers />
   </component>
