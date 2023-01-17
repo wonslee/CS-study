@@ -1,18 +1,18 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [array(배열)](#array)
-- [Linked List(연결리스트)](#linked-list)
-- [Stack (스택)](#stack)
-- [Queue (큐)](#queue)
-- [Deque (데크)](#deque)
+- [array(배열)](#array-배열)
+- [Linked List(연결리스트)](#linked-list-연결리스트)
+- [Stack (스택)](#stack-스택)
+- [Queue (큐)](#queue-큐)
+- [Deque (데크)](#deque-데크)
 - [Tree (트리)]()
 - [Binary Tree (이진 트리)]()
 - [Graph (그래프)]()
 
 </details>
 
-# Array
+# Array (배열)
 
 ## 배열이란?
 
@@ -91,7 +91,7 @@ class 동적배열 {
 
 `append()` 가 `O(1)` 인 이유는, 처음에 메모리를 할당받을 때 배열의 크기가 커질 때를 대비해 **여유분**의 메모리를 미리 할당받아두기 때문이다. 즉, 실제로는 용량이 더 있으면서 배열의 크기(size)는 현재 가진 원소의 개수만큼만 인식하게 된다.
 
-# Linked List
+# Linked List (연결리스트)
 
 정적이든 동적이든, 결국 배열의 단점은 삽입과 삭제시의 **이동 과정**이다.
 
@@ -161,7 +161,7 @@ struct node{
 
 이 세 자료 구조들간의 **차이점**은, 데이터를 **어느쪽 끝에서** 넣고 뺄 수 있는가이다.
 
-# Stack
+# Stack (스택)
 
 스택은 **한 방향에서만** 자료를 넣고 뺄 수 있다. 이 속성에 따라서, 가장 늦게 들어간 자료를 가장 먼저 꺼내게 된다(**후입선출, LIFO**).
 
@@ -193,7 +193,7 @@ struct node{
 
 등이 있다.
 
-# Queue
+# Queue (큐)
 
 큐에서는 **한 쪽 끝**에서 자료를 넣고 **반대 쪽 끝**에서 자료를 꺼낼 수 있다. 이 속성에 따라서, 가장 먼저 들어간 자료가 가장 먼저 나오게 된다(**선입선출, FIFO**).
 
@@ -219,9 +219,12 @@ struct node{
 - 프린터 큐 (스풀링)
 
 
-# Deque
+# Deque (데크)
+![https://www.geeksforgeeks.org/deque-in-python/](https://media.geeksforgeeks.org/wp-content/uploads/anod.png)
 
-데크는 **양쪽 방향에서** 자료들을 넣고 뺄 수 있는 자료구조를 말한다. 데크에서 FIFO, LIFO는 골라서 쓰면 된다. 데크를 스택과 큐의 상위집합이라고 볼 수 있고, 데크를 이용해서 스택과 큐를 모두 구현할 수 있다.
+데크는 **양쪽 방향에서** 자료들을 넣고 뺄 수 있는 자료구조를 말한다.  
+데크는 스택과 큐의 상위집합이라고 볼 수 있고, 데크를 이용해서 스택과 큐를 모두 구현할 수 있다.  
+파이썬과 c++ 모두 `deque`를 지원하며, 메서드의 형태가 다를뿐 역할은 같다.
 
 ## 데크의 연산
 
@@ -235,8 +238,149 @@ struct node{
 
 데크는 스택과 큐의 연산을 모두 쓸 수 있기 때문에, 스택과 큐로 구현할 수 있는 것들을 모두 구현할 수 있다.
 
+# Tree (트리)
+
+## Tree란?
+자료가 **계층적인 구조**를 가진다면 어떻게 할까?  
+가계도, 모집합과 부분집합, 컴퓨터의 디렉토리 구조 등 계층적인 관계를 표현하려고 한다면 선형 자료구조(큐, 스택 )는 더 이상 적합하지 않다.  
+Tree는 이런 계층적인 구조를 표현할 때 적합하며, 원소들간에 일대다(one-to-many) 관계를 가진다.  
+
+
+![](https://media.geeksforgeeks.org/wp-content/uploads/20221124153129/Treedatastructure.png)
+> 트리는 자료가 저장된 노드(node)들이 간선(edge)로 서로 **상/하** 연결되어 있는 자료구조다.
+
+하나의 트리는 `root` 노드와 `sub` 노드들로 이루어져 있고, 전체 트리 관점에서 가장 끝의 노드들은 `leaf` 노드라고 부른다.
+
+`루트 노드` : 트리의 최상위 노드. 1개만 존재한다(unique).  
+`부모 노드` : 1개의 간선으로 이어져있는 윗노드는  
+`자식 노드` : 1개의 간선으로 이어져있는 아랫노드  
+`형제 노드` : 동일한 부모 노드를 공유하는 노드  
+`조상 노드` : 해당 노드의 부모노드 ~ root노드까지 이르는 경로에 존재하는 모든 노드들  
+`자손 노드` : 해당 노드의 자식노드 ~ leaf노드까지 이르는 경로에 존재하는 모든 노드들. 즉 해당 노드의 sub tree 노드들  
+
+`내부 노드(internal/nonterminal node)` : 자식이 있는 노드  
+`외부 노드(leaf/terminal/ node)` : 자식이 없는 노드  
+
+`부분 트리(sub tree)` : 전체 트리 내부에서 특정 노드를 루ㅌ로 갖는 또 다른 트리  
+
+`depth` : 루트에서 어떤 노드에 도달하기위해 거쳐야 하는 간선의 수(e.g. 루트노드의 깊이 = 0)  
+`level` : 특정 깊이(depth)를 갖는 노드들의 층 혹은 집합  
+`height` : 가장 깊숙히 있는 노드의 깊이. 전체 레벨의 수이기도 함.  
+`degree` : 특정 노드에 Edge로 연결된 자식 노드의 수. '트리의 차수'라고 할 때는 트리에 있는 노드의 차수 중에서 가장 큰 값을 말한다.  
+
+
+## Tree의 활용
+- 컴퓨터의 파일 시스템.  
+  ![https://informationtechnologyja.wordpress.com/2020/10/19/information-technology-grade-9-lesson-2-tree-directory-structure/](https://informationtechnologyja.files.wordpress.com/2019/09/presentation4.jpg)
+
+- HTML, DOM(javascript) 트리.  
+  ![](http://watershedcreative.com/naked/img/dom-tree.png)  
+- DBMS의 indexing
+- 결정 트리(머신러닝)
+- DNS
+
+## Tree의 재귀적 성질
+트리는 기본적으로 재귀적인(recursive) 구조이다. 이는 트리가 유용하게 사용되는 큰 이유중 하나이다.  
+> 트리는 하나의 root와 0 ~ k개의 서브트리로 이뤄진다. 그 서브트리도 마찬가지다.  
+
+그래서 트리의 각 노드들을 방문할 땐 재귀문이나 반복문을 쓰게 된다. 이는 `Binary Search Tree`를 구현할 때 중요하게 쓰인다.
+
+## 연산과 시간복잡도
+- 순회(노드 검색) : O(N)
+- 노드 삽입 : 
+- 노드 삭제 : 
+
+
+# Binary Tree
+자식 노드의 개수가 고정되지 않은 트리에는 문제점이 있다.  
+노드에 붙어있는 서브 트리의 개수에 다라 노드의 메모리 크기가 달라지기 때문에 구현하기 복잡하다.
+
+2진 트리(Binary Tree)는 각 노드의 자식 노드 개수가 2개로 고정된 트리다.  
+그래서 보통 노드의 자식을 얘기할 때 `왼쪽 자식`과 `오른쪽 자식`이라고 표현한다.  
+![](https://www.geeksforgeeks.org/wp-content/uploads/binary-tree-to-DLL.png)
+
+> 이진트리는 하나의 루트 노드와 **2개의 서브트리**로 이뤄진다.    
+즉 왼쪽 서브트리, 오른쪽 서브트리로 구성된 노드들의 유한집합이다.  
+서브트리는 **공집합**일 수 있고, 이진 트리의 서브트리들은 모두 이진트리여야 한다.
+
+## 이진트리의 성질
+> 높이 `h`인 이진트리의 노드 갯수 h <= n <= ~ 2^h - 1   
+h <= log2(n)
+> 
+
+## 이진트리 종류
+
+### 포화 이진 트리(full binary tree)
+트리의 각 레벨에 노드가 꽉 차있는 이진 트리.  
+높이 k인 포화 이진트리의 노드 개수 = 2^k-1  
+![img_1.png](https://www.gatevidyalay.com/wp-content/uploads/2018/08/Time-Complexity-of-Binary-Search-Tree-Best-Case.png)
+
+### 완전 이진 트리(complete binary tree)
+높이가 k일 때, 1~k-1 레벨까지는 노드가 모두 채워져있고 마지막 레벨에선 왼쪽부터 오른쪽으로 노드가 순서대로 채워져 있는 이진 트리.  
+포화 이진트리는 완전 이진 트리의 부분집합.  
+
+### 편향 이진 트리(skewed binary tree)
+높이가 k일 대, 최소 개수의 노드를 가지면서 한쪽 방향의 자식 노드만을 가진 이진 트리  
+![img.png](https://www.gatevidyalay.com/wp-content/uploads/2018/08/Time-Complexity-of-Binary-Search-Tree-Worst-Case.png)
+
+## Binary Tree의 구현
+이진트리를 구현하는 2가지 방법이 있다.
+<details>
+<summary>이진트리 구현 방법</summary>
+
+### 포인터로 구현하는 방법 (Linked)
+
+
+```c++
+struct Node{
+   int data;
+   struct Node *left_child;
+   struct Node *right_child;
+};
+
+// addEdge: x,y 노드를 간선으로 연결
+void addEdge(int x, int y, vector<vector<int>>& adj)
+{
+    adj[x].push_back(y);
+    adj[y].push_back(x);
+}
+```  
+
+### 배열로 구현하는 방법
+이진트리의 부모-자식 노드간의 순서(index)에는 규칙이 생기는데, 이 성질을 활용하면 배열로 만들 수 있다.
+
+> 부모노드의 순서가 p라고 할 때, 왼쪽 자식의 순서는 (2 * p) + 1, 오른쪽 자식의 순서는 (2 * p) + 2 이다.
+
+
+```c++
+char tree[14];
+tree[0] = 'A'; // root
+tree[1] = 'H'; 
+tree[2] = 'B'; 
+tree[3] = 'G'; 
+tree[4] = 'I';
+tree[6] = 'C';
+tree[9] = 'F';
+tree[10] = 'E';
+tree[11] = 'D';
+```
+![](https://upload.wikimedia.org/wikipedia/commons/6/63/Binary_tree_%28letters%29.png?20060626010746)
+</details>
+
+## 연산과 시간복잡도
+`이진 탐색`처럼, 이진(검색)트리는 각 분기(현재 노드보다 큰지 OR 작은지)마다 탐색할 후보의 수를 2분의 1로 줄여나간다.   
+제일 말단 노드에 원하는 값이 있는 경우를 생각해보자. 그러면 높이 h만큼 탐색, 즉 O(h)가 걸리게 된다.  
+여기서 이진트리의 성질과 종류를 생각해보면, 평균 시간은 완전트리일 때이고 최악 시간은 편향이진트리일 때이다.  
+
+|  | 평균 | 최악 |
+| --- | --- | --- |
+| 탐색 | O(log N) | O(N) |
+| 삽입, 삭제 | O(log N) | O(N) |
+| 순회 | O(N) | O(N) |
 # 더 배울 부분들
 
-- [ ]  배열과 **Cache hit rate**
-- [ ]  동적 배열과 **overhead**
-- [ ]  포인터의 메모리 크기는 왜 32, 64비트 컴퓨터마다 다를까
+- 각 자료구조의 응용, **사례와 연결지어 설명**
+- AVL 트리, 구간 트리 개념 공부하고 업데이트
+- 배열과 Cache hit rate
+- 동적 배열과 overhead
+- 포인터의 메모리 크기는 왜 32, 64비트 컴퓨터마다 다를까?
