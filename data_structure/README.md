@@ -329,8 +329,6 @@ h <= log2(n)
 <summary>이진트리 구현 방법</summary>
 
 ### 포인터로 구현하는 방법 (Linked)
-
-
 ```c++
 struct Node{
    int data;
