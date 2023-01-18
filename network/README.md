@@ -5,7 +5,7 @@
 - [OSI 7 계층](#osi-7-계층)
 - [TCP 3-way-handshake & 4-way-handshake](#tcp-3-way-handshake--4-way-handshake)
 - [TCP와 UDP의 차이점](#tcp와-udp의-차이점)
-- [HTTP와 GET,POST](#http와-get,post)
+- [HTTP와 GET,POST](#http와-getpost)
 </details>
 
 
