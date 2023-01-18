@@ -5,7 +5,7 @@
 - [OSI 7 계층](#osi-7-계층)
 - [TCP 3-way-handshake & 4-way-handshake](#tcp-3-way-handshake--4-way-handshake)
 - [TCP와 UDP의 차이점](#tcp와-udp의-차이점)
-
+- [HTTP와 GET,POST](#http와-getpost)
 </details>
 
 
@@ -352,3 +352,164 @@ UDP의 데이터 송신 과정
 
 ### **요약**
 ![https://blog.kakaocdn.net/dn/CRqrQ/btrWrrNlRpN/fUaJw2PEMugqAhDVX2acNK/img.png](https://blog.kakaocdn.net/dn/CRqrQ/btrWrrNlRpN/fUaJw2PEMugqAhDVX2acNK/img.png)
+
+---
+## HTTP와 GET,POST
+### HTTP(Hyper Text Transfer Protocol)
+
+### **HTTP의 개념**
+
+HTTP는 하이퍼텍스트 전송 규약으로, 웹 브라우저(Web Browser) 같은 응용프로그램을 통해 웹 클라이언트(사용자)와 웹 서버(서비스 제공자) 사이 데이터를 전송하는 프로토콜이다.
+
+HTTP를 통해 주고 받는 대표적인 파일은 HTML 문서파일이 있다.
+
+---
+
+### **HTTP의 특징**
+
+- TCP/IP를 이용하는 응용 프로토콜(application protocol)이다.
+- 연결 상태를 유지하지 않는 비연결성 프로토콜이다.
+- 요청/응답 (Request/Response) 방식으로 동작한다.
+
+연결 상태를 유지하지 않기 때문에 정보를 저장하기 위해 쿠키(Cookie)와 세션(Session)이 등장했다.
+<details>
+<summary>쿠키와 세션</summary>
+쿠키란?
+
+- 웹 서버가 웹 브라우저에게 보내어 저장했다가 서버의 부가적인 요청이 있을 때 다시 서버로 보내주는 문자열 정보
+- 웹페이지 방문 시 방문 기록 등 브라우저에서의 정보들이 저장된 텍스트 파일
+
+즉, 쿠키는 서버를 대신해 웹 브라우저에 저장하고 요청을 할 때 그 정보를 서버에 보내 사용자를 식별할 수 있게 한다.
+
+세션이란?
+
+- 일정 시간동안 같은 사용자(브라우저)로 부터 들어오는 일련의 요구를 하나의 상태로 보고 그 상태를 일정하게 유지시키는 기술
+- 여기서 일정 시간이란 방문자가 웹 브라우저를 통해 웹 서버에 접속한 시점으로부터 웹 브라우저를 종료함으로써 연결을 끝내는 시점을 말한다.
+- 즉 방문자가 웹 서버에 접속해 있는 상태를 하나의 단위로 보고 세션이라고 칭함
+
+쿠키와 세션의 차이점
+
+- 쿠키의 경우는 방에 저장하는 것을 말한다.
+
+  문자의 정보를 방문자 컴퓨터의 메모리
+
+
+예를 들자면 ID나 비밀번호를 저장하거나 방문한 사이트를 저장하는데에 사용한다.(인터넷 옵션에서 검색 기록 삭제할 때 임시파일, 열어본 페이지 목록, 쿠키 등 정보 삭제라고 나와있음)
+
+- 세션은 방문자의 요청에 따른 정보를 방문자 메모리에 저장하는 것이 아닌 웹 서버가 세션 아이디 파일을 만들어 하는 것을 말한다.
+
+  서비스가 돌아가고 있는 서버에 저장
+
+</details>
+
+
+
+---
+
+### **HTTP의 동작 방식**
+
+클라이언트(웹 브라우저, 모바일 등)가 브라우저를 통해서 어떠한 서비스를 URI를 통해 서버에 요청(Request)하면 서버에서는 해당 요청에 대한 결과를 응답(Response)하는 형태로 동작한다.
+
+![https://blog.kakaocdn.net/dn/wbg5s/btrWwqJHskw/z6raaw7kkdS6MADae2klw1/img.png](https://blog.kakaocdn.net/dn/wbg5s/btrWwqJHskw/z6raaw7kkdS6MADae2klw1/img.png)
+
+---
+
+### **HTTP 요청 메서드**
+
+- **GET**
+
+GET 메서드는 정보를 조회하기 위한 메서드로, 서버에서 어떤 데이터를 가져와서 보여주기 위한 용도의 메서드이다.
+
+"가져오는 것(Select)"
+
+GET 방식은 요청하는 데이터가 HEEP Request Message의 Header 부분의 URL에 담겨서 전송된다. 이는 요청 정보를 URL 상에 넣어야 한다는 뜻이다. 요청 정보를 URL에 넣는 방법은 요청하려는 URL의 끝에 **'?'** 를 붙이고, (key=value) 형태로 요청 정보를 담으면 된다. 요청 정보가 여러 개일 때는 **'&'** 로 구분한다.
+
+ex)
+
+```bash
+www.urladdress.xyz?name1=value1&name2=value2, www.google.com/search?q=WooYoungDoo
+```
+
+GET 방식은 게시판의 게시글 조회 기능처럼 데이터를 조회할 때 쓰이며 서버의 상태를 바꾸지 않는다. 예외적으로 방문자의 로그 남기기 기능이나 글을 읽은 횟수 증가 기능에도 쓰인다.
+
+**GET 방식의 특징**
+
+- GET 메서드에는 바디를 쓰는 것을 지양한다.
+
+실사용 시에는 GET메서드에 바디를 허용하는 경우도 있지만, 많은 서버에서 GET메서드를 처리할 때는 바디를 읽지 않고 시작라인과 헤더를 읽은 후 데이터를 처리한다.
+
+따라서 GET 메서드 사용 시 바디는 쓰지 않는다.
+
+- 요청 데이터가 그대로 url에 노출되므로 사용자가 쉽게 눈으로 확인할 수 있어 POST 방식보다 보안상 취약하다. 보안이 필요한 데이터는 GET 방식이 적절하지 않다.
+- GET 방식은 멱등성(연산을 여러 번 적용하더라도 결과가 달라지지 않는 성질)이 적용된다.
+- GET 방식은 캐싱을 사용할 수 있어, GET 요청과 그에 대한 응답이 브라우저에 의해 캐쉬된다. 따라서 POST 방식보다 빠르다
+
+※GET의 캐싱 : 서버에 리소스를 요청할 때 웹 캐시가 요청을 가로채 서버로부터 리소스를 다시 다운로드하는 대신 리소스의 복사본을 반환한다.
+
+**GET 요청 예제**
+
+```bash
+GET /home.html HTTP/1.1
+User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)
+Host: www.java67.blogspot.com
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+Connection: Keep-Alive
+```
+
+- **POST**
+
+POST 메서드는 서버의 값이나 상태를 바꾸기 위한 용도의 메서드이다.
+
+"수행하는 것(Insert, Update, Delete)"
+
+POST 방식은 요청하는 데이터가 HEEP Request Message의 Body 부분에 담겨서 전송된다. Request Header의 Content-Type에 해당 데이터 타입이 표현되며, 전송하고자 하는 데이터 타입을 적어주어야 한다.
+
+POST 방식은 게시판 글쓰기 기능처럼 서버의 데이터를 업데이트할 때 쓰인다.
+
+POST 방식의 특징
+
+- Body 안에 데이터를 담아 전송하기 때문에 대용량의 데이터를 전송하기에 적합하다.
+- GET 방식보다 보안상 안전하지만, 암호화를 하지 않는 이상 보안에 취약한 것은 똑같다.
+- 클라이언트 쪽에서 데이터를 인코딩하여 서버로 전송하고, 이를 받은 서버 쪽이 해당 데이터를 디코딩한다.
+
+**POST 요청 예제**
+
+```bash
+POST / HTTP/1.1
+content-type:application/x-www-form-urlencoded;charset=utf-8
+host: https://importexport.amazonaws.com
+content-length:207
+
+Action=GetStatus&SignatureMethod=HmacSHA256&JobId=JOBID&SignatureVersion=2
+&Version=2010-06-03&Signature=%2FVfkltRBOoSUi1sWxRzN8rw%3D
+&Timestamp=2011-06-20T22%3A30%3A59.556Z
+```
+
+**GET VS** **POST**
+
+- 사용목적: GET은 서버의 리소스에서 데이터를 요청할 때, POST는 서버의 리소스를 새로 생성하거나 업데이트할 때 사용한다.
+- 요청에 Body 유무 : GET 은 URL 파라미터에 요청하는 데이터를 담아 보내기 때문에 HTTP 메시지에 Body가 없다. POST는 Body에 데이터를 담아 보내기 때문에 당연히 HTTP 메시지에 Body가 존재한다.
+- 멱등성 : GET 요청은 멱등이며, POST는 멱등이 아니다.
+
+![https://blog.kakaocdn.net/dn/ZBhXB/btrWCrmB9sd/zWGbREoUS7BXpfdC95kXf0/img.png](https://blog.kakaocdn.net/dn/ZBhXB/btrWCrmB9sd/zWGbREoUS7BXpfdC95kXf0/img.png)
+
+이외의 HTTP Method에는
+
+PUT - 전체 수정 ex) 회원정보 전체 수정
+
+DELETE - 삭제 ex) 회원정보 삭제
+
+PATCH - 일부 수정 ex) 회원정보 일부 수정 (Update에 가장 가깝게 쓰이고 있다)
+
+OPTIONS - 시스템에서 지원하는 메소드 확인
+
+등이 있다.
+
+출처
+
+[https://www.java67.com/2014/08/difference-between-post-and-get-request.html](https://www.java67.com/2014/08/difference-between-post-and-get-request.html)
+
+[https://github.com/Seogeurim/CS-study/tree/main/contents/network#http-%EC%9A%94%EC%B2%AD-%EB%B0%A9%EC%8B%9D---get-post](https://github.com/Seogeurim/CS-study/tree/main/contents/network#http-%EC%9A%94%EC%B2%AD-%EB%B0%A9%EC%8B%9D---get-post)
+
+[https://88240.tistory.com/190](https://88240.tistory.com/190)
