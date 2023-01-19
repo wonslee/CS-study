@@ -6,8 +6,8 @@
 - [Stack (스택)](#stack-스택)
 - [Queue (큐)](#queue-큐)
 - [Deque (데크)](#deque-데크)
-- [Tree (트리)]()
-- [Binary Tree (이진 트리)]()
+- [Tree (트리)](#tree-트리)
+- [Binary Tree (이진 트리)](#binary-tree-이진-트리)
 - [Graph (그래프)]()
 
 </details>
@@ -240,17 +240,19 @@ struct node{
 
 # Tree (트리)
 
-## Tree란?
+## 트리란?
 자료가 **계층적인 구조**를 가진다면 어떻게 할까?  
 가계도, 모집합과 부분집합, 컴퓨터의 디렉토리 구조 등 계층적인 관계를 표현하려고 한다면 선형 자료구조(큐, 스택 )는 더 이상 적합하지 않다.  
-Tree는 이런 계층적인 구조를 표현할 때 적합하며, 원소들간에 일대다(one-to-many) 관계를 가진다.  
+트리는 이런 계층적인 구조를 표현할 때 적합하며, 원소들간에 **일대다(one-to-many)** 관계를 가진다.  
+여기서 일대다라는건, 부모 노드쪽에선 다수의 자식 노드를 갖지만 자식 노드들은 오직 하나의 부모 노드를 갖는다는걸 의미.
 
 
-![](https://media.geeksforgeeks.org/wp-content/uploads/20221124153129/Treedatastructure.png)
-> 트리는 자료가 저장된 노드(node)들이 간선(edge)로 서로 **상/하** 연결되어 있는 자료구조다.
 
-하나의 트리는 `root` 노드와 `sub` 노드들로 이루어져 있고, 전체 트리 관점에서 가장 끝의 노드들은 `leaf` 노드라고 부른다.
+![](https://miro.medium.com/max/828/1*PWJiwTxRdQy8A_Y0hAv5Eg.webp)
+> 트리는 자료가 저장된 **노드**(node)들이 간선을 통해 서로 **계층적**으로 연결되어 있는 자료구조다.
 
+
+## 트리 용어들
 `루트 노드` : 트리의 최상위 노드. 1개만 존재한다(unique).  
 `부모 노드` : 1개의 간선으로 이어져있는 윗노드는  
 `자식 노드` : 1개의 간선으로 이어져있는 아랫노드  
@@ -269,7 +271,7 @@ Tree는 이런 계층적인 구조를 표현할 때 적합하며, 원소들간�
 `degree` : 특정 노드에 Edge로 연결된 자식 노드의 수. '트리의 차수'라고 할 때는 트리에 있는 노드의 차수 중에서 가장 큰 값을 말한다.  
 
 
-## Tree의 활용
+## 트리의 활용
 - 컴퓨터의 파일 시스템.  
   ![https://informationtechnologyja.wordpress.com/2020/10/19/information-technology-grade-9-lesson-2-tree-directory-structure/](https://informationtechnologyja.files.wordpress.com/2019/09/presentation4.jpg)
 
@@ -277,38 +279,39 @@ Tree는 이런 계층적인 구조를 표현할 때 적합하며, 원소들간�
   ![](http://watershedcreative.com/naked/img/dom-tree.png)  
 - DBMS의 indexing
 - 결정 트리(머신러닝)
-- DNS
+- 이진검색트리, AVL트리, B-트리 등의 트리 자료구조들
 
-## Tree의 재귀적 성질
-트리는 기본적으로 재귀적인(recursive) 구조이다. 이는 트리가 유용하게 사용되는 큰 이유중 하나이다.  
-> 트리는 하나의 root와 0 ~ k개의 서브트리로 이뤄진다. 그 서브트리도 마찬가지다.  
+## 트리의 재귀적 성질
+트리는 기본적으로 **재귀적(recursive)** 이다.   
+> 하나의 트리는 0개의 루트 노드 혹은 1개의 루트 노드와 0 ~ k개의 서브 트리를 갖는다.  
+그 서브 트리들도 마찬가지.  
 
-그래서 트리의 각 노드들을 방문할 땐 재귀문이나 반복문을 쓰게 된다. 이는 `Binary Search Tree`를 구현할 때 중요하게 쓰인다.
-
-## 연산과 시간복잡도
-- 순회(노드 검색) : O(N)
-- 노드 삽입 : 
-- 노드 삭제 : 
+![](https://www.101computing.net/wp/wp-content/uploads/recursive-tree-steps.png)  
+위 그림은 서브 트리를 2개 갖는 트리의 재귀적 구조를 표현한 그림.  
+이런 재귀적 성질 때문에, 트리를 순회할 땐 재귀 함수를 자주 쓰게 된다.  
+이 성질은 `Binary Search Tree`를 구현할 때 중요하게 쓰인다.
 
 
-# Binary Tree
+# Binary Tree (이진 트리)
 자식 노드의 개수가 고정되지 않은 트리에는 문제점이 있다.  
-노드에 붙어있는 서브 트리의 개수에 다라 노드의 메모리 크기가 달라지기 때문에 구현하기 복잡하다.
+노드에 붙어있는 서브 트리의 개수에 다라 노드의 메모리 크기가 달라지기 때문에 구현하기 복잡하다는 것.  
+e.g. 자식이 100개로 한정된 트리에서 101개가 되었을 때, 노드 객체의 포인터 수를 늘려야 한다.
 
 2진 트리(Binary Tree)는 각 노드의 자식 노드 개수가 2개로 고정된 트리다.  
 그래서 보통 노드의 자식을 얘기할 때 `왼쪽 자식`과 `오른쪽 자식`이라고 표현한다.  
 ![](https://www.geeksforgeeks.org/wp-content/uploads/binary-tree-to-DLL.png)
 
-> 이진트리는 하나의 루트 노드와 **2개의 서브트리**로 이뤄진다.    
+> 이진 트리는 하나의 루트 노드와 **2개의 서브트리**로 이뤄진다.    
 즉 왼쪽 서브트리, 오른쪽 서브트리로 구성된 노드들의 유한집합이다.  
 서브트리는 **공집합**일 수 있고, 이진 트리의 서브트리들은 모두 이진트리여야 한다.
 
-## 이진트리의 성질
-> 높이 `h`인 이진트리의 노드 갯수 h <= n <= ~ 2^h - 1   
-h <= log2(n)
-> 
+## 이진 트리의 성질
+> 높이 h인 이진 트리의 노드 갯수 n에 대해  
+> $$h \leq  n  \leq  2^{h} -1$$
 
-## 이진트리 종류
+트리의 재귀적인 성질도 그대로 가지고 있다.  
+
+## 이진 트리 종류
 
 ### 포화 이진 트리(full binary tree)
 트리의 각 레벨에 노드가 꽉 차있는 이진 트리.  
@@ -323,10 +326,10 @@ h <= log2(n)
 높이가 k일 대, 최소 개수의 노드를 가지면서 한쪽 방향의 자식 노드만을 가진 이진 트리  
 ![img.png](https://www.gatevidyalay.com/wp-content/uploads/2018/08/Time-Complexity-of-Binary-Search-Tree-Worst-Case.png)
 
-## Binary Tree의 구현
+## 이진 트리의 구현
 이진트리를 구현하는 2가지 방법이 있다.
 <details>
-<summary>이진트리 구현 방법</summary>
+<summary>이진트리 구현 방법(c++)</summary>
 
 ### 포인터로 구현하는 방법 (Linked)
 ```c++
@@ -365,20 +368,87 @@ tree[11] = 'D';
 ![](https://upload.wikimedia.org/wikipedia/commons/6/63/Binary_tree_%28letters%29.png?20060626010746)
 </details>
 
+# Binary Search Tree (이진 탐색 트리)
+`이진 탐색 트리` : 이진 탐색 트리의 성질을 만족하는 이진트리
+
+![](https://media.geeksforgeeks.org/wp-content/uploads/BSTSearch.png)
+## 이진 탐색 트리의 성질
+- 모든 원소는 유일한 키(primary key)를 가진다
+- 왼쪽 서브트리 키들은 루트의 키보다 작고, 오른쪽 서브 트리의 키들은 루트의 키보다 크다
+- 왼쪽과 오른쪽 서브트리 또한 이진 탐색 트리다.
+
+## 순회
+선형 자료 구조(연결 리스트, 스택, 큐 등)는 요소들을 순회하는 방법이 하나뿐이지만,  
+트리는 다른 방식을 사용해야 한다.  
+순회는 3단계로 이뤄진다.
+- 왼쪽 서브트리로 이동
+- 루트 노드 방문
+- 오른쪽 서브트리로 이동
+
+순회는 루트노드를 언제 방문하냐에 따라 순서대로 전위순회(preorder), 중위순회(inorder), 후위순회(postorder)로 나뉜다.
+
+<details>
+<summary>이진트리 순회 방법 (c++)</summary>
+
+여기서 트리의 **재귀적인 성질**을 다시 떠올려보면 이해하기 쉽다.
+
+```c++
+// 전위순회
+void preorder(struct Node* node){
+if (node == NULL) return;
+cout << node->data << " "; // 루트 노드 방문
+preorder(node->left);
+preorder(node->right);
+}
+// 중위순회
+void inorder(struct Node* node){
+    if (node == NULL) return;
+    inorder(node->left);
+    cout << node->data << " "; // 루트 노드 방문
+    inorder(node->right);
+}
+// 위순회
+void postorder(struct Node* node){
+    if (node == NULL) return;
+    inorder(node->left);
+    inorder(node->right);
+    cout << node->data << " "; // 루트 노드 방문
+}
+```  
+순서의 차이가 사소해보일 수 있지만, 결과는 천차만별이다!  
+![](https://miro.medium.com/max/640/0*YzOEfnGnWTPbsUkv)  
+시간복잡도는 O(N)으로 모두 같다.
+</details>
+
 ## 연산과 시간복잡도
-`이진 탐색`처럼, 이진(검색)트리는 각 분기(현재 노드보다 큰지 OR 작은지)마다 탐색할 후보의 수를 2분의 1로 줄여나간다.   
-제일 말단 노드에 원하는 값이 있는 경우를 생각해보자. 그러면 높이 h만큼 탐색, 즉 O(h)가 걸리게 된다.  
-여기서 이진트리의 성질과 종류를 생각해보면, 평균 시간은 완전트리일 때이고 최악 시간은 편향이진트리일 때이다.  
+`이진 탐색`처럼, 이진 탐색 트리는 각 분기(현재 노드보다 큰지 OR 작은지)마다 탐색할 후보의 수를 2분의 1로 줄여나간다.  
+즉 트리의 높이 h만큼 **O(h)** 가 걸린다. 하지만 원소의 개수 N을 기준으로 하는 표준을 따르자 ^^.   
 
-|  | 평균 | 최악 |
-| --- | --- | --- |
-| 탐색 | O(log N) | O(N) |
-| 삽입, 삭제 | O(log N) | O(N) |
-| 순회 | O(N) | O(N) |
+**이진트리의 종류**를 생각해보자. 왠만하면(완전트리일 때) h = log2(N)이고 최악(편향이진트리)일 때 h = N이다.  
+그리고 이진트리의 삽입과 삭제는 **탐색**이 주요 로직이다.  
+따라서..
+
+|       | 평균 | 최악 |
+|-------| --- | --- |
+| 탐색    | O(log N) | O(N) |
+| 삽입    | O(log N) | O(N) |
+| 삭제    | O(log N) | O(N) |
+| 순회    | O(N) | O(N) |
+
+# Graph (그래프)
+## 그래프란?
+- `그래프` : 정점(vertex)과 간선(edge)으로 이뤄진 비선형 자료구조.  
+
+
 # 더 배울 부분들
-
 - 각 자료구조의 응용, **사례와 연결지어 설명**
 - AVL 트리, 구간 트리 개념 공부하고 업데이트
 - 배열과 Cache hit rate
 - 동적 배열과 overhead
 - 포인터의 메모리 크기는 왜 32, 64비트 컴퓨터마다 다를까?
+
+# 참조
+- https://www.geeksforgeeks.org/difference-between-general-tree-and-binary-tree/
+- https://towardsdatascience.com/8-useful-tree-data-structures-worth-knowing-8532c7231e8c
+- https://medium.com/@ajinkyajawale/inorder-preorder-postorder-traversal-of-binary-tree-58326119d8da
+- 
