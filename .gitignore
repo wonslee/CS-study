@@ -5,6 +5,8 @@
 .idea/
 *.iml
 *.xml
+vcs.xml
+workspace.xml
 
 # IntelliJ
 out/
@@ -17,6 +19,7 @@ out/
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/*.xml
 
 # AWS User-specific
 .idea/**/aws.xml
