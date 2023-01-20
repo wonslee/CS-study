@@ -15,6 +15,9 @@
 - [Network (네트워크)](https://github.com/wonseok2877/CS-study/tree/master/network)
 - Language (언어)
 - Design Pattern (디자인 패턴)
+- Computer Architecture(컴퓨터 구조)
+- Software Engineering
+- Web & Spring
 
 ## Rule
 전반적인 진행 :
