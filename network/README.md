@@ -6,6 +6,7 @@
 - [TCP 3-way-handshake & 4-way-handshake](#tcp-3-way-handshake--4-way-handshake)
 - [TCP와 UDP의 차이점](#tcp와-udp의-차이점)
 - [HTTP와 GET,POST](#http와-getpost)
+- [HTTP와 HTTPS](#http와-https)
 </details>
 
 
@@ -513,3 +514,205 @@ OPTIONS - 시스템에서 지원하는 메소드 확인
 [https://github.com/Seogeurim/CS-study/tree/main/contents/network#http-%EC%9A%94%EC%B2%AD-%EB%B0%A9%EC%8B%9D---get-post](https://github.com/Seogeurim/CS-study/tree/main/contents/network#http-%EC%9A%94%EC%B2%AD-%EB%B0%A9%EC%8B%9D---get-post)
 
 [https://88240.tistory.com/190](https://88240.tistory.com/190)
+
+---
+## HTTP와 HTTPS
+
+### **HTTP (Hypertext Transfer Protocol)**
+
+HTTP는 서로 다른 시스템들 사이에서 통신을 주고받게 해주는 가장 기초적인 프로토콜이다. 웹 서핑을 할 때 서버에서 자신의 브라우저로 데이터를 전송해 주는 용도로 가장 많이 사용된다. 인터넷 초기에 모든 웹 사이트에서 기본적으로 사용된 프로토콜이다.
+
+자세한 HTTP의 동작 방식은 이전 글을 참고해 주길 바란다.
+
+하지만 HTTP에는 단점이 존재했다.
+
+- 평문 텍스트, 즉 암호화되지 않은 텍스트를 전송하는 프로토콜로, 중간자 공격에 취약하다.
+- 변조, 위장, 도청에 취약하다.
+
+이 말은 즉슨 데이터가 쉽게 도난 당할 수 있다는 것이다.
+
+이 문제를 해결하기 위해 HTTPS가 등장했다.
+
+---
+
+
+
+
+### **HTTPS (Hypertext Transfer Protocol Secure)**
+
+![https://blog.kakaocdn.net/dn/cxiq72/btrWR8nvfmW/8XNRd3CGwyQ2DyXF535nlk/img.png](https://blog.kakaocdn.net/dn/cxiq72/btrWR8nvfmW/8XNRd3CGwyQ2DyXF535nlk/img.png)
+
+HTTPS = HyperText Transfer Protocol over Secure Socket Layer = HTTP over SSL = HTTP over TLS
+
+HTTP의 단점인 보안성을 보완한 프로토콜이다.
+
+HTTPS 프로토콜은 SSL(보안 소켓 계층)을 사용함으로써 이 문제를 해결했다.
+
+### **SSL(Secure Socket Layer) 이란?**
+
+SSL은 웹사이트와 브라우저 사이(또는 두 서버 사이)에 전송되는 데이터를 암호화하여 인터넷 연결을 보호하기 위한 표준 기술이다. 이 기술은 해커가 개인 데이터나 금융 데이터 등의 전송되는 정보를 보거나 훔치는 것을 방지한다.
+
+SSL은 공개키 암호화를 기반으로 동작하는 프로토콜이다.
+
+### **암호화 방식**
+
+암호학에서 사용되는 키는 크게 대칭키와 공개키로 구분할 수 있다.
+
+대칭키: 암호화 / 복호화에 사용되는 키가 동일한 방식. A와 B가 암호 통신을 하려 한다면 A와 B는 공통된 대칭키를 가지고 있어야 한다.
+
+공캐키: 대칭키와 다르게 키를 공개키와 비밀키 두 가지로 나눈 방식. 여기서 공개키는 말 그대로 공개된 키로 다른 사용자들에게 공개된다. 하지만 비밀키는 오직 비밀키의 소유자만이 알고 있는 키이다. 공개키로 암호화된 평문은 비밀키로 복호화가 가능하고, 비밀키로 암호화된 평문은 공개키로 복호화가 가능하다.
+
+### 예시
+
+A와 B가 암호화 통신을 한다고 예를 들자.
+
+A는 B의 공개키를 알고 있고, B는 A의 공개키를 알고 있다.
+
+**A -----> B : B의 공개키로 암호화 (공개키 암호화)**
+
+- A가 B의 공개키를 알고 있기 때문에 B의 공개키로 암호화하면 B는 자신의 비밀키로 복호화 할 수 있다.
+
+**A -----> 해커 : B의 공개키로 암호화**
+
+- A가 B의 공개키로 암호화했으므로 B의 비밀키를 모르는 C는 복호화를 할 수 없다.
+
+**A -----> B : A의 비밀키로 암호화 (비밀키 암호화)**
+
+- A가 자신의 비밀키로 암호화한다면 B는 A의 공개키로 복호화 할 수 있다.
+
+**A -----> 해커 : A의 비밀키로 암호화**
+
+- A가 자신의 비밀키로 암호화한다면
+
+  해커 또한 A의 공개키로 복호화 할 수 있다.
+
+
+비밀키로 암호화 하는 것은 해당 암호문은 A에 의해 생성된 것이라는 일종의 인증 기능을 가진다
+
+![https://blog.kakaocdn.net/dn/bb9knF/btrWRC3DOcS/Fv1Y6QA7uutEiAmLr3EVf1/img.png](https://blog.kakaocdn.net/dn/bb9knF/btrWRC3DOcS/Fv1Y6QA7uutEiAmLr3EVf1/img.png)
+
+---
+
+### 
+
+### **SSL의 기능**
+
+- 통신 내용이 공격자에게 노출되는 것을 막을 수 있다.
+- 클라이언트가 접속하려는 서버가 신뢰할 수 있는 서버인지 판단할 수 있다.
+- 통신 내용의 악의적인 변경을 방지할 수 있다.
+
+SSL은 이를 위해 **인증서**를 사용한다.
+
+인증서는 신뢰할 수 있는 공인된 기관에서 발급해준다. 이러한 기관을 CA ( Certificate Authority ) 라고 한다
+
+CA에게서 인증서를 발급받은 서버는 클라이언트 입장에서 믿고 사용할 수 있다.
+
+SSL은 이러한 인증서를 통해 클라이언트와 서버가 보안적으로 안전한 상태로 통신하게 돕는다.
+
+---
+
+### **인증서와 SSL의 동작 과정**
+
+인증서에는 아래와 같은 내용이 담겨있다.
+
+- 서비스 서버의 정보 (인증서를 발급한 CA, 서비스 서버의 도메인)
+- 서비스 서버 측 공개 키(공개 키 값, 공개 키 암호화 방법)
+
+브라우저는 CA의 리스트와 그 공개 키들을 가지고 있다.
+
+**SSL 동작과정**
+
+**1. Client -> Server 연결을 시도한다 (Client Hello) - handshake**
+
+클라이언트에서 통신하고 싶은 서버로 연결을 시도하는 패킷을 전송한다.
+
+이때, 전송하는 패킷에는 아래의 내용들이 들어있다.
+
+- 자신(client)이 사용 가능한 [cipher suite](https://en.wikipedia.org/wiki/Cipher_suite) 목록 (cipher suite 예시 : TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA)
+- session id
+- SSL protocol version
+- 등등
+
+![https://blog.kakaocdn.net/dn/dcSRR0/btrWRRGi6tq/yksMclS81LBBeOxfKRjla0/img.png](https://blog.kakaocdn.net/dn/dcSRR0/btrWRRGi6tq/yksMclS81LBBeOxfKRjla0/img.png)
+
+**2. Server -> client 응답 (Server Hello)**
+
+1번에서 클라이언트에서 받은 인사(Client Hello 패킷)에 대해 서버가 응답을 한다. 이 역시 패킷을 찍어보면 Server Hello라고 나오는 것을 확인할 수 있다.
+
+이때, 서버에서 전송하는 내용은 다음과 같다
+
+- 클라이언트에서 받은 cipher suite 목록 중 선택한 1개의 cipher suite
+- SSL protocol version
+- 등등
+
+![https://blog.kakaocdn.net/dn/dCYlNu/btrWRCvLbwS/IST9IATr00jaNSCQmR8W50/img.png](https://blog.kakaocdn.net/dn/dCYlNu/btrWRCvLbwS/IST9IATr00jaNSCQmR8W50/img.png)
+
+**3. Server -> Client (Certificate, Server Key Exchange, Server Hello Done)**
+
+서버는 2번 패킷 외에 클라이언트에 Certificate 라는 내용의 패킷을 보낸다.
+
+이 Certificate라는 패킷에는 Server의 SSL 인증서 내용이 들어있다. 아래의 패킷 내부를 보면, 인증서의 signature algorithm, public key info 등을 확인할 수 있다.
+
+![https://blog.kakaocdn.net/dn/KUiGM/btrWSwPoVQw/gi0WL5jBDgnkPmhHJM7Zh1/img.png](https://blog.kakaocdn.net/dn/KUiGM/btrWSwPoVQw/gi0WL5jBDgnkPmhHJM7Zh1/img.png)
+
+Certificate 패킷을 전달할 때, Server Key Exchange가 있는데, 이것은 위에서 전달한 Certificate 내의 SSL 인증서에 서버의 공개키가 없을 경우, 서버가 직접 전달함을 의미한다. 즉, 인증서 내부에 내부에 서버의 공개키가 존재한다면 Server Key Exchange는 생략된다.
+
+그리고 server가 행동을 마쳤다는 의미로 Server Hello Done까지 보낸다.
+
+**4. Client 에서 Server의 SSL 인증서 검증**
+
+3번에서 전달받은 서버의 SSL 인증서를 검증한다. 검증 원리는 아래와 같다.
+
+SSL 인증서를 발급한 CA(인증기관)는 CA의 비밀키(private key)를 이용해 인증서를 암호화했다. 그래서 SSL 인증서는 CA의 공개키를 이용해서만 복호화 할 수 있다. 클라이언트는 해당 CA의 공개키를 통해 암호화된 인증서를 복호화 한다. 즉, 클라이언트에서 CA 의 공개키를 이용해 인증서를 복호화했을 때, 복호화가 되었다는 것은 인증서는 해당 CA 에서 발급되었다라는 것을 검증할 수 있는 것.
+
+클라이언트는 CA의 공개키를 어디서 구하는가?
+
+클라이언트가 브라우저 또는 안드로이드 기기일 경우에는, 인증서를 발급하는 주요 인증기관(CA)의 리스트와 공개키를 가지고 있다. 그래서 매번 CA로 요청하는 것이 아닌 가지고 있는 리스트에서 확인할 수 있다.
+
+그러나, 리스트에 없다면 외부 인터넷을 통해 인증기관의 정보와 공개키를 확보한다.
+
+
+
+클라이언트는 CA의 공개키를 어디서 구하는가?
+
+클라이언트가 브라우저 또는 안드로이드 기기일 경우에는, 인증서를 발급하는 주요 인증기관(CA)의 리스트와 공개키를 가지고 있다. 그래서 매번 CA로 요청하는 것이 아닌 가지고 있는 리스트에서 확인할 수 있다.
+
+그러나, 리스트에 없다면 외부 인터넷을 통해 인증기관의 정보와 공개키를 확보한다.
+
+**5. Client -> Server 대칭키(비밀키) 전달 (Client Key Exchange, change Ciper Spec)**
+
+이제 클라이언트는 서버와 원하는 데이터를 안전하게 주고받기 위해서는 전달하는 데이터를 암호화해야한다. 클라이언트는 데이터를 암호화하기 위한 대칭키(비밀키, 데이터를 암호화하는 키)를 생성한다.
+
+클라이언트는 이 대칭키(비밀키)를 서버만 볼 수 있게 하기 위해, 서버의 공개키로 암호화를 해서 서버한테 전달한다. (Client Key Exchange) 서버의 공개키는 4번에서 SSL 인증서를 복호화해서 얻었다. 또는 인증서 내부에 없었을 경우 3번에서 서버로부터 직접 전달을 받았다(Server Key Exchange)
+
+이제 클라이언트는 Change Cipher Spec을 통해 SSL Handshake의 완료를 알린다.
+
+![https://blog.kakaocdn.net/dn/coyTUQ/btrWRzy8ppu/OlqYFj1d1vNPP6FxMDLjk0/img.png](https://blog.kakaocdn.net/dn/coyTUQ/btrWRzy8ppu/OlqYFj1d1vNPP6FxMDLjk0/img.png)
+
+**6. Server / Client SSL Handshake Finished**
+
+서버는 클라이언트가 5번에서 전달한 암호화된 대칭키(비밀키)를 받았다. 이키는 서버의 공개키로 암호화 되었으니 서버의 비밀키로 복호화해서 얻을 수 있다.
+
+이제 서버/클라이언트 모두 동일한 대칭키(비밀키)를 갖고 있으니 보안을 가진 통신을 할 수 있다.
+
+---
+
+### **인증서확인법**
+
+![https://blog.kakaocdn.net/dn/mfwHr/btrWRjJ1Bph/8HIB15FwygZxFk27RCrYgK/img.png](https://blog.kakaocdn.net/dn/mfwHr/btrWRjJ1Bph/8HIB15FwygZxFk27RCrYgK/img.png)
+
+좌물쇠를 클릭하게 되면 다음과 같이 나오게된다.
+
+![https://blog.kakaocdn.net/dn/bN9Rxq/btrWVLE1pbB/49yI2ySslY2Z3u5ziJon7k/img.png](https://blog.kakaocdn.net/dn/bN9Rxq/btrWVLE1pbB/49yI2ySslY2Z3u5ziJon7k/img.png)
+
+![https://blog.kakaocdn.net/dn/bXPIJN/btrWUHCSarc/rK6RKsIk31iNgKYGqQvBKk/img.png](https://blog.kakaocdn.net/dn/bXPIJN/btrWUHCSarc/rK6RKsIk31iNgKYGqQvBKk/img.png)
+
+이렇게 인증서에 키가 담겨있는 것을 확인할 수 있다.
+
+참고
+
+[https://nukw0n-dev.tistory.com/11?category=940859](https://nukw0n-dev.tistory.com/11?category=940859)
+
+[https://nuritech.tistory.com/25](https://nuritech.tistory.com/25)
+
+https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=skinfosec2000&logNo=222135874222
