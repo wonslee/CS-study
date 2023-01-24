@@ -29,10 +29,10 @@
   선형 탐색이라고 가정할 때 배열의 길이에 비례한다. `O(n)`.
     ```python
   # 선형 탐색
-  def lenear_search(arr, n, key):
+  def lenear_search(tree, n, key):
       for i in range(n):
                   # found
-          if (arr[i] == key):
+          if (tree[i] == key):
               return i
              
       # If the key is not found
@@ -52,10 +52,10 @@
 
 파이썬을 비롯한 현대 언어들은 기본 지원되는 메소드를 통해 삽입, 삭제를 편하게 구현할 수 있다.
 ```python
-arr= [1,2,3]
+tree= [1,2,3]
 # 파이썬의 기본 배열 메소드들
-arr.insert(0,10) # [10,1,2,3]
-arr.remove(3) # [10,1,2]
+tree.insert(0,10) # [10,1,2,3]
+tree.remove(3) # [10,1,2]
 ```
 그래도 여전히 시간 복잡도는 그대로다.
 </details>
@@ -64,11 +64,11 @@ arr.remove(3) # [10,1,2]
 정적 배열의 큰 문제 중 하나는 처음에 배열을 선언할 때 배열의 크기를 지정해야 하며, 그 이상의 데이터를 집어넣을 수 없다는 점이다. 즉 **원소의** **개수가 제한된다**.
 ```cpp
 // c++의 정적 배열
-int arr[3];
-arr[0]=100;
-arr[1]=100;
-arr[2]=100;
-arr[3]=100; // error!
+int tree[3];
+tree[0]=100;
+tree[1]=100;
+tree[2]=100;
+tree[3]=100; // error!
 ```
 
 ## 동적 배열
@@ -420,23 +420,23 @@ void postorder(struct Node* node){
 ```  
 순서의 차이가 사소해보일 수 있지만, 결과는 천차만별이다!  
 ![](https://miro.medium.com/max/640/0*YzOEfnGnWTPbsUkv)  
-시간복잡도는 O(N)으로 모두 같다.
+시간복잡도는 O(tree.size())으로 모두 같다.
 </details>
 
 ## 연산과 시간복잡도
 `이진 탐색`처럼, 이진 탐색 트리는 각 분기(현재 노드보다 큰지 OR 작은지)마다 탐색할 후보의 수를 2분의 1로 줄여나간다.  
 즉 트리의 높이 h만큼 **O(h)** 가 걸린다. 하지만 원소의 개수 N을 기준으로 하는 표준을 따르자 ^^.   
 
-**이진트리의 종류**를 생각해보자. 왠만하면(완전트리일 때) h = log2(N)이고 최악(편향이진트리)일 때 h = N이다.  
+**이진트리의 종류**를 생각해보자. 왠만하면(완전트리일 때) h = log2(tree.size())이고 최악(편향이진트리)일 때 h = N이다.  
 그리고 이진트리의 삽입과 삭제는 **탐색**이 주요 로직이다.  
 따라서..
 
-|       | 평균 | 최악 |
-|-------| --- | --- |
-| 탐색    | O(log N) | O(N) |
-| 삽입    | O(log N) | O(N) |
-| 삭제    | O(log N) | O(N) |
-| 순회    | O(N) | O(N) |
+|       | 평균                 | 최악             |
+|-------|--------------------|----------------|
+| 탐색    | O(log tree.size()) | O(tree.size()) |
+| 삽입    | O(log tree.size()) | O(tree.size()) |
+| 삭제    | O(log tree.size()) | O(tree.size()) |
+| 순회    | O(tree.size())     | O(tree.size()) |
 
 # Graph (그래프)
 ## 그래프란?
@@ -583,15 +583,13 @@ V = 정점의 개수, E = 간선의 개수, degree(V) = 정점의 차수
 '가장 큰 원소를 찾는데 최적화'라는 말을 구체적으로 풀어 쓰면,  
 평소에 데이터들이 특정한 **규칙**을 만족하도록 한다는 뜻이다.  
 
-- **대소 관계 규칙** : 부모 노드가 가진 원소값은 항상 자식 노드가 가진 원소값 이상이어야 한다
-- 이진 검색 트리와는 달리 왼쪽 자식과 오른쪽 자식이 갖는 원소의 크기는 제한하지 않는다
-- **완전이진트리** 규칙 : 마지막 레벨을 제외한 모든 레벨에 노드가 꽉 차 있어야 하고, 마지막 레벨의 노드들은 항상 가장 왼쪽부터 차례대로 채워져 있어야 한다.  
-완전이진트리의 성질에 따라, 힙의 **높이**는 언제나 **log2 n** 이다.
-
-힙의 대소 관계 조건이 **느슨하기 때문에** 엄격한 **완전이진트리** 조건을 쉽게 만족시킬 수 있고,  
-덕분에 힙은 **배열**로 쉽고 효율적으로 구현할 수 있다.
-
-
+- **대소 관계 규칙** : **부모** 노드가 가진 원소값은 항상 자식 노드가 가진 원소값 **이상**이어야 한다.  
+  이진 검색 트리와는 달리 왼쪽 자식과 오른쪽 자식이 갖는 원소의 크기는 제한하지 않는다.  
+이렇듯 힙의 대소 관계 조건은 **느슨하다**.  
+그래서 엄격한 **완전이진트리** 조건을 쉽게 만족시킬 수 있고, 덕분에 힙은 **배열**로 쉽고 효율적으로 구현할 수 있다.(트리의 배열 구현을 떠올려보자)
+- **완전이진트리** 규칙 : 말 그대로 완전이진트리로써 갖는 규칙.  
+마지막 레벨을 제외한 모든 레벨에 노드가 꽉 차 있어야 하고, 마지막 레벨의 노드들은 항상 가장 왼쪽부터 차례대로 채워져 있어야 한다.  
+힙의 **높이**는 언제나 **log2 n** 이다.
 - **모양 규칙** :  부모노드의 순서가 p라고 할 때, 왼쪽 자식의 순서는 (2 * p) + 1, 오른쪽 자식의 순서는 (2 * p) + 2 이다.  
 이 규칙을 이용해서 노드들간의 연결 관계를 명시적으로 저장하는 대신 **배열의 index**를 통해 힙의 정보를 표현한다.  
 
@@ -600,6 +598,8 @@ V = 정점의 개수, E = 간선의 개수, degree(V) = 정점의 차수
 ## 힙의 연산들
 힙 자체는 배열로 간단하게 구현된다.   
 그러나 힙의 연산들은 **힙의 조건을 만족시키도록** 까다로운 과정을 거친다.  
+
+[visualgo](https://visualgo.net/en/heap)
 
 ### 삽입
 먼저 **모양 규칙**을 만족시키도록 `heap[]`의 맨 끝에 추가한다.  
@@ -642,9 +642,9 @@ void push(int num) {
 이 작업을 트리의 바닥에 도달하거나 두 자손이 모두 자기 자신 이하의 원소를 갖고 있을 때까지 **반복**한다.  
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F270DE042583849E61F)
+(그림 오류 : 4,5번째 그림에서 3번째 노드의 값은 15입니다)
 
-삽입과 마찬가지로, 이런 반복과정은 **O(log n)** 시간이 걸린다.  
-
+삽입과 마찬가지로 **O(log n)** 시간이 걸린다.  
 
 <details>
 <summary>힙 원소 삭제 구현 (c++)</summary>
@@ -677,16 +677,67 @@ void pop() {
 
 
 ### 일반 배열을 힙으로 만들기(Heapify)
-Heapify: a process of creating a heap from an array.  
 
+배열을 힙으로 만들려면, 결국 **힙의 규칙**을 만족하도록 노드들을 재배치하는 과정이 필요하다.  
+이진트리의 재귀적 성질 덕분에, 재귀함수로 이 과정을 구현할 수 있다.  
+
+1. 부모, 왼쪽 자식, 오른쪽 자식 중에서 가장 큰 값을 갖는 노드를 찾는다(largest)
+2. 부모가 largest라면 상태를 유지하고, 아니라면 부모 노드와 해당 자식의 위치를 바꾼다.(swap)
+3. 바꿨다면, 해당 서브트리에 대해서 1,2 과정을 반복한다.(재귀호출)
+
+이 과정을 내부(non-leaf)노드들에 대해서만 실행하면 힙이 완성된다.  
+(n / 2) - 1번째부터 1번째(루트)노드까지 heapify를 호출하면 된다.  
+
+<details>
+<summary>heapify 구현 (c++)</summary>
+
+https://www.geeksforgeeks.org/building-heap-from-array/
+
+```c++
+vector<int> tree;
+
+// i : 서브 트리 노드의 index. 
+void heapify(int i){
+    int largest = i; // largest : 자식들과 비교하면서 갱신시킬 값의 index
+    int left = 2 * i + 1; 
+    int right = 2 * i + 2; 
+  
+    // 왼쪽 자식이 루트보다 큰 경우
+    if (l < tree.size() && tree[l] > tree[largest])
+        largest = l;
+  
+    // 오른쪽 자식이 루트보다 큰 경우
+    if (r < tree.size() && tree[r] > tree[largest])
+        largest = r;
+  
+    // largest가 루트노드가 아닌 경우, swap
+    if (largest != i) {
+        swap(tree[i], tree[largest]);
+  
+        // Recursively heapify the affected sub-tree
+        heapify(largest);
+    }
+}
+
+void buildHeap(){
+    // Index of last non-leaf node
+    int startIdx = (tree.size() / 2) - 1;
+  
+    // Perform reverse level order traversal from last non-leaf node and heapify each node
+    for (int i = startIdx; i >= 0; i--)
+        heapify(i);
+    
+}
+```
+</details>
 
 ## 시간복잡도
-| 연산 | 시간 복잡도 |
-| --- | --- |
-| 원소 삽입 | O(log n) |
-| 최대값 접근 | O(1) |
-| 원소 삭제 | O(log n) |
-| 힙 생성 | O(n) |
+| 연산            | 시간 복잡도 |
+|---------------| --- |
+| 원소 삽입         | O(log n) |
+| 최대값 접근        | O(1) |
+| 원소 삭제         | O(log n) |
+| 힙 생성(heapify) | O(n) |
 
 # 더 배울 부분들
 - 각 자료구조의 응용, **사례와 연결지어 설명**
