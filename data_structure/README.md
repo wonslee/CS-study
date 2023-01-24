@@ -32,7 +32,7 @@
   def lenear_search(tree, n, key):
       for i in range(n):
                   # found
-          if (tree[i] == key):
+          if (arr[i] == key):
               return i
              
       # If the key is not found
@@ -52,10 +52,10 @@
 
 파이썬을 비롯한 현대 언어들은 기본 지원되는 메소드를 통해 삽입, 삭제를 편하게 구현할 수 있다.
 ```python
-tree= [1,2,3]
+arr= [1,2,3]
 # 파이썬의 기본 배열 메소드들
-tree.insert(0,10) # [10,1,2,3]
-tree.remove(3) # [10,1,2]
+arr.insert(0,10) # [10,1,2,3]
+arr.remove(3) # [10,1,2]
 ```
 그래도 여전히 시간 복잡도는 그대로다.
 </details>
@@ -64,11 +64,11 @@ tree.remove(3) # [10,1,2]
 정적 배열의 큰 문제 중 하나는 처음에 배열을 선언할 때 배열의 크기를 지정해야 하며, 그 이상의 데이터를 집어넣을 수 없다는 점이다. 즉 **원소의** **개수가 제한된다**.
 ```cpp
 // c++의 정적 배열
-int tree[3];
-tree[0]=100;
-tree[1]=100;
-tree[2]=100;
-tree[3]=100; // error!
+int arr[3];
+arr[0]=100;
+arr[1]=100;
+arr[2]=100;
+arr[3]=100; // error!
 ```
 
 ## 동적 배열
