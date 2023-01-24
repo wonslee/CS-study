@@ -420,23 +420,23 @@ void postorder(struct Node* node){
 ```  
 순서의 차이가 사소해보일 수 있지만, 결과는 천차만별이다!  
 ![](https://miro.medium.com/max/640/0*YzOEfnGnWTPbsUkv)  
-시간복잡도는 O(N)으로 모두 같다.
+시간복잡도는 O(n)으로 모두 같다.
 </details>
 
 ## 연산과 시간복잡도
 `이진 탐색`처럼, 이진 탐색 트리는 각 분기(현재 노드보다 큰지 OR 작은지)마다 탐색할 후보의 수를 2분의 1로 줄여나간다.  
 즉 트리의 높이 h만큼 **O(h)** 가 걸린다. 하지만 원소의 개수 N을 기준으로 하는 표준을 따르자 ^^.   
 
-**이진트리의 종류**를 생각해보자. 왠만하면(완전트리일 때) h = log2(N)이고 최악(편향이진트리)일 때 h = N이다.  
+**이진트리의 종류**를 생각해보자. 왠만하면(완전트리일 때) h = log2 n이고 최악(편향이진트리)일 때 h = N이다.  
 그리고 이진트리의 삽입과 삭제는 **탐색**이 주요 로직이다.  
 따라서..
 
-|       | 평균 | 최악 |
-|-------| --- | --- |
-| 탐색    | O(log N) | O(N) |
-| 삽입    | O(log N) | O(N) |
-| 삭제    | O(log N) | O(N) |
-| 순회    | O(N) | O(N) |
+|       | 평균       | 최악   |
+|-------|----------|------|
+| 탐색    | O(log n) | O(n) |
+| 삽입    | O(log n) | O(n) |
+| 삭제    | O(log n) | O(n) |
+| 순회    | O(n)     | O(n) |
 
 # Graph (그래프)
 ## 그래프란?
@@ -556,9 +556,194 @@ V = 정점의 개수, E = 간선의 개수, degree(V) = 정점의 차수
 반면 인접 리스트는 정점 추가, 삭제에 강하기 때문에 간선의 갯수가 고정적이라면 인접 리스트가 빠르다.
 둘 다 고정적이라고 한다면, 밀집 그래프엔 인접 행렬(검색 시간이 빠르기 때문에)을 쓰고 희소 그래프에는 인접 리스트(공간을 아끼기 위해)를 쓰는 것이 좋다.  
 
+# 우선순위 큐와 힙(Binary Heap)
+
+## 우선순위 큐란?
+> 데이터들이 우선순위를 가지고 있어, **우선순위가 높은 데이터부터** 먼저 나가는 큐.
+
+특정 순서대로 기다리고 있는 데이터들을 저장한다는 점에서 큐와 비슷하다.  
+그러나 큐는 FIFO인 반면, 우선순위 큐는 PFO(Priority First Out)라는 점에서 차이가 있다. (PFO는 내가 만들어낸 단어다.)  
+
+우선순위 큐가 쓰이는 컴퓨터의 **작업 스케줄링**(운영체제 내용)에서는 우선순위에 따라 작업을 처리한다.  
+가령 windows OS에서의 `윈도우 키`는 왠만한 다른 작업보다도 우선순위에 있다.  
+
+우선순위 큐를 구현하는 방법은 다양하다.  
+단순히 배열에 원소를 모두 집어넣고, 원소를 꺼낼 때마다 모든 원소중에서 가장 우선순위가 높은 데이터를 찾는 방법이 있다.  
+이렇게 하면 원소를 추가하는데는 O(1), 원소를 꺼내는데는 O(n)의 시간이 걸린다.(정렬되어있지 않으므로 선형탐색만 가능)  
+
+혹은 [균형잡힌 이진검색트리(AVL tree)](https://en.wikipedia.org/wiki/AVL_tree)방법이 있다.  
+삽입과 삭제 모두 O(log n) 시간에 가능하지만, 우선순위 큐를 구현하는데 쓰이기에는 과하게 복잡하다.  
+이 방법보다 훨씬 단순한 구조가 있는데 바로 이진 **힙(binary heap)** 이다.  
+
+## 힙이란?
+
+![](https://media.geeksforgeeks.org/wp-content/cdn-uploads/20221220165711/MinHeapAndMaxHeap1.png)
+> **가장 큰(작은) 원소를 찾는데 최적화**된 형태의 완전 이진 트리.  
+
+'가장 큰 원소를 찾는데 최적화'라는 말을 구체적으로 풀어 쓰면,  
+평소에 데이터들이 특정한 **규칙**을 만족하도록 한다는 뜻이다.  
+
+- **대소 관계 규칙** : **부모** 노드가 가진 원소값은 항상 자식 노드가 가진 원소값 **이상**이어야 한다.  
+  이진 검색 트리와는 달리 왼쪽 자식과 오른쪽 자식이 갖는 원소의 크기는 제한하지 않는다.  
+이렇듯 힙의 대소 관계 조건은 **느슨하다**.  
+그래서 엄격한 **완전이진트리** 조건을 쉽게 만족시킬 수 있고, 덕분에 힙은 **배열**로 쉽고 효율적으로 구현할 수 있다.(트리의 배열 구현을 떠올려보자)
+- **완전이진트리** 규칙 : 말 그대로 완전이진트리로써 갖는 규칙.  
+마지막 레벨을 제외한 모든 레벨에 노드가 꽉 차 있어야 하고, 마지막 레벨의 노드들은 항상 가장 왼쪽부터 차례대로 채워져 있어야 한다.  
+힙의 **높이**는 언제나 **log2 n** 이다.
+- **모양 규칙** :  부모노드의 순서가 p라고 할 때, 왼쪽 자식의 순서는 (2 * p) + 1, 오른쪽 자식의 순서는 (2 * p) + 2 이다.  
+이 규칙을 이용해서 노드들간의 연결 관계를 명시적으로 저장하는 대신 **배열의 index**를 통해 힙의 정보를 표현한다.  
+
+![](https://media.geeksforgeeks.org/wp-content/cdn-uploads/Leaf-starting-point-in-a-Binary-Heap-data-structure.png)  
+
+## 힙의 연산들
+힙 자체는 배열로 간단하게 구현된다.   
+그러나 힙의 연산들은 **힙의 조건을 만족시키도록** 까다로운 과정을 거친다.  
+
+[visualgo](https://visualgo.net/en/heap)
+
+### 삽입
+먼저 **모양 규칙**을 만족시키도록 `heap[]`의 맨 끝에 추가한다.  
+그 다음, **대소 관계 규칙**을 만족시키는 과정을 반복한다.  
+새 원소를 그 부모 노드 원소와 비교하고, 부모 노드의 원소가 작다면 두 원소의 위치를 바꾼다.  
+그렇게 더 크거나 같은 부모 노드를 만나거나 루트에 도달할 때까지 **반복**한다.  
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F22557639583849E438)
+
+이 반복 과정은 힙(트리)의 높이만큼, 즉 **O(log n)** 시간이 걸린다.  
+
+
+<details>
+<summary>힙 원소 삽입 구현 (c++)</summary>
+
+```c++
+// push
+void push(int num) {
+    maxHeap[++heapSize] = num; // 힙 크기를 증가시키는 동시에 마지막 노드에 인자값 할당
+    
+    for(int i = heapSize; i > 1; i /= 2) { // i/=2, 즉 한 레벨씩 위로 올라가기를 반복 
+        if(maxHeap[i/2] < maxHeap[i]) // 자신의 부모 노드보다 크면 swap
+          swap(i/2, i);
+        else  break;
+    }
+}
+```
+
+</details> 
+
+### 최대 원소 찾기
+(최대힙에서) 최대 원소를 찾는건 아주 간단하다.  
+배열의 첫번째 원소에 접근하면 된다.(heap[0])
+
+### 삭제
+문제는 최대 원소(루트 노드)를 삭제한 다음이다.  
+
+먼저 **모양 규칙**을 만족하도록, 힙의 마지막 노드를 삭제하고 그 노드를 루트에 덮어씌운다.   
+그 다음, **대소 관계 조건**을 만족하도록 두 자식 중 더 큰 원소를 선택해 (새로 온)루트와 맞바꾼다.  
+이 작업을 트리의 바닥에 도달하거나 두 자손이 모두 자기 자신 이하의 원소를 갖고 있을 때까지 **반복**한다.  
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F270DE042583849E61F)
+(그림 오류 : 4,5번째 그림에서 3번째 노드의 값은 15입니다)
+
+삽입과 마찬가지로 **O(log n)** 시간이 걸린다.  
+
+<details>
+<summary>힙 원소 삭제 구현 (c++)</summary>
+
+```c++
+// pop
+void pop() {
+    heap[0] = heap.back();
+    heap.pop_back();
+    int here = 0;
+    
+    while(true){
+      int left = here*2 + 1, right = here*2 + 2;
+      if (left >= heap.size()) break;   // leaf에 도달한 경우
+      
+      int next = here;  // heap[here]가 내려갈 위치
+      // 왼쪽, 오른쪽 자식 노드중에 큰 놈 고르기
+      if (heap[next] < heap[left])
+        next = left;
+      if (right < heap.size() && heap[next] < heap[right])
+        next = right;
+      
+      if (next == here) break;
+      swap(heap[here], heap[next]);
+      here = next;
+    }
+}
+```
+</details>
+
+
+### 일반 배열을 힙으로 만들기(Heapify)
+
+배열을 힙으로 만들려면, 결국 **힙의 규칙**을 만족하도록 노드들을 재배치하는 과정이 필요하다.  
+이진트리의 재귀적 성질 덕분에, 재귀함수로 이 과정을 구현할 수 있다.  
+
+1. 부모, 왼쪽 자식, 오른쪽 자식 중에서 가장 큰 값을 갖는 노드를 찾는다(largest)
+2. 부모가 largest라면 상태를 유지하고, 아니라면 부모 노드와 해당 자식의 위치를 바꾼다.(swap)
+3. 바꿨다면, 해당 서브트리에 대해서 1,2 과정을 반복한다.(재귀호출)
+
+이 과정을 내부(non-leaf)노드들에 대해서만 실행하면 힙이 완성된다.  
+(n / 2) - 1번째부터 1번째(루트)노드까지 heapify를 호출하면 된다.  
+
+<details>
+<summary>heapify 구현 (c++)</summary>
+
+https://www.geeksforgeeks.org/building-heap-from-array/
+
+```c++
+vector<int> tree;
+
+// i : 서브 트리 노드의 index. 
+void heapify(int i){
+    int largest = i; // largest : 자식들과 비교하면서 갱신시킬 값의 index
+    int left = 2 * i + 1; 
+    int right = 2 * i + 2; 
+  
+    // 왼쪽 자식이 루트보다 큰 경우
+    if (l < tree.size() && tree[l] > tree[largest])
+        largest = l;
+  
+    // 오른쪽 자식이 루트보다 큰 경우
+    if (r < tree.size() && tree[r] > tree[largest])
+        largest = r;
+  
+    // largest가 루트노드가 아닌 경우, swap
+    if (largest != i) {
+        swap(tree[i], tree[largest]);
+  
+        // Recursively heapify the affected sub-tree
+        heapify(largest);
+    }
+}
+
+void buildHeap(){
+    // Index of last non-leaf node
+    int startIdx = (tree.size() / 2) - 1;
+  
+    // Perform reverse level order traversal from last non-leaf node and heapify each node
+    for (int i = startIdx; i >= 0; i--)
+        heapify(i);
+    
+}
+```
+</details>
+
+## 시간복잡도
+| 연산            | 시간 복잡도 |
+|---------------| --- |
+| 원소 삽입         | O(log n) |
+| 최대값 접근        | O(1) |
+| 원소 삭제         | O(log n) |
+| 힙 생성(heapify) | O(n) |
+
 # 더 배울 부분들
 - 각 자료구조의 응용, **사례와 연결지어 설명**
-- AVL 트리, 구간 트리 개념 공부하고 업데이트
+- **구간 트리**(segment tree), **AVL 트리**
+- 그래프 **DFS와 BFS**, 최단거리 알고리즘
+- **heapify**와 heap sort
 - 배열과 Cache hit rate
 - 동적 배열과 overhead
 - 포인터의 메모리 크기는 왜 32, 64비트 컴퓨터마다 다를까?
@@ -573,3 +758,6 @@ V = 정점의 개수, E = 간선의 개수, degree(V) = 정점의 차수
 - https://www.geeksforgeeks.org/comparison-between-adjacency-list-and-adjacency-matrix-representation-of-graph/
 - https://luisnatera.com/posts/2020/04/Euler/
 - https://soliloquiess.github.io/class/2021/03/16/algorithm_01.html
+- https://www.geeksforgeeks.org/heap-data-structure/
+- https://www.geeksforgeeks.org/applications-priority-queue/
+- https://debugdaldal.tistory.com/28
