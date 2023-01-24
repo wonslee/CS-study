@@ -29,7 +29,7 @@
   선형 탐색이라고 가정할 때 배열의 길이에 비례한다. `O(n)`.
     ```python
   # 선형 탐색
-  def lenear_search(tree, n, key):
+  def lenear_search(arr, n, key):
       for i in range(n):
                   # found
           if (arr[i] == key):
