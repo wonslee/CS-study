@@ -62,11 +62,14 @@ SQL은 여기에 TCL을 더해 4가지 종류가 있다.
 DB 객체 (TABLE, INDEX, VIEW 등)를 생성, 수정, 삭제할 목적으로 사용되는 언어.   
 CREATE, ALTER, DROP, RENAME 등이 있다.  
 
-데이터베이스 구조는 스키마(schema)라고도 한다.    
-테이블 이름과 열 이름으로 나타낼 수 있다.
-> 학생(학번, 이름, 학년, 성별, 전공)
+> CREATE 학생(학번, 이름, 학년, 성별, 전공)
 
-![](http://www.carnaghan.com/wp-content/uploads/2017/10/schema-1024x662.png)
+
+![](https://d1whtlypfis84e.cloudfront.net/guides/wp-content/uploads/2019/01/01111318/Relational-databse.png)
+
+데이터베이스 구조는 스키마(schema)라고도 한다.    
+테이블 이름과 열 이름으로 표현될 수 있다.
+
 ### DML (데이터 조작 언어, Data Manipulation Language)
 데이터베이스 안의 데이터를 실제 조작하는 언어.     
 SELECT, INSERT, UPDATE, DELETE 등이 있다.  
