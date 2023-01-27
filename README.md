@@ -9,9 +9,9 @@
 
 ## Curriculum
 - [Data Structure (자료구조)](https://github.com/wonseok2877/CS-study/tree/master/data_structure)
-- Algorithm (알고리즘)
+- [Algorithm (알고리즘)](https://github.com/wonseok2877/CS-study/tree/master/algorithm)
 - Operating System (운영체제)
-- Database (데이터베이스)
+- [Database (데이터베이스)](https://github.com/wonseok2877/CS-study/tree/master/database)
 - [Network (네트워크)](https://github.com/wonseok2877/CS-study/tree/master/network)
 - Language (언어)
 - Design Pattern (디자인 패턴)
