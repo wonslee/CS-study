@@ -14,7 +14,10 @@
   <component name="ChangeListManager">
     <list default="true" id="3e63864a-a0dc-41cc-bc71-8c4108367753" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/data_structure/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/data_structure/README.md" afterDir="false" />
+=======
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,9 +34,12 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+<<<<<<< Updated upstream
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/data_structure/README.md" root0="FORCE_HIGHLIGHTING" root1="SKIP_INSPECTION" />
+=======
+>>>>>>> Stashed changes
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -168,8 +174,13 @@
       <workItem from="1673880952504" duration="141000" />
       <workItem from="1674020690765" duration="2106000" />
       <workItem from="1674123770799" duration="37000" />
+<<<<<<< Updated upstream
       <workItem from="1674388770363" duration="1298000" />
       <workItem from="1674540456912" duration="3214000" />
+=======
+      <workItem from="1674388770363" duration="1612000" />
+      <workItem from="1674402169177" duration="10000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
