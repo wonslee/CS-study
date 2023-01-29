@@ -8,10 +8,15 @@
 - [HTTP와 GET,POST](#http와-getpost)
 - [HTTP와 HTTPS](#http와-https)
 - [DNS와 DNS Round Robin](#dns--domain-name-system-)
-- [웹의 통신의 전체적인 흐름](#웹-통신의-전체적인-흐름)
+- [웹 통신의 전체적인 흐름](#웹-통신의-전체적인-흐름)
 </details>
 
 
+
+## OSI 7 계층
+![https://blog.kakaocdn.net/dn/cR1FtN/btrVxrajVAN/m1qpjD1F8VyFcBRtVqa1f1/img.png](https://blog.kakaocdn.net/dn/cR1FtN/btrVxrajVAN/m1qpjD1F8VyFcBRtVqa1f1/img.png)
+
+# OSI(Open Systems Interconnection) 7계층
 
 OSI 7계층이란?
 
@@ -800,8 +805,7 @@ DNS 라운드 로빈은 부하분산을 위한 방법일 뿐, 다중화 방법�
 
 [https://github.com/Seogeurim/CS-study/blob/main/contents/network/materials/yoongoing_networkflow.pdf](https://github.com/Seogeurim/CS-study/blob/main/contents/network/materials/yoongoing_networkflow.pdf)
 
----
-## 웹 통신의 전체적인 흐름
+
 ### **웹이란?**
 
 WWW (world wide web)의 약자이며 인터넷으로 연결된 컴퓨터를 통해 정보를 공유할 수 있는 공간을 뜻한다.
@@ -829,6 +833,8 @@ WWW (world wide web)의 약자이며 인터넷으로 연결된 컴퓨터를 통�
 이러한 클라이언트와 서버가 **Request**와 **Response**를 주고 받으며 통신이 일어난다.
 
 ---
+
+## 웹 통신의 전체적인 흐름
 
 ### **웹 통신의 과정**
 
