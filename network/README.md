@@ -805,6 +805,8 @@ DNS 라운드 로빈은 부하분산을 위한 방법일 뿐, 다중화 방법�
 
 [https://github.com/Seogeurim/CS-study/blob/main/contents/network/materials/yoongoing_networkflow.pdf](https://github.com/Seogeurim/CS-study/blob/main/contents/network/materials/yoongoing_networkflow.pdf)
 
+---
+## 웹 통신의 전체적인 흐름
 
 ### **웹이란?**
 
@@ -834,7 +836,6 @@ WWW (world wide web)의 약자이며 인터넷으로 연결된 컴퓨터를 통�
 
 ---
 
-## 웹 통신의 전체적인 흐름
 
 ### **웹 통신의 과정**
 
