@@ -1,3 +1,11 @@
+<details>
+<summary>Table of Contents</summary>
+
+- [데이터베이스](#데이터베이스)
+- [릴레이션과 키](#릴레이션--relation--과-키--key-)
+
+</details>
+
 # 데이터베이스
 ## 데이베터이스 시스템(DBMS)을 쓰는 이유
 
@@ -143,7 +151,7 @@ COMMIT, ROLLBACK, SAVEPOINT 등이 있다.
 투플을 유일하게 식별할 수 있는 속성들의 집합.  
 꼭 필요한 속성이 아니어도 포함된다.  
 
-<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb61dOa%2FbtqGgjeFbnE%2F3PLqMbKhtALl89KtYX4Bt1%2Fimg.png" width="20%" height="20%">
+<img src="https://velog.velcdn.com/images/duck-ach/post/8b2ea421-f688-4d37-896c-8eecdf1bb68b/image.png" width="50%" height="50%">
 
 
 ### 외래키(Foreign Key)
