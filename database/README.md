@@ -86,12 +86,156 @@ GRANT, REVOKE, CREATE USER 등이 있다.
 DML 명령문으로 수행한 변경을 관리 (트랜잭션 관리)하는 언어.    
 COMMIT, ROLLBACK, SAVEPOINT 등이 있다.  
 
+# 릴레이션(Relation)과 키(Key)
+
+## 관계형 데이터 모델
+
+관계형 데이터베이스 개념은 관계형 데이터 모델에 기반하고 있다.  
+관계형 데이터 모델은 이론적으로는 릴레이션(relation)이라는 **수학적 집합** 개념에 기초하고 있다.  
+
+
+> 관계 모델에서 **릴레이션**(relation)은 동일한 구조로 이뤄진 **튜플(tuple)의 집합**을 말한다.   
+
+쉽게 표현하면 릴레이션은 **2차원 테이블(table)** 형태의 단순한 구조다.  
+
+<img src="https://odinuv.cz/slides/relational-database/relation.svg" width="50%" height="50%">
+
+테이블 개념은 내부 저장 구조에 대한 추상적인 표현일 뿐이고, 물리적으로는 복잡한 구조 속에 데이터가 저장된다.  
+
+관계형 데이터베이스에서 데이터베이스는 전체 릴레이션들의 모임이다.
+
+## 릴레이션 용어 정리
+- 속성(**attribute**) : 테이블의 열(column). 데이터를 표현하는 **가장 작은 논리적 단위**
+- 속성 집합(attribute **domain**) : 각 속성이 취할 수 있는 모든 값들의 집합을 정의한 것. 데이터 타입과 비슷!  
+  <img src="https://people.cs.pitt.edu/~chang/156/images/fig41.gif" width="50%" height="50%">
+- 튜플(tuple), record : 테이블의 각 행(row)
+- 차수(degree) : 릴레이션을 구성하는 전체 속성의 개수. 각 튜플이 가지는 속성값의 개수는 해당 릴레이션의 차수와 같다.
+
+## 키(Key)
+튜플의 **유일성** 규칙을 충족시키기 위해 모든 릴레이션은 **키(Key)** 를 갖는다.  
+키는 릴레이션이 단순한 테이블이 아님을 보여주는 대표적 개념이다.  
+데이터베이스에서 키는 여러 **무결성** 제약 조건에 대해 중요한 역할을 한다.  
+
+### 후보키(Candidate Key)
+> 튜플을 유일하게 식별할 수 있는 속성들의 최소(부분) 집합.  
+후보키는 유일성과 최소성 조건을 모두 만족해야 한다.  
+
+- **유일성** : Key로 하나의 튜플을 유일하게 식별할 수 있음
+- **최소성** : 각 튜플들을 유일하게 식별하기 위해 꼭 필요한 최소한을 만족
+
+예를 들어, 속성 중 '이름'을 기본키로 사용한다면 **동명이인**이 있을 수 있기 때문에 **유일성**을 만족할 수 없다.    
+
+모든 릴레이션은 최소 하나 이상의 후보키를 가진다.
+
+<img src="http://wiki.hash.kr/images/thumb/d/da/%EB%8C%80%EC%B2%B4%ED%82%A4_%EC%98%88%EC%8B%9C_%EC%88%98%EC%A0%95%EB%B3%B8.PNG/900px-%EB%8C%80%EC%B2%B4%ED%82%A4_%EC%98%88%EC%8B%9C_%EC%88%98%EC%A0%95%EB%B3%B8.PNG"  width="50%" height="50%">
+
+### 기본키(Primary Key)
+> 튜플을 **대표**하도록 선정된 후보키.  
+
+대부분의 DB에서는 `id`로 튜플을 식별한다.  
+
+### 대체키(Alternate Key)
+> 기본키로 **선정되지 못한** 후보키. 
+
+### 슈퍼키(Super Key)
+> **유일성**은 만족하지만, 최소성과는 상관 없는 키.  
+
+투플을 유일하게 식별할 수 있는 속성들의 집합.  
+꼭 필요한 속성이 아니어도 포함된다.  
+
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb61dOa%2FbtqGgjeFbnE%2F3PLqMbKhtALl89KtYX4Bt1%2Fimg.png" width="20%" height="20%">
+
+
+### 외래키(Foreign Key)
+> 외부 릴레이션의 키를 **참조**하는 키
+
+외래키의 값은 참조될 다른 릴레이션의 **기본키(PK)** 중에서 하나를 골라 정한다.  
+
+
+<img src="http://wiki.hash.kr/images/8/8b/%EC%99%B8%EB%9E%98%ED%82%A4_%EC%98%88%EC%8B%9C.jpg" width="50%" height="50%">
+
+<details>
+<summary>외래키 포함한 테이블 생성 (sql)</summary>
+
+```sql
+CREATE TABLE table_name (
+  id    INTEGER PRIMARY KEY,
+  col3  INTEGER FOREIGN KEY 
+      REFERENCES other_table(other_id),
+  ... )
+```  
+</details>
+
+
+## 무결성 제약 조건
+> 데이터 **무결성(integrity)** 은 데이터베이스에 저장된 데이터의 **일관성**과 **정확성**을 지키는 것을 말한다.
+### 개체 무결성 제약 조건(PK constraint)
+> 기본키(PK)로 지정한 모든 속성은 **NULL값을 가질 수 없고** 릴레이션 안에서 중복되지 않는 **유일한 값**을 가지도록 하는 제약 조건
+
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F996030495B3646B627" width="50%" height="50%">
+
+개체의 **유일성**을 위해, 왠만하면 릴레이션마다 PK를 정의해야 한다.  
+보통은 테이블을 생성할 때 `PRIMARY KEY(기본키)`를 선언함으로써 적용된다.  
+
+
+<details>
+<summary>SQL PRIMARY KEY</summary>
+
+```sql
+CREATE TABLE Persons (
+   ID int NOT NULL PRIMARY KEY,
+   LastName varchar(255) NOT NULL,
+   FirstName varchar(255),
+   Age int
+);
+```  
+</details>
+
+
+### 참조 무결성 제약 조건(FK constraint)
+> 외래키(FK)로 지정한 속성은 참조하는 릴레이션의 **기본키(PK) 값과 일치**하거나 **NULL값**을 가지도록 하는 제약 조건
+
+어떤 개체의 외래키가 NULL 값을 갖는다는건 관련된 개체가 없음을 의미한다.   
+반면에 어떤 값을 갖는다면, 그 값은 반드시 관련된 개체의 기본키값과 일치해야 한다.  
+
+만약 관계된 개체를 삭제하려면, 그걸 참조중인 개체를 먼저 삭제하거나 관계를 끊어야 한다.   
+외래키의 값이 존재하지 않는 기본키라면 PK 제약 조건을 위배하기 때문이다.   
+
+
+<details>
+<summary>SQL FOREIGN KEY</summary>
+
+```sql
+CREATE TABLE Orders (
+  OrderID int NOT NULL PRIMARY KEY,
+  OrderNumber int NOT NULL,
+  PersonID int FOREIGN KEY REFERENCES Persons(PersonID)
+);
+```  
+</details>
+
+
+### 도메인 무결성 제약 조건(domain constraint)
+> 튜플의 모든 속성 값이 각 속성 **도메인에 속한 값만을 취하도록** 하는 제약 조건. 
+
+SQL에서 테이블 생성시 각 열의 타입을 명시하거나  
+`NULL` 혹은 `NOT NULL`, `DEFAULT(디폴트 값)`, `CHECK(값 범위 체크 조건)` 등의 키워드 설정을 써서 제약을 명시한다.  
+
+### 유일성 제약 조건(uniqueness constraint)
+> **키** 속성 값이 서로 중복되지 않고 **유일하도록** 하는 제약 조건.
+
+SQL에서 테이블 생성시에 `UNIQUE(유일 조건)` 키워드 설정을 써서 명시한다.  
+
+
 # TODO
 - TCL 보충.. 트랜잭션 모름
 - 데이터 독립성? 응용 프로그램과 데이터의 관계
+- SQL 코테 문제랑 연결해보기
 
 # 출처
 - 데이터베이스의 정석 - 박성진
 - https://www.geeksforgeeks.org/difference-between-file-system-and-dbms/
 - https://towardsdatascience.com/designing-a-relational-database-and-creating-an-entity-relationship-diagram-89c1c19320b2
 - https://ko.wikipedia.org/wiki/SQL
+- https://victorydntmd.tistory.com/126
+- http://wiki.hash.kr/index.php/%EC%88%98%ED%8D%BC%ED%82%A4
