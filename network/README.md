@@ -8,6 +8,7 @@
 - [HTTP와 GET,POST](#http와-getpost)
 - [HTTP와 HTTPS](#http와-https)
 - [DNS와 DNS Round Robin](#dns--domain-name-system-)
+- [웹 통신의 전체적인 흐름](#웹-통신의-전체적인-흐름)
 </details>
 
 
@@ -803,3 +804,87 @@ DNS 라운드 로빈은 부하분산을 위한 방법일 뿐, 다중화 방법�
 [https://velog.io/@eu_nzi/%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC-DNS-round-robin%EC%9D%98-%EB%B0%A9%EC%8B%9D](https://velog.io/@eu_nzi/%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC-DNS-round-robin%EC%9D%98-%EB%B0%A9%EC%8B%9D)
 
 [https://github.com/Seogeurim/CS-study/blob/main/contents/network/materials/yoongoing_networkflow.pdf](https://github.com/Seogeurim/CS-study/blob/main/contents/network/materials/yoongoing_networkflow.pdf)
+
+---
+## 웹 통신의 전체적인 흐름
+
+### **웹이란?**
+
+WWW (world wide web)의 약자이며 인터넷으로 연결된 컴퓨터를 통해 정보를 공유할 수 있는 공간을 뜻한다.
+
+흔히 인터넷과 통용하여 사용하는데 엄연히 다른 개념이다.
+
+- 인터넷 : 인터넷 프로토콜을 사용해 네트워크와 기기 간 통신하는 컴퓨터 네트워크들이 전세계적으로 상호 연결되어 이루는 시스템이다.
+- 인터넷 vs 웹:
+
+![https://blog.kakaocdn.net/dn/bYhSX1/btrXt8M6p5h/Qr7pA07tNk1TXgMVYgDktk/img.png](https://blog.kakaocdn.net/dn/bYhSX1/btrXt8M6p5h/Qr7pA07tNk1TXgMVYgDktk/img.png)
+
+비유를 한 예:
+
+- 인터넷이 도시라면, 웹은 도시 위에 있는 건물 하나
+- 인터넷이 도로라면, 웹은 도로 위에 있는 자동차 한대
+
+기본적으로 웹 통신은 HTTP 프로토콜을 사용하여 통신한다.
+
+![https://blog.kakaocdn.net/dn/bpb7L8/btrXv2TownY/GEKRev2jiNG8iZjHbpL1t1/img.png](https://blog.kakaocdn.net/dn/bpb7L8/btrXv2TownY/GEKRev2jiNG8iZjHbpL1t1/img.png)
+
+- 웹에 연결된 컴퓨터는 **클라이언트(Client)**와 **서버(Server)**로 구분한다.
+- 클라이언트 : 사용자가 서버에 접속하기 위해 사용하는 프로그램 또는 서비스이다. ex) 웹 브라우저, 모바일 앱 등
+- 서버 : 클라이언트에게 네트워크를 통해 정보나 서비스를 제공하는 컴퓨터 시스템
+
+이러한 클라이언트와 서버가 **Request**와 **Response**를 주고 받으며 통신이 일어난다.
+
+---
+
+
+### **웹 통신의 과정**
+
+[https://www.google.com/](https://www.google.com/) 주소창에 해당 URL을 입력한 뒤 클라이언트에 화면이 렌더링 되기까지의 과정은 어떨까?
+
+그 전에, IP주소와 도메인 이름 그리고, 이 둘의 관계에 대해 알아보겠다.
+
+- IP주소 : 컴퓨터들의 고유 식별번호로 생각하면 된다. IP주소는 129.0.0.1과 같은 형태의 숫자로 나타난다.
+
+※ 현재는 .(점)으로 구분된 각 자리에서 0~255를 나타낼 수 있는 32비트의 IPv4 프로토콜을 사용하나, 인터넷 사용자 수의 증가로 IP주소 부족 현상이 일어났고, 이는 128비트의 IPv6가 등장하는 배경이 되었다.
+
+- 도메인 이름 : 사람이 쉽게 외울 수 있도록 IP주소를 문자로 표현한 것이다. 예를들면 google.com이 도메인 이름에 해당한다.
+
+터미널을 켠뒤 nslookup google.com 을 입력해보면, google.com 도메인이 갖는 IP주소를 알 수 있고, 주소창에 해당 IP주소를 입력하면 도메인을 입력했을 때와 같은 결과를 얻는다.
+
+※ 시간에 따라 IP주소는 달라진다
+
+![https://blog.kakaocdn.net/dn/lYXpl/btrXtSDwTDn/P31X3AnUFfWOD1IJxQSMgK/img.png](https://blog.kakaocdn.net/dn/lYXpl/btrXtSDwTDn/P31X3AnUFfWOD1IJxQSMgK/img.png)
+
+![https://blog.kakaocdn.net/dn/0Bu7c/btrXn6pusZK/Yrv1dWuZP20TJR2J0hTcq1/img.png](https://blog.kakaocdn.net/dn/0Bu7c/btrXn6pusZK/Yrv1dWuZP20TJR2J0hTcq1/img.png)
+
+※ 실제로는 IP로 나오지 않고 google.com이라는 똑같은 값을 가짐. 이해를 돕기위해 URL창에 IP를 써놓음
+
+즉, 브라우저에 입력된 도메인 이름을 통해 해당 도메인의 IP주소를 얻은 뒤 통신을 시작할 수 있다는 것이다.
+
+도메인 이름 -> IP 과정에서 필요한 도우미 역할을 하는 것이 DNS 이다.
+
+전체적인 흐름을 보면,
+
+![https://blog.kakaocdn.net/dn/bGrEKZ/btrXt87lF8I/0gIAN4urKpqxlrXscEVDY0/img.png](https://blog.kakaocdn.net/dn/bGrEKZ/btrXt87lF8I/0gIAN4urKpqxlrXscEVDY0/img.png)
+
+1. 사용자가 웹 브라우저를 통해 **URL**을 입력한다.
+
+2. 입력된 URL 중 도메인 네임을 **DNS** 서버에서 검색한다.
+
+3. DNS 서버에서 해당 도메인 네임에 해당하는 **IP 주소**를 찾아 사용자가 입력한 URL 정보와 함께 전달한다.
+
+4. 웹 페이지 URL 정보와 전달받은 IP 주소를 이용해 **HTTP 요청(= HTTP Request)** 메시지를 생성한다.
+
+5. 요청은 **TCP**를 통해 **서버**로 전송된다.
+
+6. 서버는 클라이언트의 요청을 받고 **응답(= HTTP Response)**을 전송한다.
+
+---
+
+참고:
+
+[https://github.com/Seogeurim/CS-study/tree/main/contents/network#%EC%9B%B9-%ED%86%B5%EC%8B%A0%EC%9D%98-%ED%9D%90%EB%A6%84](https://github.com/Seogeurim/CS-study/tree/main/contents/network#%EC%9B%B9-%ED%86%B5%EC%8B%A0%EC%9D%98-%ED%9D%90%EB%A6%84)
+
+[https://velog.io/@sangmin7648/%EC%9B%B9-%ED%86%B5%EC%8B%A0%EC%9D%98-%ED%81%B0-%ED%9D%90%EB%A6%84](https://velog.io/@sangmin7648/%EC%9B%B9-%ED%86%B5%EC%8B%A0%EC%9D%98-%ED%81%B0-%ED%9D%90%EB%A6%84)
+
+[https://opentutorials.org/module/3097/18040](https://opentutorials.org/module/3097/18040)
