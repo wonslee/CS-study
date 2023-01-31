@@ -243,6 +243,8 @@ void function(int x, vector<int> pick, vector<bool> picked){
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FNt5cW%2FbtqBZqoc97E%2FKYrwTbo8rbfk6EX8FJzrTK%2Fimg.png)
 
+# BFS DFS
+
 그래프에서 모든 정점을 방문해야는 방법 중 가장 대표적인 것은
 
 너비 우선 탐색(BFS) 와 깊이 우선 탐색(DFS) 이다.
@@ -250,6 +252,7 @@ void function(int x, vector<int> pick, vector<bool> picked){
 다음의 사진들은 트리를 대상으로 각각 BFS, DFS 를 적용한 것이다.
 
 **너비 우선 탐색**
+---------
 
 ![https://velog.velcdn.com/images/hs1430/post/85f28d8d-22a7-4e87-93b1-add232b85cc8/image.PNG](https://velog.velcdn.com/images/hs1430/post/85f28d8d-22a7-4e87-93b1-add232b85cc8/image.PNG)
 
@@ -260,6 +263,7 @@ BFS는 루트를 시작으로 탐색을 시작하면 먼저 루트의 자식을 
 BFS는 루트에서 거리 순으로 방문한다.
 
 **깊이 우선 탐색**
+---------
 
 ![https://velog.velcdn.com/images/hs1430/post/39d00912-01af-44e9-a5d4-12b2162a9623/image.PNG](https://velog.velcdn.com/images/hs1430/post/39d00912-01af-44e9-a5d4-12b2162a9623/image.PNG)
 
@@ -271,6 +275,7 @@ DFS는 루트의 자식 정점 하나를 방문한 다음 아래로 내려갈 �
 일반적인 그래프 G=(V,E)에 대한 BFS, DFS는 다음과 같다.
 
 **너비 우선 탐색**
+---------
 
 ![https://velog.velcdn.com/images/hs1430/post/379a6880-390a-4790-9361-2f50737f6740/image.png](https://velog.velcdn.com/images/hs1430/post/379a6880-390a-4790-9361-2f50737f6740/image.png)
 
@@ -278,6 +283,7 @@ BFS는 인접한 정점에 해당하는 정점을 모두 탐색한뒤
 탐색한 정점과 인접하지만 탐색하지 않았던 정점을 탐색하는것을 반복한다.
 
 **깊이 우선 탐색**
+---------
 
 ![https://velog.velcdn.com/images/hs1430/post/3c616dd6-0e51-4247-8b95-88eb990b7693/image.png](https://velog.velcdn.com/images/hs1430/post/3c616dd6-0e51-4247-8b95-88eb990b7693/image.png)
 
@@ -286,6 +292,7 @@ DFS는 인접한 정점 중 하나를 선택해서 해당하는 정점의 끝까
 그림 (b),(c),(d)에서 각각 인접한 다른 정점들이 존재하는데 이런 경우에는 자유롭게 원하는 정점을 선택해 방문해 주면 된다.
 
 **BFS 알고리즘**
+---------
 
 BFS(G,s)
 {
@@ -319,6 +326,7 @@ BFS(G,s)
 BFS의 수행 시간은 O(V+E)이다. V = 정점, E = 간선
 
 **DFS 알고리즘**
+---------
 
 DFS(v)
 {
@@ -343,6 +351,8 @@ DFS의 수행 시간은 O(V+E)이다. V = 정점, E = 간선
 BFS나 DFS를 부분 그래프의 수만큼 수행해야 모든 정점을 방문할 수 있다.
 
 **연결 그래프가 아닌 DFS의 알고리즘**
+---------
+
 DFS(G)
 {
 
