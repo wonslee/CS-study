@@ -259,16 +259,14 @@ CREATE TABLE Student(
 CREATE TABLE Major (
   CODE  INT,
   전공명 CHAR
-)
-```  
+);
 
-```mysql
 CREATE TABLE Student (
   # ...
   전공_코드  INT, # 이제 학과명 대신 전공_코드(FK)로 관계가 맺어짐
    FOREIGN KEY (`전공_코드`) REFERENCES `Major`(`CODE`)
   #... 
-)
+);
 ```  
 </details>
 
@@ -312,6 +310,188 @@ CREATE TABLE Student(
 ```  
 </details>
 
+# JOIN
+
+## JOIN이란?
+
+> 둘 이상의 릴레이션에 흩어져 있는 튜플들을 특정 조건으로 **조합**하여 **하나의 릴레이션을 구성**하도록 **검색**(`SELECT`)하는 방법.
+
+조인은 릴레이션들의 **공통 속성**을 기준으로 하므로 테이블들간에 최소한 하나의 속성을 공유하고 있어야 한다.
+
+여러가지 조인 **조건**에 따라 검색 결과를 다르게 할 수 있다.
+
+아래는 업데이트된 `과목`, `수강` 테이블.
+
+| 과목번호 | 과목명 | 강의 교수 |
+| --- | --- | --- |
+| 001 | 컴퓨터구조 | 장성태 |
+| 002 | 정보보호개론 | 양수미 |
+| 003 | 디지털논리설계 | 장성태 |
+| 004 | 네트워크보안 | 양수미 |
+
+| 학번 | 과목번호 | 학점 |
+| --- | --- | --- |
+| 180 | 001 | B |
+| 181 | 002 | B+ |
+| 180 | 003 | A+ |
+| 181 | 004 | A |
+
+## 크로스 조인(CROSS JOIN)
+
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile10.uf.tistory.com%2Fimage%2F993F4E445A8A2D281AC66B" width="30%" height="30%">
+
+
+테이블 행들 사이의 **모든 조합**을 행으로 갖는 하나의 통합 테이블을 만들어낸다. 조인 조건식 없이 이루어진다. (관계 대수의 카티션 프로덕트 연산, 곱집합의 결과.)
+
+대부분의 행이 의미 없는 결합인 경우가 많다.
+
+```sql
+SELECT * FROM 학생, 수강;
+```
+
+```sql
+SELECT * FROM 학생 
+	CROSS JOIN 수강;
+```
+
+| 학번 | 이름 | 주전공_ID | 복수전공_ID | 학번 | 과목번호 | 학점 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 180 | 영두 | 9 | 2 | 180 | 001 | B |
+| 181 | 성욱 | 1 | NULL | 180 | 001 | B |
+| 180 | 영두 | 9 | 2 | 181 | 002 | B+ |
+| 181 | 성욱 | 1 | NULL | 181 | 002 | B+ |
+| 180 | 영두 | 9 | 2 | 180 | 003 | A+ |
+| 181 | 성욱 | 1 | NULL | 180 | 003 | A+ |
+| 180 | 영두 | 9 | 2 | 181 | 004 | A |
+| 181 | 성욱 | 1 | NULL | 181 | 004 | A |
+
+## 내부 조인(INNER JOIN)
+
+<img src="https://blog.codinghorror.com/content/images/uploads/2007/10/6a0120a85dcdae970b012877702708970c-pi.png" width="30%" height="30%">
+
+**교집합**. 두 테이블 모두에서 조건을 만족하는 튜플을 가져온다.
+
+크로스조인과는 달리 조건이 있기 때문에 의미 있는 조합만을 검색할 수 있다.
+
+```sql
+SELECT * FROM 학생 
+	INNER JOIN 수강 ON 학생.학번 = 수강.학번;
+```
+
+```sql
+SELECT * FROM 학생, 수강 
+	WHERE 학생.학번 = 수강.학번;
+```
+
+| 학번 | 이름 | 주전공_ID | 복수전공_ID | 학번 | 과목번호 | 학점 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 180 | 영두 | 9 | 2 | 180 | 001 | B |
+| 181 | 성욱 | 1 | NULL | 181 | 002 | B+ |
+| 180 | 영두 | 9 | 2 | 180 | 003 | A+ |
+| 181 | 성욱 | 1 | NULL | 181 | 004 | A |
+
+## 셀프 조인(SELF JOIN)
+
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile25.uf.tistory.com%2Fimage%2F99341D335A8A363D0614E8" width="30%" height="30%">
+
+**같은 테이블**에 속하는 행들끼리 하는 조인.
+
+자신이 갖고 있는 속성을 다양하게 변형시켜 활용할 때 쓰인다. (e.g. 쌍 만들기 )
+
+```sql
+SELECT c1.과목명, c2.과목명
+	FROM 과목 c1 JOIN 과목 c2 ON c1.강의교수 = c2.강의교수
+	WHERE c1.과목번호 < c2.과목번호
+```
+
+| 과목번호 | 과목명 | 강의 교수 |
+| --- | --- | --- |
+| 001 | 컴퓨터구조 | 장성태 |
+| 002 | 정보보호개론 | 양수미 |
+| 003 | 디지털논리설계 | 장성태 |
+| 004 | 네트워크보안 | 양수미 |
+| 005 | 졸업프로젝트 | 장성태 |
+
+| 과목명 | 과목명 |
+| --- | --- |
+| 컴퓨터구조 | 디지털논리설계 |
+| 디지털논리설계 | 네트워크보안 |
+
+## OUTER JOIN이란?
+
+일반적인 조인인 내부 조인을 하게 되면 조인 조건을 만족하는 행들만 결과에 포함된다.
+
+때로는 조인 **대상 테이블의 모든 행들이 결과에 포함**되기를 원하는 경우도 있다. 그럴 때 외부 조인(OUTER JOIN)을 사용한다.
+
+외부조인의 결과로 몇몇 매칭되지 않는 컬럼에서는 NULL 값을 가질 수 있다.
+
+조인 결과에 포함되기를 원하는 릴레이션의 대상에 따라 OUTER JOIN은 **3가지**(LEFT, RIGHT, FULL)로 분류한다.
+
+## LEFT OUTER JOIN
+
+<img src="https://i.stack.imgur.com/VkAT5.png" width="30%" height="30%">
+
+`JOIN` 연산자의 **왼쪽** 테이블의 **모든 행**들이 빠짐없이 결과에 포함된다.
+
+`Student` 릴레이션에 아무 과목을 듣지 않는 두 학생이 추가됐다고 가정해보자.
+
+| 학번 | 이름 |
+| --- | --- |
+| 180 | 영두 |
+| 181 | 성욱 |
+| 182 | 진욱 |
+| 183 | 원석 |
+
+```sql
+SELECT 학생.학번, 이름, 학점 FROM 학생 
+	LEFT JOIN 수강 ON 학생.학번 = 수강.학번;
+```
+
+| 학번 | 이름 | 학점 |
+| --- | --- | --- |
+| 180 | 영두 | B |
+| 181 | 성욱 | B+ |
+| 180 | 영두 | A+ |
+| 181 | 성욱 | A |
+| 182 | 진욱 | NULL |
+| 183 | 원석 | NULL |
+
+## RIGHT OUTER JOIN
+
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20220515095048/join.jpg" width="30%" height="30%">
+
+
+`JOIN` 연산자의 **오른쪽** 테이블의 모든 행들이 빠짐없이 결과에 포함됨.
+
+`Student` 릴레이션에 수업을 들었던 두 학생이 삭제됐다고 가정해보자.
+
+```sql
+SELECT 학생.학번, 이름, 학점 FROM 학생 
+	RIGHT JOIN 수강 ON 학생.학번 = 수강.학번;
+```
+
+| 학번 | 이름 | 학점 |
+| --- | --- | --- |
+| NULL | NULL | B |
+| NULL | NULL | B+ |
+| NULL | NULL | A+ |
+| NULL | NULL | A |
+
+## FULL OUTER JOIN
+
+<img src="https://i.stack.imgur.com/3Ll1h.png" width="30%" height="30%">
+
+**합집합**. 두 테이블의 모든 데이터가 검색된다. LEFT JOIN과 RIGHT JOIN의 결과를 합친 것과 같다.
+
+| 학번 | 이름 | 학점 |
+| --- | --- | --- |
+| NULL | NULL | B |
+| NULL | NULL | B+ |
+| NULL | NULL | A+ |
+| NULL | NULL | A |
+| 182 | 진욱 | NULL |
+| 183 | 원석 | NULL |
+
 
 # TODO
 - TCL 보충.. 트랜잭션 모름
@@ -326,3 +506,5 @@ CREATE TABLE Student(
 - https://victorydntmd.tistory.com/126
 - http://wiki.hash.kr/index.php/%EC%88%98%ED%8D%BC%ED%82%A4
 - https://www.geeksforgeeks.org/relational-model-in-dbms/
+- [https://gyoogle.dev/blog/computer-science/data-base/Join.html](https://gyoogle.dev/blog/computer-science/data-base/Join.html)
+- [https://www.geeksforgeeks.org/sql-join-set-1-inner-left-right-and-full-joins/](https://www.geeksforgeeks.org/sql-join-set-1-inner-left-right-and-full-joins/)
