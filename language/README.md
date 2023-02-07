@@ -2,6 +2,7 @@
 <summary>Table of Contents</summary>
 
 - [Java 와 JVM의 구성요소](#java-와-jvm)
+- [Java Garbage Collection](#java-garbage-collection)
 </details>
 
 
@@ -154,3 +155,152 @@ Runtime 시점에 동적으로 할당하여 사용하는 영역이다. 클래스
 [https://steady-snail.tistory.com/67](https://steady-snail.tistory.com/67)
 
 [https://aljjabaegi.tistory.com/387](https://aljjabaegi.tistory.com/387)
+
+
+---
+
+
+## **Java Garbage Collection**
+
+Garbage Collection이란, 스택으로부터, Heap 영역 객체 중 도달 불가능한 객체들을 자동으로 메모리에서 제거해주는 개념이다. Java는 객체지향 언어인만큼, 힙을 사용하여 객체를 생성하는 경우가 굉장히 많다. 개발자들은 이렇게 힙을 자유롭게 사용하고, 더 이상 사용되지 않는 객체들은 가비지 컬렉션 과정에서 자동으로 메모리에서 제거된다.
+
+그렇다면 다른 언어들은 어떠할까?
+
+### **C언어**
+
+```bash
+#include <stdio.h>#include <stdlib.h>
+
+void main()
+{
+    int* pPoint;
+    pPoint = (int*)malloc(sizeof(int)*5);
+
+    pPoint[0] = 25;
+    pPoint[1] = 45;
+    pPoint[2] = 50;
+    pPoint[3] = 70;
+    pPoint[4] = 99;
+
+    int i = 0;
+    for ( i = 0; i < 5; i++ )
+        printf("pPoint[%d] : %d\n", i, pPoint[i]);
+
+    free(pPoint);
+}
+```
+
+C & C++ 에서는 Java와 달리 메모리에 직접 접근한다. 그렇기 때문에 free() 메소드를 명시적으로 사용하여 할당 받았던 메모리를 해제해주는 과정이 필요하다. free() 메소드 호출을 하지 않게 된다면 당장은 직접적인 영향이 없다고 생각될 수 있어도 이후 메모리 누수 (memory leak)가 발생할 수 있고 향후의 프로그램을 보장할 수 없다.
+
+Java에서는 메모리 문제를 어떻게 해결을 할까? 그 이유는 C++과 달리 메모리 영역에 직접 접근하지 않고, JVM이라는 가상머신을 사용해서 간접적으로 접근하기 때문이다.
+
+※ free 함수 - 힙 영역에 할당된 메모리를 해제하는 함수
+
+---
+
+### **가비지 컬렉션 대상**
+
+가비지 컬렉션은 특정 객체가 Garbage인지 아닌지 판단하기 위해 도달성, 도달능력(Reachablily)이라는 개념을 적용한다.
+
+객체에 레퍼런스가 있다면 Reachable로 구분되고, 객체의 유효한 레퍼런스가 없다면 Unreachable로 구분해 버리고 수거해버린다.
+
+※ Reachable : 객체가 참조되고 있는 상태
+
+※Unreachable : 객체가 참조되고 있지 않은 상태 즉 GC의 대상
+
+![https://blog.kakaocdn.net/dn/bnAUxR/btrYjldFSCJ/plnKnfWdO0usRSk2fmg5L1/img.png](https://blog.kakaocdn.net/dn/bnAUxR/btrYjldFSCJ/plnKnfWdO0usRSk2fmg5L1/img.png)
+
+JVM메모리에서는 객체들은 실질적으로 Heap영역에 생성되고 Method Area나 Stack Area에서는 Heap Area에 생성된 객체의 주소만 참조하는 형식으로 구성된다.
+
+특정 이벤트 등으로 인하여 Heap Area 객체의 메모리 주소를 가지고 있는 참조 변수가 삭제되는 현상이 발생하면, 참조되고 있지 않은 객체 (Unreachable)이 발생한다. 그리고 GC는 이러한 것들을 주기적으로 제거하는 역할을 한다.
+
+---
+
+### **가비지 컬렉션 청소 방식**
+
+**1. Stop The World**
+
+Stop The World는 가비지 컬렉션을 실행하기 위해 JVM이 애플리케이션의 실행을 멈추는 작업이다. GC가 실행될 때는 GC를 실행하는 쓰레드를 제외한 모든 쓰레드들의 작업이 중단되고, GC가 완료되면 작업이 재개된다. 당연히 모든 쓰레드들의 작업이 중단되면 애플리케이션이 멈추기 때문에, GC의 성능 개선을 위해 튜닝을 한다고 하면 보통 stop-the-world의 시간을 줄이는 작업을 하는 것이다. 또한 JVM에서도 이러한 문제를 해결하기 위해 다양한 실행 옵션을 제공한다.
+
+**2. Mark and Sweep 알고리즘**
+
+- Mark : 사용되는 메모리와 사용되지 않는 메모리를 식별하는 작업
+- Sweep : Mark 단계에서 사용되지 않음으로 식별된 메모리를 해제하는 작업
+- Compaction : Sweep 후에 분산된 객체들을 Heap의 시작 주소로 모아 메모리가 할당된 부분과 그렇지 않은 부분으로 압축한다.
+
+![https://blog.kakaocdn.net/dn/lDidk/btrX41aqZIq/uO17AnUY2ng9BWrnVZ84f0/img.png](https://blog.kakaocdn.net/dn/lDidk/btrX41aqZIq/uO17AnUY2ng9BWrnVZ84f0/img.png)
+
+---
+
+### **Minor GC와 Major GC**
+
+JVM의 힙 영역은 동적으로 레퍼런스 데이터가 저장되는 공간으로, 가비지 컬렉션에 대상이 되는 공간이다.
+
+![https://blog.kakaocdn.net/dn/bkOeuE/btrYiVGrNuk/EOwGG969FbKDa5EoKq4QN1/img.png](https://blog.kakaocdn.net/dn/bkOeuE/btrYiVGrNuk/EOwGG969FbKDa5EoKq4QN1/img.png)
+
+### **Young 영역 (Young Generation)**
+
+- 새롭게 생성된 객체가 할당되는 영역
+- 대부분의 객체가 금방 Unreachable 상태가 되기 때문에, 많은 객체가 Young 영역에 생성되었다가 사라진다.
+- Young 영역에 대한 가비지 컬렉션을 Minor GC라고 부른다.
+
+### **Old 영역 (Old Generation)**
+
+- Young 영역에서 Reachable 상태를 유지하여 살아남은 객체가 복사되는 영역
+- Young 영역보다 크게 할당되며, 영역의 크기가 큰 만큼 가비지는 적게 발생한다.
+- Old 영역에 대한 가비지 컬렉션을 Major GC 또는 Full GC라고 부른다.
+
+힙 영역은 효율적인 GC를 위해 Young 영역을 3가지 영역(Eden, survivor 0, survivor 1)으로 나눈다.
+
+**Eden**
+
+- new를 통해 새로 생성된 객체가 위치한다.
+- 정기적인 쓰레기 수집 후 살아남은 객체들은 Survivor 영역으로 보낸다.
+
+**Survivor 0 & Survivor 1**
+
+- 최소 1번의 GC로부터 살아남은 객체가 존재하는 영역
+- Survivor 영역에는 특별한 규칙이 있는데, Survivor 0 또는 Survivor 1 둘 중 하나에는 꼭 비어 있어야 한다.
+
+---
+
+### **GC 발생 시나리오**
+
+![https://blog.kakaocdn.net/dn/JmsT7/btrYjfLz6Jd/61h5a5lEgY43lewlao3j00/img.png](https://blog.kakaocdn.net/dn/JmsT7/btrYjfLz6Jd/61h5a5lEgY43lewlao3j00/img.png)
+
+- 객체가 생성되면 Eden 영역에 위치하게 된다.
+
+![https://blog.kakaocdn.net/dn/2LWt4/btrYaoQlWqr/TsPJak4VQ0WWIkAakEEy80/img.png](https://blog.kakaocdn.net/dn/2LWt4/btrYaoQlWqr/TsPJak4VQ0WWIkAakEEy80/img.png)
+
+- Eden 영역이 가득차게 되면 Minor GC가 발생하여 참조가 없는 객체는 삭제되고, 참조 중인 객체는 Survivor 영역으로 이동한다.
+
+![https://blog.kakaocdn.net/dn/ckgcF2/btrX6pvvyYf/ls4lgBkGgB4t2sEsUnDBk1/img.png](https://blog.kakaocdn.net/dn/ckgcF2/btrX6pvvyYf/ls4lgBkGgB4t2sEsUnDBk1/img.png)
+
+- Survivor 영역이 가득차게 되면 minor GC가 발생하고 참조가 없는 객체는 삭제되고,
+참조 중인 객체는 다른 Survivor 영역으로 이동한다.
+
+- 살아남은 객체들은 age의 값이 1씩 증가
+
+※age 값 : Survivor 영역에서 객체가 살아남은 횟수를 의미하는 값이며, Object Header에 기록된다.
+
+![https://blog.kakaocdn.net/dn/dp3gT1/btrYjfkweed/uI4CIm3QT8IV6IckM8cip1/img.png](https://blog.kakaocdn.net/dn/dp3gT1/btrYjfkweed/uI4CIm3QT8IV6IckM8cip1/img.png)
+
+Survivor 영역에서의 GC과정을 반복하며, 계속 참조 중인 객체는 Old 영역으로 이동한다.
+
+※객체의 age가 임계값에 도달하게 되면 이동한다. / 이를 promotion이라 부른다
+
+![https://blog.kakaocdn.net/dn/HhnYB/btrYjXjl0Jx/B4EloOVZfBEf4iu37M49k1/img.png](https://blog.kakaocdn.net/dn/HhnYB/btrYjXjl0Jx/B4EloOVZfBEf4iu37M49k1/img.png)
+
+- Eden 영역에서 Survivor 영역으로 이동 할 때 객체가 남아있는 영역보다 큰 경우 Old 영역으로 이동한다.
+
+Major GC는 Old 영역의 데이터가 가득 차면 GC를 실행하는 단순한 방식이다.
+
+---
+
+참조
+
+[https://deveric.tistory.com/64](https://deveric.tistory.com/64)
+
+[https://inpa.tistory.com/entry/JAVA-%E2%98%95-%EA%B0%80%EB%B9%84%EC%A7%80-%EC%BB%AC%EB%A0%89%EC%85%98GC-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%F0%9F%92%AF-%EC%B4%9D%EC%A0%95%EB%A6%AC](https://inpa.tistory.com/entry/JAVA-%E2%98%95-%EA%B0%80%EB%B9%84%EC%A7%80-%EC%BB%AC%EB%A0%89%EC%85%98GC-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%F0%9F%92%AF-%EC%B4%9D%EC%A0%95%EB%A6%AC)
+
+[https://blog.ycpark.net/entry/JAVA%EC%9D%98-GC%EC%9D%98-%EC%A2%85%EB%A5%98-%EB%B0%8F-%ED%8A%B9%EC%A7%95](https://blog.ycpark.net/entry/JAVA%EC%9D%98-GC%EC%9D%98-%EC%A2%85%EB%A5%98-%EB%B0%8F-%ED%8A%B9%EC%A7%95)
