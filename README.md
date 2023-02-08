@@ -1,4 +1,4 @@
-![waving](https://capsule-render.vercel.app/api?type=waving&height=150&text=CS-study&fontAlign=72&fontAlignY=40&fontSize=55&color=gradient&fontColor=FFFFFF)
+![waving](https://capsule-render.vercel.app/api?type=waving&height=150&text=CS-study&fontAlign=72&fontAlignY=40&fontSize=60&color=gradient&fontColor=FFFFFF)
 
 ## About
 - [ CS 전공자로서 알아야 할 기본 지식 52개 + 각자 관심 있는 기술 α개 ]를 공부, 발표, 토론하고 정리해둔 공간입니다.  
@@ -26,10 +26,10 @@
   <img src="https://avatars.githubusercontent.com/u/72124326?v=4" width="100">
 </a>
 <a href="https://github.com/WooYoungDoo">
-  <img src="" width="100">
+  <img src="https://avatars.githubusercontent.com/u/114072164?v=4" width="100">
 </a>
 <a href="https://github.com/hs1430">
-  <img src="" width="100">
+  <img src="https://avatars.githubusercontent.com/u/53097336?v=4" width="100">
 </a>
 <a href="https://github.com/koownij">
   <img src="https://avatars.githubusercontent.com/u/81678959?v=4" width="100">
