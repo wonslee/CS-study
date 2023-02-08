@@ -1,4 +1,4 @@
-![waving](https://capsule-render.vercel.app/api?type=waving&height=180&text=CS-study&fontAlign=72&fontAlignY=40&color=gradient)
+![waving](https://capsule-render.vercel.app/api?type=waving&height=150&text=CS-study&fontAlign=72&fontAlignY=40&fontSize=55&color=gradient&fontColor=FFFFFF)
 
 ## About
 - [ CS 전공자로서 알아야 할 기본 지식 52개 + 각자 관심 있는 기술 α개 ]를 공부, 발표, 토론하고 정리해둔 공간입니다.  
