@@ -6,7 +6,7 @@
 </details>
 
 
-## **Java 와 JVM**
+# **Java 와 JVM**
 
 Java의 가장 큰 특징 중 하나가 어느 플랫폼, 어느 하드웨어(CPU)든, 어떤 운영체제(OS)이던 상관없이 컴파일된 코드가 플랫폼 독립적인 것이다.
 
@@ -26,7 +26,7 @@ Java의 경우에는 Java언어로 작성된 Test.java는 컴파일하면 Test.c
 
 ---
 
-### **JVM(Java Virtual Machine)**
+## **JVM(Java Virtual Machine)**
 
 자바 가상 머신은 단순하게 말하면 컴파일 된 코드(바이트 코드)를 실행시켜주는 가상의 컴퓨터라고 생각하면 이해하기 쉬울 것이다.
 
@@ -78,7 +78,7 @@ ex)  -로드 타임 동적 로딩:하나의 클래스를 로딩하는 과정에�
 
 ---
 
-### **JVM 구성**
+## **JVM 구성**
 
 ![https://blog.kakaocdn.net/dn/b5bvZa/btrXQMpNSec/MAK5qmgZgy30ZWGqE1anK1/img.png](https://blog.kakaocdn.net/dn/b5bvZa/btrXQMpNSec/MAK5qmgZgy30ZWGqE1anK1/img.png)
 
@@ -120,31 +120,83 @@ ex)  -로드 타임 동적 로딩:하나의 클래스를 로딩하는 과정에�
 
 Runtime Data Area는 JVM이 프로그램을 수행하기 위해 OS로부터 별도로 할당받은 메모리 공간을 말한다. Runtime Data Area는 크게 5가지 영역으로 나뉜다.
 
-- PC Register
+### PC Register
 
 JVM의 PC Register는 CPU 내의 기억장치인 레지스터와 다르게 작동한다. PC Register는 각 쓰레드 별로 하나씩 존재하며 현재 수행 중인 JVM Instruction의 주소를 가지게 된다. 즉, 쓰레드가 어떤 명령을 실행할지 기록하는 부분이라고 할 수 있다.
 
 ※ 쓰레드 - 프로그램(프로세스) 실행의 단위이며 하나의 프로세스는 여러개의 쓰레드로 구성이 가능하다.
 
-- JVM Stack
 
-메소드(method)가 호출될 때 메서드와 메서드의 정보는 JVM Stack에 쌓이게 된다. 즉 메서드의 매개변수(parameter), 지역 변수(local variable), return 주소, 임시 변수 등의 정보를 기록하는 스택이다. 각 쓰레드 별로 생성되기 때문에 다른 스레드에 접근할 수 없다. 메서드 호출이 종료되면 스택에서 정보들이 제거된다.
-
-- Native Method Stack
+### Native Method Stack
 
 자바 외의 언어로 작성된 네이티브 코드들을 위한 스택이다. Java Native Interface를 통해 호출되는 C/C++ 등의 코드를 수행한다.
 
-- Method Area
+### Method Area
 
 모든 쓰레드가 공유하는 메모리 영역으로 클래스, 인터페이스, 메서드, 필드, Static 변수 등의 바이트 코드를 보관한다. Method Area에는 Runtime Constant Pool이라는 별도의 관리 영역도 존재한다. 이는 상수 자료형을 저장하고 참조하여 중복을 막는 역할을 수행한다.
 
-- Heap
+### Stack
+
+메소드(method)가 호출될 때 메서드와 메서드의 정보는 JVM Stack에 쌓이게 된다.   
+즉 메서드의 매개변수(parameter), 지역 변수(local variable), return 주소, 임시 변수 등의 정보를 기록하는 스택이다. 각 쓰레드 별로 생성되기 때문에 다른 스레드에 접근할 수 없다. 메서드 호출이 종료되면 스택에서 정보들이 제거된다.
+
+![https://s3.ap-northeast-2.amazonaws.com/yaboong-blog-static-resources/java/javamemory-stack-and-heap-dzone.jpg](https://s3.ap-northeast-2.amazonaws.com/yaboong-blog-static-resources/java/javamemory-stack-and-heap-dzone.jpg)
+
+- **원시타입**(int, boolean, char 등)의 **데이터**가 값과 함께 할당된다.
+- Heap 영역에 생성된 **객체 타입 변수의 참조값**이 할당된다.
+- 지역변수들은 scope 에 따른 **visibility** 를 가진다.
+
+  특정 함수 내부에 선언된 지역변수는 다른 함수에서 접근할 수 없다.  
+  그리고 함수의 실행이 종료되면 그 지역변수들은 stack에서 pop되어 사라진다.
+
+- 각 Thread 는 자신만의 stack 을 가진다. 각 스레드에서 다른 스레드의 stack 영역에는 접근할 수 없다.
+
+실제 코드 예시:
+```java
+public class Main {
+    public static void main(String[] args) {
+        int x = 4;
+        argument = divideByTwo(x);
+    }
+
+    private static int divideByTwo(int param){
+        int result = param / 2;
+        return result;
+    }
+}
+```
+
+![Untitled](./images/Untitled.png)
+
+
+
+
+### Heap
 
 ![https://blog.kakaocdn.net/dn/YIKCC/btrXRUH2EN2/yIOS5RH8Ca25kCf2z2iON0/img.png](https://blog.kakaocdn.net/dn/YIKCC/btrXRUH2EN2/yIOS5RH8Ca25kCf2z2iON0/img.png)
 
 Runtime 시점에 동적으로 할당하여 사용하는 영역이다. 클래스를 이용해 인스턴스를 생성하면 Heap에 저장된다. 즉, new 연산자를 이용해 생성된 객체를 저장하는 영역이다. Heap은 크게 New/Young 영역, Old 영역, Permanent Generation 3 영역으로 나뉜다.
 
 ※ 참고로 java8 이후에는 Permanent 영역이 Metaspace 영역으로 바뀌었다.
+
+- 주로 긴 생명주기를 가지는 데이터들이 저장된다.
+- 애플리케이션의 모든 **메모리 중 stack 에 있는 데이터를 제외한 부분**이라고 보면 된다.
+- **모든 Object 타입**(Integer, String, ArrayList, ...)은 heap 영역에 생성된다.
+- 몇개의 스레드가 존재하든 상관없이 단 하나의 heap 영역만 존재한다.
+- Heap 영역에 있는 오브젝트들을 가리키는 레퍼런스 변수가 stack 에 올라가게 된다.
+
+코드 예시 : 
+```java
+public class Main {
+  public static void main(String[] args) {
+    List<String> listArgument = new ArrayList<>();
+    listArgument.add("yaboong");
+    listArgument.add("github");
+  }
+}
+```
+
+![https://s3.ap-northeast-2.amazonaws.com/yaboong-blog-static-resources/java/java-memory-management_heap-5.png](https://s3.ap-northeast-2.amazonaws.com/yaboong-blog-static-resources/java/java-memory-management_heap-5.png)
 
 ---
 
@@ -160,13 +212,13 @@ Runtime 시점에 동적으로 할당하여 사용하는 영역이다. 클래스
 ---
 
 
-## **Java Garbage Collection**
+# **Java Garbage Collection**
 
 Garbage Collection이란, 스택으로부터, Heap 영역 객체 중 도달 불가능한 객체들을 자동으로 메모리에서 제거해주는 개념이다. Java는 객체지향 언어인만큼, 힙을 사용하여 객체를 생성하는 경우가 굉장히 많다. 개발자들은 이렇게 힙을 자유롭게 사용하고, 더 이상 사용되지 않는 객체들은 가비지 컬렉션 과정에서 자동으로 메모리에서 제거된다.
 
 그렇다면 다른 언어들은 어떠할까?
 
-### **C언어**
+## **C언어**
 
 ```bash
 #include <stdio.h>#include <stdlib.h>
@@ -198,7 +250,7 @@ Java에서는 메모리 문제를 어떻게 해결을 할까? 그 이유는 C++�
 
 ---
 
-### **가비지 컬렉션 대상**
+## **가비지 컬렉션 대상**
 
 가비지 컬렉션은 특정 객체가 Garbage인지 아닌지 판단하기 위해 도달성, 도달능력(Reachablily)이라는 개념을 적용한다.
 
@@ -216,7 +268,7 @@ JVM메모리에서는 객체들은 실질적으로 Heap영역에 생성되고 Me
 
 ---
 
-### **가비지 컬렉션 청소 방식**
+## **가비지 컬렉션 청소 방식**
 
 **1. Stop The World**
 
@@ -232,19 +284,19 @@ Stop The World는 가비지 컬렉션을 실행하기 위해 JVM이 애플리케
 
 ---
 
-### **Minor GC와 Major GC**
+## **Minor GC와 Major GC**
 
 JVM의 힙 영역은 동적으로 레퍼런스 데이터가 저장되는 공간으로, 가비지 컬렉션에 대상이 되는 공간이다.
 
 ![https://blog.kakaocdn.net/dn/bkOeuE/btrYiVGrNuk/EOwGG969FbKDa5EoKq4QN1/img.png](https://blog.kakaocdn.net/dn/bkOeuE/btrYiVGrNuk/EOwGG969FbKDa5EoKq4QN1/img.png)
 
-### **Young 영역 (Young Generation)**
+## **Young 영역 (Young Generation)**
 
 - 새롭게 생성된 객체가 할당되는 영역
 - 대부분의 객체가 금방 Unreachable 상태가 되기 때문에, 많은 객체가 Young 영역에 생성되었다가 사라진다.
 - Young 영역에 대한 가비지 컬렉션을 Minor GC라고 부른다.
 
-### **Old 영역 (Old Generation)**
+## **Old 영역 (Old Generation)**
 
 - Young 영역에서 Reachable 상태를 유지하여 살아남은 객체가 복사되는 영역
 - Young 영역보다 크게 할당되며, 영역의 크기가 큰 만큼 가비지는 적게 발생한다.
@@ -264,7 +316,7 @@ JVM의 힙 영역은 동적으로 레퍼런스 데이터가 저장되는 공간�
 
 ---
 
-### **GC 발생 시나리오**
+## **GC 발생 시나리오**
 
 ![https://blog.kakaocdn.net/dn/JmsT7/btrYjfLz6Jd/61h5a5lEgY43lewlao3j00/img.png](https://blog.kakaocdn.net/dn/JmsT7/btrYjfLz6Jd/61h5a5lEgY43lewlao3j00/img.png)
 
