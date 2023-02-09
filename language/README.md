@@ -3,6 +3,7 @@
 
 - [Java 와 JVM의 구성요소](#java-와-jvm)
 - [Java Garbage Collection](#java-garbage-collection)
+- [Java Collection](#java-collection)
 </details>
 
 
@@ -304,3 +305,151 @@ Major GC는 Old 영역의 데이터가 가득 차면 GC를 실행하는 단순�
 [https://inpa.tistory.com/entry/JAVA-%E2%98%95-%EA%B0%80%EB%B9%84%EC%A7%80-%EC%BB%AC%EB%A0%89%EC%85%98GC-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%F0%9F%92%AF-%EC%B4%9D%EC%A0%95%EB%A6%AC](https://inpa.tistory.com/entry/JAVA-%E2%98%95-%EA%B0%80%EB%B9%84%EC%A7%80-%EC%BB%AC%EB%A0%89%EC%85%98GC-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%F0%9F%92%AF-%EC%B4%9D%EC%A0%95%EB%A6%AC)
 
 [https://blog.ycpark.net/entry/JAVA%EC%9D%98-GC%EC%9D%98-%EC%A2%85%EB%A5%98-%EB%B0%8F-%ED%8A%B9%EC%A7%95](https://blog.ycpark.net/entry/JAVA%EC%9D%98-GC%EC%9D%98-%EC%A2%85%EB%A5%98-%EB%B0%8F-%ED%8A%B9%EC%A7%95)
+
+---
+
+# **Java Collection**
+
+Java collection에는 List, Map, Set 인터페이스를 기준으로 여러 구현체가 존재한다. 이에 더해 Stack과 Queue 인터페이스도 존재한다. 왜 이러한 Collection을 사용할까?
+
+그 이유는 다수의 Data를 다루는데 표준화된 클래스들을 제공해 주기 때문에 DataStructure를 직접 구현하지 않고 편하게 사용할 수 있기 때문이다. 또한 배열과 다르게 객체를 보관하기 위한 공간을 미리 정하지 않아도 되므로, 상황에 따라 객체의 수를 동적으로 정할 수 있다. 이는 프로그램의 공간적인 효율성 또한 높여준다.
+
+---
+
+### **Java Collections Framework(JCF)**
+
+Java Collections Framwork(JCF)는 이러한 데이터, 자료구조인 컬렉션과 이를 구현하는 클래스를 정의하는 인터페이스를 제공한다.
+
+다음은 JCF의 상속 구조를 나타낸다.
+
+![https://blog.kakaocdn.net/dn/bsVerP/btrYCinsGXb/8KbpPDk2vl6KERnxPweQv0/img.png](https://blog.kakaocdn.net/dn/bsVerP/btrYCinsGXb/8KbpPDk2vl6KERnxPweQv0/img.png)
+
+Collection 인터페이스는 List, Set, Queue로 크게 3가지 상위 인터페이스로 분류할 수 있다. 그리고 Map의 경우 Collection 인터페이스로 상속받고 있지 않지만 Collection으로 분류된다.
+
+---
+
+**1. List Interface**
+
+> 순서가 있는 데이터의 집합으로 데이터의 중복을 허용한다.
+>
+- LinkedList
+
+![https://blog.kakaocdn.net/dn/b2t9d9/btrYz0OEi4t/EiIspwaGiQzSLoagKgtPzK/img.png](https://blog.kakaocdn.net/dn/b2t9d9/btrYz0OEi4t/EiIspwaGiQzSLoagKgtPzK/img.png)
+
+- 양방향 포인터 구조로 데이터의 삽입, 삭제가 빈번할 경우 데이터의 위치정보만 수정하면 되기에 유용하다.
+- 스택, 큐, 양방향 큐 등을 만들기 위한 용도로 쓰인다.
+- Vector
+
+![https://blog.kakaocdn.net/dn/bI4SUG/btrYy9ZRLdU/nx0lP0Ge8Hy7Cs1RImipkK/img.png](https://blog.kakaocdn.net/dn/bI4SUG/btrYy9ZRLdU/nx0lP0Ge8Hy7Cs1RImipkK/img.png)
+
+- 과거에 대용량 처리를 위해 사용했으며, 내부에서 자동으로 동기화 처리가 일어나 비교적 성능이 좋지 않고 무거워 잘 쓰이지 않는다.
+- ArrayList와 동이한 내부구조를 보이나, 동기화에서의 차이가 존재할 뿐이다.
+
+※ 동기화 - 프로세스(스레드)가 수행되는 시점을 조절하여 서로가 알고 있는 정보가 일치하는 것인데, 쉽게 말해 프로세스 간 데이터가 일치하도록 하는 것
+
+- ArrayList
+
+![https://blog.kakaocdn.net/dn/bv8uir/btrYBdzZryS/rfainQTAGxaERbMnIKRNs1/img.png](https://blog.kakaocdn.net/dn/bv8uir/btrYBdzZryS/rfainQTAGxaERbMnIKRNs1/img.png)
+
+- 단방향 포인터 구조로 각 데이터에 대한 인덱스를 가지고 있어 조회 기능에 있어서 성능이 뛰어나다.
+- ArrayList Vs Vector
+
+Vector는 동기화된 메소드로 구성되어 있기 때문에 멀티 쓰레드가 동시에 이 메소드들을 실행할 수 없고, 하나의 쓰레드가 실행을 완료해야만 다른 쓰레드들이 실행할 수 있다. 드래서 멀티 스레드 환경에서 안전하게 객체를 추가하고 삭제할 수 있다.
+
+하지만 벡터의 동기화는 장점이자 단점이 될 수 있다. 스레드가 1개일때도 동기화를 하기 때문에 ArrayList보다 성능이 떨어진다. ArrayList는 기본적인 기능은 벡터와 동일하나 자동 동기화 기능이 빠져있고, 동기화 옵션이 존재한다. 따라서 벡터의 비해 속도가 빠르기 때문에 벡터에 비해 많이 쓰이고 있다.
+
+---
+
+**2. Set Interface**
+
+> 순서를 유지하지 않는 데이터의 집합으로 데이터의 중복을 허용하지 않는다.
+>
+- HashSet
+
+<img src="https://blog.kakaocdn.net/dn/bXJsCb/btrYydIe11p/nLk0LsuwZ7SGuCFuyrmV40/img.png" width="400" height="300">
+
+- 가장 빠른 임의 접근 속도
+- 순서를 예측할 수 없다.
+- null 값을 허용한다.
+- TreeSet
+
+![https://blog.kakaocdn.net/dn/buSb6Y/btrYy9etrTt/groDPumJZ9GREmPhQlx2E1/img.png](https://blog.kakaocdn.net/dn/buSb6Y/btrYy9etrTt/groDPumJZ9GREmPhQlx2E1/img.png)
+
+- 정렬방법을 지정할 수 있다.
+- 이진 탐색 트리 구조로 되어있다.(레드-블랙 트리)
+
+※ 레드-블랙 트리(Red-Black Tree) - 부모노드보다 작은 값을 가지는 노드는 왼쪽 자식으로, 큰 값을 가지는 노드는 오른쪽 자식으로 배치하여 데이터의 추가나 삭제 시 트리가 한쪽으로 치우쳐지지 않도록 균형을 맞춘 이진 탐색 트리 구조 중 하나
+
+---
+
+**3. Map Interface**
+
+> 키(Key), 값(Value)의 쌍으로 이루어진 데이터의 집합으로,
+>
+- HashMap
+
+![https://blog.kakaocdn.net/dn/cdy1jE/btrYwmZxeRK/s3HOr2q2KYAEicXhPKZsR0/img.png](https://blog.kakaocdn.net/dn/cdy1jE/btrYwmZxeRK/s3HOr2q2KYAEicXhPKZsR0/img.png)
+
+- 중복과 순서가 허용되지 않으며, null값이 올 수 있다.
+- 만약 기존에 저장된 키와 동일한 키로 값을 저장하면 기존의 값은 없어지고 새로운 값으로 대치된다.
+- HashMap은 많은 양의 데이터를 검색하는 데 있어서 뛰어난 성능을 보인다.
+- Hashtable
+
+![https://blog.kakaocdn.net/dn/brEVcr/btrYtRMcDlx/COSQNYDAMLPosgl7TSkfck/img.png](https://blog.kakaocdn.net/dn/brEVcr/btrYtRMcDlx/COSQNYDAMLPosgl7TSkfck/img.png)
+
+- HashMap보다는 느리지만 동기화 지원
+- null 불가
+- TreeMap
+
+![https://blog.kakaocdn.net/dn/TRkfr/btrYByD2E91/0BM5iMHE9RPGD7ovtjavv1/img.png](https://blog.kakaocdn.net/dn/TRkfr/btrYByD2E91/0BM5iMHE9RPGD7ovtjavv1/img.png)
+
+- 정렬된 순서대로 키(Key)와 값(Value)을 저장하여 검색이 빠르다.
+
+---
+
++
+
+**4. Queue**
+
+![https://blog.kakaocdn.net/dn/B3O5p/btrYzkNGITN/0kKx0mDDc09naSKDYBxpLK/img.png](https://blog.kakaocdn.net/dn/B3O5p/btrYzkNGITN/0kKx0mDDc09naSKDYBxpLK/img.png)
+
+- 줄을 지어 순서대로 처리되는 것 (First In First Out)
+- 즉, 가장 먼저 들어온 데이터가 가장 먼저 나가는 구조
+
+Queue 선언
+
+```java
+import java.util.LinkedList;//importimport java.util.Queue;//import
+Queue<Integer> queue = new LinkedList<>();//int형 queue 선언, linkedlist 이용
+Queue<String> queue = new LinkedList<>();//String형 queue 선언, linkedlist 이용
+```
+
+자바에서 큐는 LinkedList를 활용해서 생성해야 한다. 그렇기에 Queue와 LinkedList가 다 import되어 있어야 사용이 가능하다. Queue<Element> queue = new LinkedList<>()와 같이 선언하면 된다.
+
+- Priority Queue
+- 높은 우선순위의 요소를 먼저 꺼내서 처리하는 구조이다.
+- 내부 요소는 힙으로 구성되어 이진트리 구조로 이루어져 있다.
+- 운선순위를 중요시해야 하는 상황에서 주로 쓰인다.
+
+Priority Queue 선언
+
+```java
+import java.util.PriorityQueue;
+import java.util.Collections;
+
+//낮은 숫자가 우선 순위인 int 형 우선순위 큐 선언
+PriorityQueue<Integer> priorityQueueLowest = new PriorityQueue<>();
+
+//높은 숫자가 우선 순위인 int 형 우선순위 큐 선언
+PriorityQueue<Integer> priorityQueueHighest = new PriorityQueue<>(Collections.reverseOrder());
+```
+
+---
+
+참고
+
+[https://coding-factory.tistory.com/550](https://coding-factory.tistory.com/550)
+
+[https://gangnam-americano.tistory.com/41](https://gangnam-americano.tistory.com/41)
+
+[https://velog.io/@gillog/Java-Priority-Queue%EC%9A%B0%EC%84%A0-%EC%88%9C%EC%9C%84-%ED%81%90](https://velog.io/@gillog/Java-Priority-Queue%EC%9A%B0%EC%84%A0-%EC%88%9C%EC%9C%84-%ED%81%90)
