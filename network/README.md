@@ -890,7 +890,7 @@ WWW (world wide web)의 약자이며 인터넷으로 연결된 컴퓨터를 통�
 
 [https://opentutorials.org/module/3097/18040](https://opentutorials.org/module/3097/18040)   
 
-# Session과 JWT
+## Session과 JWT
 ## Stateful, Stateless
 https://inpa.tistory.com/entry/WEB-%F0%9F%93%9A-Stateful-Stateless-%EC%A0%95%EB%A6%AC
 Session과 JWT에 대해 알아보기 전에 먼저 `Stateful`과 `Stateless`의 차이를 알아야한다.    
