@@ -560,37 +560,42 @@ theLargest(A[],last)
 
 ---
 
-## **파이썬을 이용한 선택 정렬 구현**
+##  **파이썬을 이용한 선택 정렬 구현**
 
-```
- def insertion_sort(arr):
-   for end in range(1, len(arr)):
-       for i in range(end, 0, -1):
-           if arr[i - 1] > arr[i]:
-               arr[i - 1], arr[i] = arr[i], arr[i - 1]
-
-```
-
+ ```
+  def selection_sort(arr):
+    for i in range(len(arr) - 1):
+        min_idx = i
+        for j in range(i + 1, len(arr)):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+ ```
+ 
 ---
 
-## **자바를 이용한 선택 정렬 구현**
+##  **자바를 이용한 선택 정렬 구현**
 
-```
-public class Insertion {
-   public static void sort(int[] arr) {
-       for (int end = 1; end < arr.length; end++) {
-           int toInsert = arr[end];
-           int i = end;
-           while (i > 0 && arr[i - 1] > toInsert) {
-               arr[i] = arr[i - 1];
-               i--;
-           }
-           arr[i] = toInsert;
-       }
-   }
+ ```
+ public class Selection {
+    public static void sort(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            int minIdx = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[minIdx])
+                    minIdx = j;
+            }
+            swap(arr, i, minIdx);
+        }
+    }
+
+    private static void swap(int[] arr, int a, int b) {
+        int tmp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = tmp;
+    }
 }
-
-```
+ ```
 
 ---
 
@@ -691,6 +696,207 @@ public class Bubble {
 
 ---
 
+## **삽입 정렬**
+
+삽입 정렬은 이미 정렬되어 있는 i개짜리 배열에 하나의 원소를 더 더하여
+정렬된 i+1개짜리 배열을 만드는 과정을 반복한다.
+선택 정렬과 버블 정렬이 n개 짜리 배열 에서 아직 **정렬되지 않은 배열**의 크기를 하나씩 줄이는 데 반해
+삽입 정렬은 한 개 짜리 배열에서 시작해서 **이미 정렬된 배열**의 크기를 하나씩 늘리는 정렬이다.
+
+삽입 정렬의 수행시간은 1+2+3+...+(n-1) = n(n-1)/2 이므로 **O(n^2)** 이지만
+배열이 완전히 정렬되어 있다면 while 루프를 한 번도 수행하지 않아 최적의 수행시간은 **O(n)** 이된다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/1468a15c-2529-4273-aa79-887d34f4076c/image.png)
+
+---
+
+## **삽입 정렬 알고리즘**
+
+insertionSort(A[],n)
+{
+
+     for i <- 2 to n {
+         loc <- i-1;
+         newItem <- A[i]; // 이 지점에서 A[1~i-1]은 정렬되어있는 상태
+     
+         while ( loc >= 1 and newItem < A[loc]) {
+            A[loc+1] <- A[loc];
+            loc--; // newItem과 loc를 하나씩 비교하며 마지막엔 탈출
+     
+         }
+         
+         A[loc+1] <- newItem; //while문을 거치지 않는 경우 맨앞에 추가
+         
+     }
+
+
+}
+
+
+---
+
+##  **파이썬을 이용한 삽입 정렬 구현**
+
+ ```
+  def insertion_sort(arr):
+    for end in range(1, len(arr)):
+        for i in range(end, 0, -1):
+            if arr[i - 1] > arr[i]:
+                arr[i - 1], arr[i] = arr[i], arr[i - 1]
+ ```
+ 
+---
+
+##  **자바를 이용한 삽입 정렬 구현**
+
+ ```
+ public class Insertion {
+    public static void sort(int[] arr) {
+        for (int end = 1; end < arr.length; end++) {
+            int toInsert = arr[end];
+            int i = end;
+            while (i > 0 && arr[i - 1] > toInsert) {
+                arr[i] = arr[i - 1];
+                i--;
+            }
+            arr[i] = toInsert;
+        }
+    }
+}
+ ```
+ 
+---
+
+# 고급 정렬 알고리즘
+
+- 고급 정렬 알고리즘
+
+**병합 정렬**
+
+**퀵 정렬**
+
+**힙 정렬**
+
+## 병합 정렬(Merge Sort)
+
+병합 정렬은 입력을 반으로 나누고, 이렇게 나눈 전반부와 후반부를 각각 독립적으로 정렬한다.
+마지막으로 정렬된 두 부분을 합쳐서,즉 병합하여 정렬된 배열을 얻는다.
+여기서 전반부,후반부를 정렬할 때도 반으로 나눈 다음 정렬해서 병합한다.
+이를 재귀적으로 반복하는것이 병합 정렬이다.
+
+병합 정렬의 수행시간은 항상 **O(nlogn)** 이다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/711043b9-8313-423e-ae68-5b0425dfd05a/image.png)
+전체적인 부분
+
+![](https://velog.velcdn.com/images/hs1430/post/2893f75f-7412-4bb4-8e48-1abb5c4318b8/image.png)
+
+전반부 후반부 정렬 완료후
+
+---
+
+## 병합 정렬 알고리즘
+
+MergeSort(A[],p,r)  // A[p ... r]
+{
+
+     if(p<r) then {
+        q <-⌊(p+r)/2⌋;         //p,r의 중간 지점 계산
+        mergeSort(A,p,q);     // 전반부 정렬
+        mergeSort(A,q+1,r);   // 후반부 정렬
+        merge(A,p,q,r);       // 병합
+     }
+
+
+}
+
+merge(A[]p,q,r)
+{
+
+     i <- p; j<-q+1; t<-1;
+     
+     while (i <= q and j <= r) {
+        if ( A[i] <= A[j])
+        then tmp[t++] <- A[i++]; //조건에 따라 tmp에 값저장
+        else tmp[t++] <- A[j++];
+    }                           //밑부분은 한쪽 배열이 모두 tmp에 저장되고 남은 부분 정렬
+    while(i<=q)                //왼쪽 부분 배열이 남은 경우
+       tmp[t++] <- A[i++];
+       
+    while(j<=r)               //오른쪽 부분 배열이 남은 경우
+       tmp[t++] <- A[j++];
+       
+       i <- p; t <- 1;
+       while(i<=r)               // 결과를 A[p ... r]에 저장
+       A[i++] <- tmp[t++];
+
+
+
+}
+ 
+---
+
+## **파이썬을 이용한 병합 정렬 구현**
+
+``` 
+def merge_sort(arr):
+    if len(arr) < 2:
+        return arr
+
+    mid = len(arr) // 2
+    low_arr = merge_sort(arr[:mid])
+    high_arr = merge_sort(arr[mid:])
+
+    merged_arr = []
+    l = h = 0
+    while l < len(low_arr) and h < len(high_arr):
+        if low_arr[l] < high_arr[h]:
+            merged_arr.append(low_arr[l])
+            l += 1
+        else:
+            merged_arr.append(high_arr[h])
+            h += 1
+    merged_arr += low_arr[l:]
+    merged_arr += high_arr[h:]
+    return merged_arr
+```
+---
+
+## **자바를 이용한 병합 정렬 구현**
+
+```
+public class MergeSorter {
+    public static int[] sort(int[] arr) {
+        if (arr.length < 2) return arr;
+
+        int mid = arr.length / 2;
+        int[] low_arr = sort(Arrays.copyOfRange(arr, 0, mid));
+        int[] high_arr = sort(Arrays.copyOfRange(arr, mid, arr.length));
+
+        int[] mergedArr = new int[arr.length];
+        int m = 0, l = 0, h = 0;
+        while (l < low_arr.length && h < high_arr.length) {
+            if (low_arr[l] < high_arr[h])
+                mergedArr[m++] = low_arr[l++];
+            else
+                mergedArr[m++] = high_arr[h++];
+        }
+        while (l < low_arr.length) {
+            mergedArr[m++] = low_arr[l++];
+        }
+        while (h < high_arr.length) {
+            mergedArr[m++] = high_arr[h++];
+        }
+        return mergedArr;
+    }
+}
+```
+---
+
 
 
 
@@ -705,3 +911,5 @@ public class Bubble {
 - 쉽게 배우는 알고리즘
 - https://www.daleseo.com/sort-bubble/
 - https://www.daleseo.com/sort-insertion/
+- https://www.daleseo.com/sort-selection/
+- https://www.daleseo.com/sort-merge/
