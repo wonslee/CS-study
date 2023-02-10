@@ -1,8 +1,8 @@
 ![waving](https://capsule-render.vercel.app/api?type=waving&height=150&text=CS-study&fontAlign=72&fontAlignY=40&fontSize=60&color=gradient&fontColor=FFFFFF)
 
 ## About
-- [ CS 전공자로서 알아야 할 기본 지식 52개 + 각자 관심 있는 기술 α개 ]를 공부, 발표, 토론하고 정리해둔 공간입니다.  
-- 주목적은 면접 대비지만, 향후 다른 개발자들과 소통하여 좋은 영향을 주고 받을 수 있게 되는 것이 또 하나의 목표입니다.
+- [ 전공자로서 알아야 할 기본 **CS 지식 52개** + 각자 관심 있는 **기술 α개** ]를 공부, 발표, 토론하고 정리해둔 공간입니다.  
+- 주목적은 면접 대비지만, 향후 다른 개발자들과 **소통**하여 좋은 영향을 주고 받을 수 있게 되는 것이 또 하나의 목표입니다.
 - 수원대학교 컴퓨터학부생 4명(java spring 3명, java android 1명)이 진행했습니다. 
 
 ## Contents
@@ -19,6 +19,7 @@
 
 ## Rule
 > [스터디 규칙 :bulb:](https://github.com/wonseok2877/CS-study/issues/24)  
+> [github 작업 가이드 :guide_dog:](https://github.com/wonseok2877/CS-study/issues/45)
 
 ## Contributors
 <p>
