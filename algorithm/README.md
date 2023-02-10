@@ -790,7 +790,12 @@ insertionSort(A[],n)
 
 ---
 
+![](https://velog.velcdn.com/images/hs1430/post/711043b9-8313-423e-ae68-5b0425dfd05a/image.png)
+전체적인 부분
+
 ![](https://velog.velcdn.com/images/hs1430/post/2893f75f-7412-4bb4-8e48-1abb5c4318b8/image.png)
+
+전반부 후반부 정렬 완료후
 
 ---
 
