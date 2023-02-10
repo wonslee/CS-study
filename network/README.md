@@ -1079,3 +1079,10 @@ JWT는 발급한 후 삭제가 불가능하기 때문에, 유효시간을 부여
 
 ***Refresh Token이 탈취되면 그냥 끝 아닌가요 ... ?***   
 물론 그렇다 ... 하지만 서버 DB에 저장되어있는 Refresh Token을 삭제하여 방어할 수 있다.
+
+### 추가 내용
+만료되지 않은 ac token을 refresh token과 함께 ac token 재발급을 요청하면 해킹으로 간주하고 refresh token 삭제
+(ac token이 만료되지 않았는데 재발급할 이유가 없으므로)
+
+ac token 만 요청 : stateless
+refresh token : stateful (단, 자주 일어나지 않음 - 세션은 계속 stateful인데, re token은 ac token 재발급할때만 stateful임)
