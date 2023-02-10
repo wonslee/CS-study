@@ -9,7 +9,7 @@
 - [HTTP와 HTTPS](#http와-https)
 - [DNS와 DNS Round Robin](#dns--domain-name-system-)
 - [웹 통신의 전체적인 흐름](#웹-통신의-전체적인-흐름)
-- [Session과 JWT](#session-과-JWT)
+- [Session과 JWT](#session과-jwt)
 </details>
 
 
