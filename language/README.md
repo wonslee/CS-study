@@ -3,6 +3,8 @@
 
 - [Java 와 JVM의 구성요소](#java-와-jvm)
 - [Java Garbage Collection](#java-garbage-collection)
+- [Java Collection](#java-collection)
+- [오버로딩 vs 오버라이딩](#오버로딩-vs-오버라이딩)
 </details>
 
 
@@ -304,3 +306,383 @@ Major GC는 Old 영역의 데이터가 가득 차면 GC를 실행하는 단순�
 [https://inpa.tistory.com/entry/JAVA-%E2%98%95-%EA%B0%80%EB%B9%84%EC%A7%80-%EC%BB%AC%EB%A0%89%EC%85%98GC-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%F0%9F%92%AF-%EC%B4%9D%EC%A0%95%EB%A6%AC](https://inpa.tistory.com/entry/JAVA-%E2%98%95-%EA%B0%80%EB%B9%84%EC%A7%80-%EC%BB%AC%EB%A0%89%EC%85%98GC-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%F0%9F%92%AF-%EC%B4%9D%EC%A0%95%EB%A6%AC)
 
 [https://blog.ycpark.net/entry/JAVA%EC%9D%98-GC%EC%9D%98-%EC%A2%85%EB%A5%98-%EB%B0%8F-%ED%8A%B9%EC%A7%95](https://blog.ycpark.net/entry/JAVA%EC%9D%98-GC%EC%9D%98-%EC%A2%85%EB%A5%98-%EB%B0%8F-%ED%8A%B9%EC%A7%95)
+
+---
+
+# **Java Collection**
+
+Java collection에는 List, Map, Set 인터페이스를 기준으로 여러 구현체가 존재한다. 이에 더해 Stack과 Queue 인터페이스도 존재한다. 왜 이러한 Collection을 사용할까?
+
+그 이유는 다수의 Data를 다루는데 표준화된 클래스들을 제공해 주기 때문에 DataStructure를 직접 구현하지 않고 편하게 사용할 수 있기 때문이다. 또한 배열과 다르게 객체를 보관하기 위한 공간을 미리 정하지 않아도 되므로, 상황에 따라 객체의 수를 동적으로 정할 수 있다. 이는 프로그램의 공간적인 효율성 또한 높여준다.
+
+---
+
+### **Java Collections Framework(JCF)**
+
+Java Collections Framwork(JCF)는 이러한 데이터, 자료구조인 컬렉션과 이를 구현하는 클래스를 정의하는 인터페이스를 제공한다.
+
+다음은 JCF의 상속 구조를 나타낸다.
+
+![https://blog.kakaocdn.net/dn/bsVerP/btrYCinsGXb/8KbpPDk2vl6KERnxPweQv0/img.png](https://blog.kakaocdn.net/dn/bsVerP/btrYCinsGXb/8KbpPDk2vl6KERnxPweQv0/img.png)
+
+Collection 인터페이스는 List, Set, Queue로 크게 3가지 상위 인터페이스로 분류할 수 있다. 그리고 Map의 경우 Collection 인터페이스로 상속받고 있지 않지만 Collection으로 분류된다.
+
+---
+
+**1. List Interface**
+
+> 순서가 있는 데이터의 집합으로 데이터의 중복을 허용한다.
+>
+- LinkedList
+
+![https://blog.kakaocdn.net/dn/b2t9d9/btrYz0OEi4t/EiIspwaGiQzSLoagKgtPzK/img.png](https://blog.kakaocdn.net/dn/b2t9d9/btrYz0OEi4t/EiIspwaGiQzSLoagKgtPzK/img.png)
+
+- 양방향 포인터 구조로 데이터의 삽입, 삭제가 빈번할 경우 데이터의 위치정보만 수정하면 되기에 유용하다.
+- 스택, 큐, 양방향 큐 등을 만들기 위한 용도로 쓰인다.
+- Vector
+
+![https://blog.kakaocdn.net/dn/bI4SUG/btrYy9ZRLdU/nx0lP0Ge8Hy7Cs1RImipkK/img.png](https://blog.kakaocdn.net/dn/bI4SUG/btrYy9ZRLdU/nx0lP0Ge8Hy7Cs1RImipkK/img.png)
+
+- 과거에 대용량 처리를 위해 사용했으며, 내부에서 자동으로 동기화 처리가 일어나 비교적 성능이 좋지 않고 무거워 잘 쓰이지 않는다.
+- ArrayList와 동이한 내부구조를 보이나, 동기화에서의 차이가 존재할 뿐이다.
+
+※ 동기화 - 프로세스(스레드)가 수행되는 시점을 조절하여 서로가 알고 있는 정보가 일치하는 것인데, 쉽게 말해 프로세스 간 데이터가 일치하도록 하는 것
+
+- ArrayList
+
+![https://blog.kakaocdn.net/dn/bv8uir/btrYBdzZryS/rfainQTAGxaERbMnIKRNs1/img.png](https://blog.kakaocdn.net/dn/bv8uir/btrYBdzZryS/rfainQTAGxaERbMnIKRNs1/img.png)
+
+- 단방향 포인터 구조로 각 데이터에 대한 인덱스를 가지고 있어 조회 기능에 있어서 성능이 뛰어나다.
+- ArrayList Vs Vector
+
+Vector는 동기화된 메소드로 구성되어 있기 때문에 멀티 쓰레드가 동시에 이 메소드들을 실행할 수 없고, 하나의 쓰레드가 실행을 완료해야만 다른 쓰레드들이 실행할 수 있다. 드래서 멀티 스레드 환경에서 안전하게 객체를 추가하고 삭제할 수 있다.
+
+하지만 벡터의 동기화는 장점이자 단점이 될 수 있다. 스레드가 1개일때도 동기화를 하기 때문에 ArrayList보다 성능이 떨어진다. ArrayList는 기본적인 기능은 벡터와 동일하나 자동 동기화 기능이 빠져있고, 동기화 옵션이 존재한다. 따라서 벡터의 비해 속도가 빠르기 때문에 벡터에 비해 많이 쓰이고 있다.
+
+---
+
+**2. Set Interface**
+
+> 순서를 유지하지 않는 데이터의 집합으로 데이터의 중복을 허용하지 않는다.
+>
+- HashSet
+
+<img src="https://blog.kakaocdn.net/dn/bXJsCb/btrYydIe11p/nLk0LsuwZ7SGuCFuyrmV40/img.png" width="400" height="300">
+
+- 가장 빠른 임의 접근 속도
+- 순서를 예측할 수 없다.
+- null 값을 허용한다.
+- TreeSet
+
+![https://blog.kakaocdn.net/dn/buSb6Y/btrYy9etrTt/groDPumJZ9GREmPhQlx2E1/img.png](https://blog.kakaocdn.net/dn/buSb6Y/btrYy9etrTt/groDPumJZ9GREmPhQlx2E1/img.png)
+
+- 정렬방법을 지정할 수 있다.
+- 이진 탐색 트리 구조로 되어있다.(레드-블랙 트리)
+
+※ 레드-블랙 트리(Red-Black Tree) - 부모노드보다 작은 값을 가지는 노드는 왼쪽 자식으로, 큰 값을 가지는 노드는 오른쪽 자식으로 배치하여 데이터의 추가나 삭제 시 트리가 한쪽으로 치우쳐지지 않도록 균형을 맞춘 이진 탐색 트리 구조 중 하나
+
+---
+
+**3. Map Interface**
+
+> 키(Key), 값(Value)의 쌍으로 이루어진 데이터의 집합으로,
+>
+- HashMap
+
+![https://blog.kakaocdn.net/dn/cdy1jE/btrYwmZxeRK/s3HOr2q2KYAEicXhPKZsR0/img.png](https://blog.kakaocdn.net/dn/cdy1jE/btrYwmZxeRK/s3HOr2q2KYAEicXhPKZsR0/img.png)
+
+- 중복과 순서가 허용되지 않으며, null값이 올 수 있다.
+- 만약 기존에 저장된 키와 동일한 키로 값을 저장하면 기존의 값은 없어지고 새로운 값으로 대치된다.
+- HashMap은 많은 양의 데이터를 검색하는 데 있어서 뛰어난 성능을 보인다.
+- Hashtable
+
+![https://blog.kakaocdn.net/dn/brEVcr/btrYtRMcDlx/COSQNYDAMLPosgl7TSkfck/img.png](https://blog.kakaocdn.net/dn/brEVcr/btrYtRMcDlx/COSQNYDAMLPosgl7TSkfck/img.png)
+
+- HashMap보다는 느리지만 동기화 지원
+- null 불가
+- TreeMap
+
+![https://blog.kakaocdn.net/dn/TRkfr/btrYByD2E91/0BM5iMHE9RPGD7ovtjavv1/img.png](https://blog.kakaocdn.net/dn/TRkfr/btrYByD2E91/0BM5iMHE9RPGD7ovtjavv1/img.png)
+
+- 정렬된 순서대로 키(Key)와 값(Value)을 저장하여 검색이 빠르다.
+
+---
+
++
+
+**4. Queue**
+
+![https://blog.kakaocdn.net/dn/B3O5p/btrYzkNGITN/0kKx0mDDc09naSKDYBxpLK/img.png](https://blog.kakaocdn.net/dn/B3O5p/btrYzkNGITN/0kKx0mDDc09naSKDYBxpLK/img.png)
+
+- 줄을 지어 순서대로 처리되는 것 (First In First Out)
+- 즉, 가장 먼저 들어온 데이터가 가장 먼저 나가는 구조
+
+Queue 선언
+
+```java
+import java.util.LinkedList;//importimport java.util.Queue;//import
+Queue<Integer> queue = new LinkedList<>();//int형 queue 선언, linkedlist 이용
+Queue<String> queue = new LinkedList<>();//String형 queue 선언, linkedlist 이용
+```
+
+자바에서 큐는 LinkedList를 활용해서 생성해야 한다. 그렇기에 Queue와 LinkedList가 다 import되어 있어야 사용이 가능하다. Queue<Element> queue = new LinkedList<>()와 같이 선언하면 된다.
+
+- Priority Queue
+- 높은 우선순위의 요소를 먼저 꺼내서 처리하는 구조이다.
+- 내부 요소는 힙으로 구성되어 이진트리 구조로 이루어져 있다.
+- 운선순위를 중요시해야 하는 상황에서 주로 쓰인다.
+
+Priority Queue 선언
+
+```java
+import java.util.PriorityQueue;
+import java.util.Collections;
+
+//낮은 숫자가 우선 순위인 int 형 우선순위 큐 선언
+PriorityQueue<Integer> priorityQueueLowest = new PriorityQueue<>();
+
+//높은 숫자가 우선 순위인 int 형 우선순위 큐 선언
+PriorityQueue<Integer> priorityQueueHighest = new PriorityQueue<>(Collections.reverseOrder());
+```
+
+---
+
+참고
+
+[https://coding-factory.tistory.com/550](https://coding-factory.tistory.com/550)
+
+[https://gangnam-americano.tistory.com/41](https://gangnam-americano.tistory.com/41)
+
+[https://velog.io/@gillog/Java-Priority-Queue%EC%9A%B0%EC%84%A0-%EC%88%9C%EC%9C%84-%ED%81%90](https://velog.io/@gillog/Java-Priority-Queue%EC%9A%B0%EC%84%A0-%EC%88%9C%EC%9C%84-%ED%81%90)
+
+
+---
+
+
+# **오버로딩 vs 오버라이딩**
+
+### **개념**
+
+다형성이란 하나의 메서드나 클래스가 있을 때 그것이 다양한 방법으로 동작하는 것을 말하며, 자바에서는 주로 오버로딩(Overloading)과 오버라이딩(Overriding)을 통해서 다형성을 지원한다.
+
+오버로딩(Overloading) : 메서드의 이름은 같고 매개변수의 유형과 개수가 다르도록 하는 것을 의미한다.
+
+- 리턴값만을 다르게 갖는 오버로딩은 작성할 수 없다.
+
+오버라이딩 (Overriding) : 상위 클래스가 가지고 있는 메서드를 하위 클래스가 재정의해서 사용하는 것을 의미한다.
+
+- 메서드의 이름은 물론 파라미터의 개수나 타입도 동일해야 하며, 주로 상위 클래스의 동작을 상속받는 하위 클래스에서 변경하기 위해 사용된다.
+
+간략하게 요약하면,
+
+- 오버로딩(Overloading)은 기존에 없던 새로운 메서드를 정의하는 것이고,
+- 오버라이딩(Overriding)은 상속받은 메서드의 내용만 변경하는 것이다.
+
+---
+
+### **오버로딩 예제**
+
+```java
+class OverloadingMethods {
+    public void print() {
+        System.out.println("매개변수X - 오버로딩1");
+    }
+
+    String print(Integer a) {
+        System.out.println("Integer - 오버로딩2");
+        return a.toString();
+    }
+
+    void print(String a) {
+        System.out.println("String - 오버로딩3");
+        System.out.println(a);
+    }
+
+    String print(Integer a, Integer b) {
+        System.out.println("Integer, Integer - 오버로딩4");
+        return a.toString() + b.toString();
+    }
+
+}
+
+class OverloadingTest {
+
+    public static void main(String[] args) {
+        OverloadingMethods om = new OverloadingMethods();
+
+        om.print();
+        System.out.println(om.print(3));
+        om.print("Hello!");
+        System.out.println(om.print(4, 5));
+    }
+}
+```
+
+**실행결과**
+
+![https://blog.kakaocdn.net/dn/bc6nFV/btrYTMwoAJR/x765Ih06wM9kYebemo44lK/img.png](https://blog.kakaocdn.net/dn/bc6nFV/btrYTMwoAJR/x765Ih06wM9kYebemo44lK/img.png)
+
+### 
+
+**주의해야 할 점**
+
+```java
+class OverloadingMethods {
+    public void print() {
+        System.out.println("매개변수X - 오버로딩1");
+    }
+    public int print() {
+    	System.out.println("매개변수X - 오버로딩2");
+        return 1;
+    }
+
+    String print(Integer a) {
+        System.out.println("Integer - 오버로딩3");
+        return a.toString();
+    }
+
+    void print(String a) {
+        System.out.println("String - 오버로딩4");
+        System.out.println(a);
+    }
+
+    String print(Integer a, Integer b) {
+        System.out.println("Integer, Integer - 오버로딩5");
+        return a.toString() + b.toString();
+    }
+
+}
+```
+
+### 
+
+위의 코드에서 에러를 유발하는 곳이 있다.
+
+한번 그 코드를 찾아보자.(바로 아래에 정답이 있음)
+
+---
+
+### **정답**
+
+![https://blog.kakaocdn.net/dn/c2Zzq3/btrYTpVExIv/o6MUmh2nAngmNiNtyzyVgk/img.png](https://blog.kakaocdn.net/dn/c2Zzq3/btrYTpVExIv/o6MUmh2nAngmNiNtyzyVgk/img.png)
+
+아까 처음에 말했듯이 리턴값만 다른 것은 오버로딩을 할 수 없다. 따라서 print()라는 매개변수가 존재하지 않는 메서드가 두 개 존재하기 때문에 에러를 유발한다.
+
+결국 오버로딩은 매개변수의 차이로만 구현할 수 있다는 것이다. 매개변수가 다르다면 리턴 값은 다르게 지정할 수 있다.
+
+**다시 한번 강조하지만 리턴 값만 다른 것은 오버로딩 할 수 없다.**
+
+---
+
+### **오버로딩을 사용하는 이유**
+
+- 같은 기능을 하는 메서드를 하나의 이름으로 사용할 수 있기 때문이다.
+- 메서드의 이름을 절약할 수 있기 때문이다.
+
+많이 사용하는 println() 메서드를 예로 들면 이해하기 쉽다. println() 메서드는 오버로딩 되어있기 때문에 int형 인자, string형 인자, boolean형 인자, char형 인자 모두 받아서 동작할 수 있다.
+
+만약 오버로딩이 없다면, int형 인자를 받는 메서드는 printlnInt()로 String형 인자를 받는 메서드는 printInString()으로 boolean형 인자를 받는 메서드는 printInBoolean()처럼 각각의 메서드의 이름을 따로 만들어줘야 한다.
+
+오버로딩이 있기 때문에 같은 기능을 하는 메서드를 하나의 이름은 printIn()으로 사용할 수 있게 된다.
+
+### 
+
+---
+
+### 
+
+### **오버라이딩**
+
+### **오버라이딩의 조건**
+
+상위 클래스가 가지고 있는 멤버변수가 하위 클래스로 상속되는 것처럼 상위 클래스가 가지고 있는 메서드도 하위 클래스로 상속되어 하위 클래스에 사용할 수 있다. 또한 하위 클래스에서 메서드를 재정의해서도 사용할 수 있다.
+
+쉽게 말해 메서드의 이름이 서로 같고, 매개변수가 같고, 반환형이 같을 경우에 상속받은 메서드를 덮어쓴다고 생각하면 된다. '부모 클래스의 메서드는 무시하고, 자식 클래스의 메서드 기능을 사용하겠다'와 같다.
+
+### **오버라이딩 예제**
+
+```java
+class SuwonMember {
+    String test() {
+        return "저는 수원에 거주중입니다.";
+    }
+}
+
+class SuwonStudent extends SuwonMember{
+    String test() {
+        return "저는 YD 입니다.";
+    }
+}
+
+public class OverridingTest {
+
+    public static void main(String[] args) {
+        SuwonStudent student = new SuwonStudent();
+
+        System.out.println(student.test());
+    }
+
+}
+```
+
+### 
+
+**결과**
+
+![https://blog.kakaocdn.net/dn/cW93zs/btrY4mCSFqa/4vwzw6vI0L57C31HT43EIK/img.png](https://blog.kakaocdn.net/dn/cW93zs/btrY4mCSFqa/4vwzw6vI0L57C31HT43EIK/img.png)
+
+SuwonMember에서 정의한 test() 메서드의 값 -> '저는 수원에 거주중입니다'가 아닌
+
+SuwonStudent에서 재정의한 값 -> '저는 YD 입니다.' 가 출력되는 것을 확인할 수 있다.
+
+**주의해야 할 점**
+
+- 자식 클래스에서 오버라이딩하는 메소드의 접근 제어자는 부모 클래스보다 더 좁게 설정할 수 없다
+
+만약 부모클래스에서 default로 설정되어 있다면, 자식 클래스는 default 보다 같거나 더 넓은 범위의 접근 제어자만 설정할 수 있으므로 default, protected, public의 접근 제어자를 사용할 수 있다.
+
+- 예외(Exception)는 부모 클래스의 메소드보다 많이 선언할 수 없다.
+
+부모 클래스에서 어던 예외를 throws 한다고 하면, 자식 클래스에서는 그 예외보다 더 큰 범위의 예외를 throws 할 수 없다.
+
+- static메서드를 인스턴스의 메서드로 또는 그 반대로 바꿀 수 없다.
+
+상위 클래스의 static 메서드는 클래스에 속하는 메서드이기 때문에 상속되지 않고 따라서 오버라이드 되지도 않는다. (static 메서드는 런타임 시에 생성되는 것이 아니라 컴파일 시 생성되어 메모리에 적제 되는 방식이기 때문에 런타임 시에 해당 메서드를 구현한 실체 객체를 찾아가서 호출하게 된다. static 메서드에 대해서는 다형성이 적용되지 않는다.)
+
+다음과 같이 static을 붙인 메서드에서는 에러를 유발한다.
+
+![https://blog.kakaocdn.net/dn/z30I2/btrYSDs6NCQ/tSSVTqpv0a8e2snvDQVvNK/img.png](https://blog.kakaocdn.net/dn/z30I2/btrYSDs6NCQ/tSSVTqpv0a8e2snvDQVvNK/img.png)
+
+final이 지정된 메서드 역시 오버라이드가 불가하며, private 접근 제어자를 가진 메서드는 상속 자체가 불가능하기 때문에 오버라이드가 성립되지 않는다.
+
+(final의 경우 하위 클래스가 해당 메서드를 재정의 할 수 없도록 하기 위해서 사용된다.)
+
+---
+
+### **@Override 어노테이션을 쓰는 이유**
+
+@Override 어노테이션은 없어도 오버라이딩이 적용되어 정상적으로 잘 동작한다. 그렇다면 @Override 어노테이션을 왜 쓸까?
+
+1. @Override 어노테이션은 시스템에서 오버라이딩한 메서드라고 알리는 역할로 오버라이딩이 잘못된 경우 경고를 준다.
+
+예를 들어 백엔드 단에서 사용되는 라이브러리 중 하나가 업데이트되어 상속하는 클래스 메서드의 시그니처가 바뀌었다.
+
+@Override 어노테이션이 적용되지 않은 상태에서는 전에 오버라이드 한 메서드가 업데이트 이후 그냥 추가적인 메서드로 인식되어 컴파일 오류가 발생하지 않는다. 이때 @Override 어노테이션을 적용함으로써 의도적으로 컴파일 오류를 일으켜 작동방식이 바뀌는 것을 대비할 수 있다.
+
+2. @Override를 표시함으로써 코드 리딩 시에 해당 메서드가 오버라이딩하였다는 것을 쉽게 파악할 수 있다는 장점이 있다.
+
+---
+
+### 정리 - 오버로딩 vs 오버라이딩
+
+![https://blog.kakaocdn.net/dn/bwwIel/btrYUvOB1SF/dnKH0RwbW8Fsy2N4kFunK0/img.png](https://blog.kakaocdn.net/dn/bwwIel/btrYUvOB1SF/dnKH0RwbW8Fsy2N4kFunK0/img.png)
+
+---
+
+참고
+
+[https://hyoje420.tistory.com/14](https://hyoje420.tistory.com/14)
+
+[https://wildeveloperetrain.tistory.com/110](https://wildeveloperetrain.tistory.com/110)
+
+[https://lnsideout.tistory.com/entry/JAVA-%EC%9E%90%EB%B0%94-%EC%98%A4%EB%B2%84%EB%A1%9C%EB%94%A9%EA%B3%BC-%EC%98%A4%EB%B2%84%EB%9D%BC%EC%9D%B4%EB%94%A9-%EA%B0%9C%EB%85%90-%EC%99%84%EB%B2%BD%EC%A0%95%EB%A6%AC](https://lnsideout.tistory.com/entry/JAVA-%EC%9E%90%EB%B0%94-%EC%98%A4%EB%B2%84%EB%A1%9C%EB%94%A9%EA%B3%BC-%EC%98%A4%EB%B2%84%EB%9D%BC%EC%9D%B4%EB%94%A9-%EA%B0%9C%EB%85%90-%EC%99%84%EB%B2%BD%EC%A0%95%EB%A6%AC)
