@@ -633,12 +633,94 @@ SELECT 학생.학번, 이름, 학점 FROM 학생
 | 182 | 진욱 | NULL |
 | 183 | 원석 | NULL |
 
+# 인덱스(index)
+
+## 인덱스란?
+
+
+: 테이블 안의 데이터를 쉽고 **빠르게** **찾을 수 있도록** 만든 데이터베이스 객체.
+책의 목차나 색인을 통해 더 빠르게 내용을 찾는것과 같은 개념이다.
+특정 속성에 인덱스를 생성하면, 해당 속성에 대한 데이터들을 정렬해서 별도의 메모리 공간에 데이터의 **물리적 주소값**(디스크 블록의 주소값)과 함께 저장된다.
+
+<details>
+<summary>DB와 디스크</summary>
+
+![https://user-images.githubusercontent.com/39291812/71639689-5cc45300-2cbe-11ea-9102-f7a9d0efe8b4.png](https://user-images.githubusercontent.com/39291812/71639689-5cc45300-2cbe-11ea-9102-f7a9d0efe8b4.png)  
+
+DB 데이터가 **물리적**으로 저장되는 곳은 디스크(보조기억장치)이기 때문에, SQL 실행시 디스크로부터 필요한 데이터를 찾게 된다. DBMS는 필요한 디스크 **블럭**을 반복해서 주기억장치로 읽어오게 되는데, 문제는 **디스크 접근 속도**가 주기억장치보다 비교할 수 없을 정도로 **너무** **느리다**는 점이다.
+
+가령 한 블록이 512byte라고 할 때, 100byte짜리 레코드의 정보를 모두 저장하는것보다는 그 레코드들의 PK값 (int라면 대충 4~8byte)만을 저장하는게 유리할 것이다.
+
+DB의 테이블 데이터들은 모두 블록 단위로 관리된다. 만약 쿼리를 통해 1개의 레코드를 읽고 싶더라도 결국은 하나의 블럭을 읽어야 하는 식이다. 쿼리에서 읽으려는 데이터가 많을수록, 데이터들의 크기를 최대한 작게 해서 한 블럭에 최대한 많은 데이터들을 저장할 수 있도록 하는게 중요해진다.
+
+인덱스를 통해 결과적으로 몇번의 디스크 블록 검색만으로 수많은 행들 중에서 원하는 행을 찾을 수 있다.
+
+</details>
+
+
+
+
+인덱스의 가장 큰 특징은, 사용자가 인덱스로 설정한 **key를 기준으로** 데이터들이 **미리 정렬**(오름차순 혹은 내림차순) 되어있다는 점.
+
+![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbPb8pb%2FbtrePWRO9HY%2FqrzMfX84KAAuFgkyZkKtKK%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbPb8pb%2FbtrePWRO9HY%2FqrzMfX84KAAuFgkyZkKtKK%2Fimg.png)
+
+대부분의 DBMS는 **B-트리**(Balanced tree) **구조**의 인덱스를 지원한다. B-tree는 루트노드와 리프 노드까지의 탐색 길이가 같아서 모든 데이터에 대한 **일정 수준의 검색 시간을 보장**한다는 장점이 있다.
+
+## 그래서 왜 쓰는데?
+
+인덱스 덕분에, 데이터를 조건적으로 **검색**할 때 모든 행을 다 불러들어는게 아니라 **필요한 일부 행만** 주기억장치로 읽어들여올 수 있게 된다.
+
+- **조건검색** (WHERE, JOIN) 절의 **효율성** : 테이블을 만들고 안에 데이터가 쌓이게 되면, 테이블의 레코드는 내부적으로는 순서가 없이 뒤죽박죽으로 저장된다. 만약 인덱스가 없다면 처음부터 끝까지 다 읽어서 검색 조건과 맞는지 비교해야 한다. 하지만 인덱스 테이블은 데이터들이 정렬되어 저장되어 있기 때문에 해당 조건 (Where)에 맞는 데이터들을 빠르게 찾아낼 수 있다. 이게 인덱스(Index)를 사용하는 가장 큰 이유다.
+
+    ```mysql
+    SELECT * FROM Student
+    	WHERE major_id = 1;
+    # 경영학과(1)인 학생들을 모두 조회
+    
+    SELECT * FROM Student
+    	JOIN Lecture_Record ON lecture_id = 11;
+    # C언어(11)에 대한 수강기록과 학생 정보를 한 테이블로 합쳐서 조회
+    ```
+
+- **정렬**(ORDER BY) 절의 **효율성**
+
+  인덱스를 사용하면 ORDER BY에 의한 정렬 과정을 피할 수가 있다. 인덱스에 저장된대로 가져오기만 하면 끝.
+
+    ```mysql
+    SELECT * FROM Student
+    	ORDER BY id; # index인 경우 : 미리 정렬되어있어서 속도가 빠르다
+    # 1 영두,2 진욱,3 성욱, 4 원석 ...
+    
+    SELECT * FROM Student
+    	ORDER BY MBTI; 
+    # index가 아닌 경우 : 따로 정렬하는 과정 필요
+    ```
+
+- **MIN, MAX**의 **효율성**
+
+  이것 또한 데이터가 정렬되어 있기에 얻을 수 있는 장점. MIN값과 MAX값을 레코드의 시작 값과 끝 값 한 건씩만 가져오면 되기 때문에 테이블을 모두 뒤져서 작업(full scan)하는 것보다 훨씬 효율적이다.
+
+
+## 단점
+- **추가적인 연산 오버헤드** : DBMS는 index들을 항상 **정렬된 상태**(b-tree의 균형)로 **유지해야** 원래의 빠른 속도가 나온다. 그래서 레코드내의 데이터 값이 바뀔 때 (INSERT, UPDATE, DELETE) 정렬하기 위한 연산을 추가적으로 해줘야 하며 그에 따른 오버헤드가 발생한다.
+- 인덱스 자체를 위한 추가적인 저장공간 필요 (DB의 약 10%)
+
+## 인덱스가 필요한 경우
+
+- **조건절**에 자주 쓰이는 속성
+- **PK**와 **FK** (대부분의 DBMS는 PK, FK, unique key에 대해 자동으로 인덱스를 생성한다)
+- 항상 `=` 으로 비교**되는 컬럼 (범위 검색에는 바람직하지 않음)
+- 정수형, 고정 길이 문자열 등의 열 (가변 길이 문자열이나 실수형, 날짜형 열에는 바람직하지 않음)
+- 갱신이 빈번하지 않은 열
+- 데이터가 많은 테이블일때
 
 # TODO
 - TCL 보충.. 트랜잭션 모름
 - 데이터 독립성? 응용 프로그램과 데이터의 관계
 - SQL 코테 문제랑 연결해보기
 - 정규형 보충(BCNF, 4NF, 5NF)
+- 주기억장치, 보조기억장치란?
+- 디스크 I/O 란?
 
 # 출처
 - 데이터베이스의 정석 - 박성진
@@ -651,3 +733,6 @@ SELECT 학생.학번, 이름, 학점 FROM 학생
 - [https://www.geeksforgeeks.org/introduction-of-database-normalization/](https://www.geeksforgeeks.org/introduction-of-database-normalization/)
 - [https://gyoogle.dev/blog/computer-science/data-base/Join.html](https://gyoogle.dev/blog/computer-science/data-base/Join.html)
 - [https://www.geeksforgeeks.org/sql-join-set-1-inner-left-right-and-full-joins/](https://www.geeksforgeeks.org/sql-join-set-1-inner-left-right-and-full-joins/)
+- [https://mangkyu.tistory.com/96](https://mangkyu.tistory.com/96)
+- [https://coding-factory.tistory.com/746](https://coding-factory.tistory.com/746)
+- [https://www.geeksforgeeks.org/indexing-in-databases-set-1/](https://www.geeksforgeeks.org/indexing-in-databases-set-1/)
