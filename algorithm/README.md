@@ -1357,64 +1357,72 @@ treeInsert(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
 ---
 
 ## 이진탐색트리 - 삽입 알고리즘 파이썬
-
+```
 def insert(self, data):
-if self.root is None:
-self.root = Node(data)
-else:
-self.base = self.root
-while True:
-if data == self.base.data:
-print("중복된 KEY 값")
-break
-elif data > self.base.data:
-if self.base.right is None:
-self.base.right = Node(data)
-break
-else:
-self.base = self.base.right
-else:
-if self.base.left is None:
-self.base.left = Node(data)
-break
-else:
-self.base = self.base.left
+    if self.root is None:
+        self.root = Node(data)
+    else:
+        self.base = self.root
+        while True:
+            if data == self.base.data:
+                print("중복된 KEY 값")
+                break
+            elif data > self.base.data:
+                if self.base.right is None:
+                    self.base.right = Node(data)
+                    break
+                else:
+                    self.base = self.base.right
+            else:
+                if self.base.left is None:
+                    self.base.left = Node(data)
+                    break
+                else:
+                    self.base = self.base.left
+```
+
+
+
 
 ---
 ## 이진탐색트리 - 삽입 알고리즘 자바
+
+```
 public boolean insert(Integer data) {
-MyNode newNode = new MyNode(data);
-MyNode cursor = this.root;
-// case 1 : 트리가 비어있는 경우
-if (root == null) {
-this.root = newNode;
-size++;
-} else {
-// case 2 : 최소 1개 이상의 노드가 트리에 존재하는 경우
-while (true) {
-// case 2-1 : 커서가 가리키고 있는 노드가 새로운 노드보다 큰 경우
-// 				커서를 트리의 왼쪽 방향으로 이동한다
-if (cursor.value > data) {
-if (cursor.left == null) {
-cursor.left = newNode;
-return true;
-} else {
-cursor = cursor.left;
+    MyNode newNode = new MyNode(data);
+    MyNode cursor = this.root;
+    // case 1 : 트리가 비어있는 경우
+    if (root == null) {
+        this.root = newNode;
+        size++;
+    } else {
+        // case 2 : 최소 1개 이상의 노드가 트리에 존재하는 경우
+        while (true) {
+            // case 2-1 : 커서가 가리키고 있는 노드가 새로운 노드보다 큰 경우
+            // 				커서를 트리의 왼쪽 방향으로 이동한다
+            if (cursor.value > data) {
+                if (cursor.left == null) {
+                    cursor.left = newNode;
+                    return true;
+                } else {
+                    cursor = cursor.left;
+                }
+                // case 2-2 : 커서가 가리키고 있는 노드가 새로운 노드보다 작거나 같은 경우
+                //				커서를 트리의 오른쪽 방향으로 이동한다
+            } else {
+                if (cursor.right == null) {
+                    cursor.right = newNode;
+                    return true;
+                } else {
+                    cursor = cursor.right;
+                }
+            }
+        }
+    }
+    return false;
 }
-// case 2-2 : 커서가 가리키고 있는 노드가 새로운 노드보다 작거나 같은 경우
-//				커서를 트리의 오른쪽 방향으로 이동한다
-} else {
-if (cursor.right == null) {
-cursor.right = newNode;
-return true;
-} else {
-cursor = cursor.right;
-}
-}
-}
-}
-return false;
-}
+```
+
 
 ---
 
@@ -1486,31 +1494,32 @@ deleteNode(r)
 
 ## 이진탐색트리 - 삭제 알고리즘 파이썬
 
+```
 def remove(self, data):
-self.searched = False
-self.cur_node = self.root
-self.parent = self.root
-while self.cur_node:
-if self.cur_node.data == data:
-self.searched = True
-break
-elif self.cur_node.data > data:
-self.parent = self.cur_node
-self.cur_node = self.cur_node.left
-else:
-self.parent = self.cur_node
-self.cur_node = self.cur_node.right
-if self.searched:
-# root를 지우는 경우
-if self.cur_node.data == self.parent.data:
-self.root = None
-else:
-# [CASE 1] 삭제하는 node가 leaf node인 경우
-if self.cur_node.left is None and self.cur_node.right is None:
-if self.parent.data > self.cur_node.data:
-self.parent.left = None
-else:
-self.parent.right = None
+    self.searched = False
+    self.cur_node = self.root
+    self.parent = self.root
+    while self.cur_node:
+        if self.cur_node.data == data:
+            self.searched = True
+            break
+        elif self.cur_node.data > data:
+            self.parent = self.cur_node
+            self.cur_node = self.cur_node.left
+        else:
+            self.parent = self.cur_node
+            self.cur_node = self.cur_node.right
+    if self.searched:
+        # root를 지우는 경우
+        if self.cur_node.data == self.parent.data:
+            self.root = None
+        else:
+            # [CASE 1] 삭제하는 node가 leaf node인 경우
+            if self.cur_node.left is None and self.cur_node.right is None:
+                if self.parent.data > self.cur_node.data:
+                    self.parent.left = None
+                else:
+                    self.parent.right = None
 
             # [CASE 2] 삭제하는 node의 자식이 하나인 경우
             elif self.cur_node.left is not None and self.cur_node.right is None:
@@ -1543,27 +1552,30 @@ self.parent.right = None
                 self.tmp_cur.right = self.cur_node.right
     else:
         print("존재하지 않는 데이터")
+```
+
 
 ---
 
 ## 이진탐색트리 - 삭제 알고리즘 자바
+```
 
 if(cursor.left == null && cursor.right == null) {
-if(cursor != root) {
-if(parent.left == cursor) {
-parent.left = null;
-} else {
-parent.right = null;
-}
-} else {
-root = null;
-}
+    if(cursor != root) {
+        if(parent.left == cursor) {
+            parent.left = null;
+        } else {
+            parent.right = null;
+        }
+    } else {
+        root = null;
+    }
 }
 
 else if (cursor.left != null && cursor.right != null) {
-// 삭제될 노드와 그 부모노드 사이의 최소 값을 지닌 노드를 찾는다.
-MyNode temp = findMinNode(cursor.right);
-int tempValue = temp.value;
+    // 삭제될 노드와 그 부모노드 사이의 최소 값을 지닌 노드를 찾는다.
+    MyNode temp = findMinNode(cursor.right);
+    int tempValue = temp.value;
 
     // 최소값 노드를 삭제 후, 삭제될 노드에 최소값을 삽입한다.
     remove(root, temp.value);
@@ -1571,7 +1583,7 @@ int tempValue = temp.value;
 }
 
 else {
-MyNode child = (cursor.left != null) ? cursor.left : cursor.right;
+    MyNode child = (cursor.left != null) ? cursor.left : cursor.right;
 
     if(cursor != root) {
         if(cursor == parent.left) {
@@ -1583,6 +1595,7 @@ MyNode child = (cursor.left != null) ? cursor.left : cursor.right;
         root = child;
     }
 }
+```
 
 ---
 
