@@ -897,6 +897,695 @@ public class MergeSorter {
 ```
 ---
 
+## 퀵 정렬
+
+퀵 정렬은 평균적으로 가장 좋은 성능을 가져 현장에서 가장 많이 쓰는 정렬 알고리즘이다.
+**정렬 후 병합** 을 하는 **병합 정렬** 과는 달리 **퀵정렬** 은 **병합을 한뒤에 정렬** 을 한다.
+
+퀵 정렬의 수행시간은 분할할때 한쪽에만 다 몰리는 최악의 경우에만 **O(n^2)** 이고
+나머지 경우에는 **O(nlogn)** 이다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/9b57cabc-6519-49f1-b610-b88f9785f7c0/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/ecb1b146-a295-4f1c-9003-902e78164972/image.png)
+
+
+---
+
+## 퀵 정렬 알고리즘
+
+quickSort(A[],p,r)  // A[p ... r]
+{
+
+     if(p<r) then {
+        q <- partition(A,P,R);         // 분할
+        quickSort(A,p,q-1);     // 전반부 정렬
+        quickSort(A,q+1,r);   // 후반부 정렬
+               
+     }
+
+
+}
+
+partition(A[]p,r)
+{
+
+     x <- A[r];
+     i <- p-1;
+     for j <- p to r-1
+          if (A[j]<=x) then A[++i] <-> A[j];
+     
+     A[i+1] <-> A[r];
+     return i+1;
+
+
+
+}
+ 
+---
+
+## **파이썬을 이용한 퀵 정렬 구현**
+
+``` 
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    lesser_arr, equal_arr, greater_arr = [], [], []
+    for num in arr:
+        if num < pivot:
+            lesser_arr.append(num)
+        elif num > pivot:
+            greater_arr.append(num)
+        else:
+            equal_arr.append(num)
+    return quick_sort(lesser_arr) + equal_arr + quick_sort(greater_arr)
+```
+---
+
+## **자바를 이용한 퀵 정렬 구현**
+
+```
+public class QuickSorter {
+    public static List<Integer> quickSort(List<Integer> list) {
+        if (list.size() <= 1) return list;
+        int pivot = list.get(list.size() / 2);
+
+        List<Integer> lesserArr = new LinkedList<>();
+        List<Integer> equalArr = new LinkedList<>();
+        List<Integer> greaterArr = new LinkedList<>();
+
+        for (int num : list) {
+            if (num < pivot) lesserArr.add(num);
+            else if (num > pivot) greaterArr.add(num);
+            else equalArr.add(num);
+        }
+
+        return Stream.of(quickSort(lesserArr), equalArr, quickSort(greaterArr))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+}
+```
+---
+
+## 힙 정렬
+
+힙은 이진 트리로서 맨 아래 층을 제외하고는 완전히 채워져 있고 맨 아래층은 왼쪽부터 꽉 채워져 있다.
+힙의 모든 노드는 하나씩의 값을 가지고 있는데 다음 힙성질을 만족한다.
+
+**각 노드의 값은 자기 자식의 값보다 작다(힙에 값이 같은 원소가 두 개 이상 있는 경우에는 "작다" 대신 "작거나 같다")**
+
+힙 정렬의 수행 시간은 항상 **O(nlogn)** 이다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/8c52fb63-4649-4775-82a9-3b3b4782bd51/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/99a37f90-5320-4950-a832-0c054afaf9e4/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/6e854097-423b-4223-b619-cc88aa5bae1f/image.png)
+
+위의 자료는 값이 큰순서대로 정렬된 것이고 실제로는 반대로 값이 작은 것이 루트에 와야 한다.
+
+
+![](https://velog.velcdn.com/images/hs1430/post/446cafd3-9be4-44a3-9691-389f514f0f0e/image.png)
+
+힙을 만들고 루트에 있는 원소를 제거하여 다른곳에 저장하는 동시에 배열의 맨 끝 값을 루트 노드로 옮긴다. 이때 힙의 성질이 깨지게 되는데
+깨진 힙을 heapify를 통해 다시 만드는것을 반복하며 정렬을 하는 과정이다.
+
+---
+
+## 힙 정렬 알고리즘
+
+buildHeap(A[],n)
+{
+  ```
+  for i <-⌊(n/2⌋ downto 1
+      heapify(A,i,n);
+ 
+ ```
+}
+
+heapify(A[],k,n) //힙 성질을 만족하도록 고쳐준다. k = 루트
+{
+
+  ```
+  left <- 2k; right <- 2k+1;
+  
+  // 작은 자식 구하기 smaller = 2k와 2k+1 중에 작은 원소
+  
+  if(right<=n) then {           // k 의 자식이 두개인 경우
+    if (A[left] < A[right]) then smaller <- left;  //둘 중 작은애 선택
+                            else smaller <- right;
+  }
+  
+  else if (left<=n) then smaller <- left; // k의 왼쪽 자식만 있는 경우
+  else return;                            // A[k]의 리프노드 끝남
+  
+  if (A[smaller] < A[k]) then { //자기 자식중 가장 작은 값이 자신보다 작다면 바꾸고 다시 heap 재귀한다.
+      A[k] <-> A[smaller];
+      heapify (A,smaller,n);
+  }
+  ```
+}
+
+heapSort(A,n)  
+{
+
+     buildHeap(A,n);
+     for i <- n downto 2 {
+         A[1] <-> A[i];   // 루트의 원소를 배열의 마지막 부분과 교환하여 저장하는 방식으로, 역순으로 저장된다.
+         heapify(A,1,i-1);
+     }
+
+
+}
+ 
+---
+
+## **파이썬을 이용한 힙 정렬 구현**
+
+``` 
+def heapify(unsorted, index, heap_size):
+  largest = index
+  left = 2 * index + 1
+  right = 2 * index + 2
+  
+  if left < heap_size and unsorted[right] > unsorted[largest]:
+    largest = left
+    
+  if right < heap_size and unsorted[right] > unsorted[largest]:
+    largest = right
+    
+  if largest != index:
+    unsorted[largest], unsorted[index] = unsorted[index], unsorted[largest]
+    heapify(unsorted, largest, heap_size)
+
+def heap_sort(unsorted):
+  n = len(unsorted)
+  
+  for i in range(n // 2 - 1, -1, -1):
+    heapify(unsorted, i, n)
+    
+  for i in range(n - 1, 0, -1):
+    unsorted[0], unsorted[i] = unsorted[i], unsorted[0]
+    heapify(unsorted, 0, i)
+
+  return unsorted
+```
+---
+
+## **자바를 이용한 힙 정렬 구현**
+
+```
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("배열의 크기를 입력하시오");
+        int n = scanner.nextInt()+1;
+        int[] arr = new int[n];
+
+        System.out.println("배열에 들어갈 숫자를 입력하시오");
+        for(int i = 1; i<n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        System.out.println("배열에 입력한 숫자");
+        System.out.println(Arrays.toString(arr));
+
+        buildHeap(arr); //배열을 힙으로 만드는 메서드
+
+        System.out.println("힙으로 변경한 배열");
+        System.out.println(Arrays.toString(arr));
+
+        heapSort(arr); //힙을 이용해서 정렬하는 메서드
+
+        System.out.println("정렬 완료된 배열");
+        System.out.println(Arrays.toString(arr));
+    }
+
+    static void heapSort(int[] arr) {
+        int eNN = arr.length-1;
+        while(eNN > 1) {
+            swap(arr, 1, eNN);
+            eNN--;
+            pushDown(arr, 1, eNN);
+        }
+    }
+
+    //eNN = endNodeNumber
+    //tNN = tempNodeNumber
+    static void buildHeap(int[] arr) {
+        int eNN = arr.length - 1; // 마지막 노드
+        int tNN = eNN/2 + 1; //1번째 리프노드 번호
+
+        while(tNN > 1) {
+            tNN--; // 자식을 가지고 있는 마지막 노드부터 시작
+            pushDown(arr, tNN, eNN);
+        }
+    }
+
+    static void pushDown(int[] arr, int tNN, int eNN) {
+        int y = findLarger(arr, tNN, eNN); 
+        //자식 노드중에서 루트 노드보다 더 큰 값을 가지는 노드 번호 얻어냄
+
+        while(arr[tNN] < arr[y]){
+            swap(arr, tNN, y);
+            tNN = y;
+            y = findLarger(arr, tNN, eNN);
+            // leaf노드 쪽으로 내려가면서 값의 제자리를 찾아간다.
+        }
+    }
+
+    static int findLarger(int[] arr, int tNN, int eNN){
+        int tmp = tNN*2+1; //오른쪽 자식 노드의 번호
+        int y = tNN;
+
+        if(tmp <= eNN){//자식 노드가 두개인 경우
+            if(arr[tNN] < arr[tmp]) //오른쪽 자식 노드의 value가 더 크다면
+                y = tmp;
+            if(arr[y] < arr[tmp-1]) //왼쪽 자식 노드의 value가 더 크다면
+                y = tmp-1;
+        }
+        else if(tmp-1 <= eNN){ //자식 노드가 1개인 경우
+            if(arr[tNN] < arr[tmp-1]) // 자식 노드의 value가 더 크다면
+                y = tmp-1;
+        }
+        return y;
+    }
+
+    static void swap(int[] arr, int a, int b){
+        int tmp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = tmp;
+    }
+}
+```
+
+---
+
+- 구현되어있는 메서드 사용
+
+```class Main {
+    public static void main(String[] args) {
+        Queue pq = new PriorityQueue();
+
+        int[] arr = {3,1,5,2,4};
+        for(int i=0; i<arr.length; i++)
+            pq.offer(arr[i]);
+
+        System.out.println(pq);
+
+        Object obj = null;
+        int a = 0;
+        while((obj = pq.poll())!=null)
+            System.out.printf("%s ",obj);
+    }
+}
+```
+
+
+---
+
+# TREE
+
+
+- 이진탐색트리
+
+**탐색**
+
+**삽입**
+
+**삭제**
+
+- B 트리
+
+---
+
+## 이진탐색트리
+
+이진탐색트리는 다음과 같은 특성을 갖는다.
+
+- 1. 이진탐색트리의 각 노드는 키값을 하나씩 갖는다. 각 노드의 키값은 모두 달라야 한다.
+
+- 2. 최상위 레벨에 루트 노드가 있고, 각노드는 최대 두개의 자식 노드를 갖는다.
+
+- 3. 임의의 노드의 키값은 자신의 왼쪽 자식 노드의 키값보다 크고, 오른쪽 자식 노드의 키값보다 작다.
+
+이진탐색트리의 시간복잡도는 **O(h)** 이다.
+h는 트리의 높이인데 이를 n으로 치환하면 n = 2^h - 1 이므로 h = log(n-1)
+즉 **O(logn)** 이 된다.
+하지만 한쪽으로만 몰리게 되는 경우 최악의 시간복잡도는 **O(n)** 이 된다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/5691bbc0-3269-4070-bb6a-889fcf09ff7b/image.png)
+```
+
+```
+```
+
+```
+![](https://velog.velcdn.com/images/hs1430/post/988f237e-0966-4a2f-b405-b27d7b48eab9/image.png)
+
+
+
+
+---
+
+## 이진탐색트리 - 탐색 알고리즘
+
+treeSearch(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       if(t=NIL or key[t] = x) then return t; // 검색하고자 했던키가 루트 노드인 경우
+       // t = NIL이면 NIL을 리턴해 검색이 실패했음을 알려야 하는데 그게 없다.
+       if(x < key[t])   // 루트 노드 t의 키값과 x를 비교한다
+            then return treeSearch(left[t],x); //key[t]>x = 왼쪽 서브트리에 x
+            else return treeSearch(right[t],x); //key[t]<x 오른쪽 서브트리에 x
+   
+   
+   ```
+}
+
+---
+## 이진탐색트리 - 탐색 알고리즘 파이썬
+
+def search(self, data):
+self.base = self.root
+while self.base:
+if self.base.data == data:
+return True
+elif self.base.data > data:
+self.base = self.base.left
+else:
+self.base = self.base.right
+return False
+
+
+
+---
+
+## 이진탐색트리 - 탐색 알고리즘 자바
+
+public MyNode search(Integer data) {
+
+
+    MyNode cursor = this.head;
+
+    while(true) {
+        if(cursor == null) {
+            System.out.println(data+" not exists");
+            return null;
+        }
+
+        if(cursor.value == data) {
+            return cursor;
+        } else {
+            if(data > cursor.value) {
+                cursor = cursor.right;
+            } else {
+                cursor = cursor.left;
+            }
+        }
+    }
+}
+
+---
+
+
+## 이진탐색트리 - 삽입
+
+![](https://velog.velcdn.com/images/hs1430/post/ac7e249c-3961-4cfe-a99c-2790dab1b08a/image.png)
+
+삽입은 탐색과 상당히 유사하다.
+
+첫 삽입시에만 루트 노드로 취급하고 이후에는 루트 노드와 비교하여
+
+작다면 왼쪽으로 크다면 오른쪽으로 자리를 찾아 삽입하게 된다.
+
+
+---
+
+## 이진탐색트리 - 삽입 알고리즘
+
+treeInsert(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       if(t=NIL) then {
+            key[r] <- x; left[r] <- NIL; right[r] <-NIL; //r = 새노드
+            return r;
+       }
+       
+       if(x < key[t])   // 루트 노드 t의 키값과 x를 비교한다
+            then {left[t] <- treeInsert(left[t],x); return t;}
+            else {right[t] <- treeInsert(right[t],x); return t;}
+   
+   
+   ```
+}
+
+---
+
+## 이진탐색트리 - 삽입 알고리즘 파이썬
+
+def insert(self, data):
+if self.root is None:
+self.root = Node(data)
+else:
+self.base = self.root
+while True:
+if data == self.base.data:
+print("중복된 KEY 값")
+break
+elif data > self.base.data:
+if self.base.right is None:
+self.base.right = Node(data)
+break
+else:
+self.base = self.base.right
+else:
+if self.base.left is None:
+self.base.left = Node(data)
+break
+else:
+self.base = self.base.left
+
+---
+## 이진탐색트리 - 삽입 알고리즘 자바
+public boolean insert(Integer data) {
+MyNode newNode = new MyNode(data);
+MyNode cursor = this.root;
+// case 1 : 트리가 비어있는 경우
+if (root == null) {
+this.root = newNode;
+size++;
+} else {
+// case 2 : 최소 1개 이상의 노드가 트리에 존재하는 경우
+while (true) {
+// case 2-1 : 커서가 가리키고 있는 노드가 새로운 노드보다 큰 경우
+// 				커서를 트리의 왼쪽 방향으로 이동한다
+if (cursor.value > data) {
+if (cursor.left == null) {
+cursor.left = newNode;
+return true;
+} else {
+cursor = cursor.left;
+}
+// case 2-2 : 커서가 가리키고 있는 노드가 새로운 노드보다 작거나 같은 경우
+//				커서를 트리의 오른쪽 방향으로 이동한다
+} else {
+if (cursor.right == null) {
+cursor.right = newNode;
+return true;
+} else {
+cursor = cursor.right;
+}
+}
+}
+}
+return false;
+}
+
+---
+
+## 이진탐색트리 - 삭제
+
+이진탐색트리에서 삭제는 앞서 소개한 탐색, 삽입보다 어려운 편이다.
+이진탐색트리에서 원하는 노드 r을 삭제 하려면 다음 세 가지의 경우에 따라
+각각 다르게 처리를 해주어야 한다.
+
+- Case 1 : r이 리프 노드인 경우
+
+- Case 2 : r의 자식 노드가 하나인 경우
+
+- Case 3 : r의 자식 노드가 두 개인 경우
+
+Case 1, 2 는 처리가 비교적 간단하지만, Case 3는 다소 복잡하다.
+
+Case 1 인 경우 선택한 r을 그냥 제거 하면된다.
+
+Case 2 인 경우 r의 부모가 r의 자식을 직접 가리키도록 해야한다.
+
+Case 3 인 경우 r의 오른쪽 서브트리의 최소원소 노드 s를 삭제하고,
+s를 r 자리에 놓아야한다.
+
+이때 s 는 왼쪽 서브트리보다 크고 오른쪽 서브트리보다 작은 값을 가져야한다.
+
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/fc80b62e-f078-42c5-82ff-d7a3fa5fee43/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/3432994a-6f7e-4012-83dd-1b7e9ad4beda/image.png)
+
+---
+
+## 이진탐색트리 - 삭제 알고리즘
+
+treeDelete(t,r,p) // t: 트리의 루트 노드 r: 삭제하고자 하는 노드 p: r의 부모 노드
+{
+  ```
+  if(r=t) then root <- deleteNode(t);
+  else if (r=left[p])
+             then left[p] <- deleteNode(r);
+             else right[p] <- deleteNode(r);
+     
+  ```
+}
+deleteNode(r)
+{
+  ```
+  if(left[r] = right[r] =NIL) then return NIL; //Case 1
+  else if(left[r] = NIL and right[r] != NIL) then return right[r];  // Case 2
+  else if(left[r] != NIL and right[r] = NIL) then return left[r];
+  // Case 2
+  else{   // Case 3
+            s <- right[r];  // r의 오른쪽 자식 노드를 s로 지정
+            while(left[s] != NIL) // s의 왼쪽 자식 노드가 없을때까지 실행 즉 s가 최소값이 될때까지 실행
+               { parent <- s; s <- left[s];} //s였던 노드는 s의 부모가 되고 왼쪽 자식 노드값이 s값이 된다.
+            key[r] <- key[s];
+            if (s=right[r]) then right[r] <- right[s]; 
+                            else left[parent] <- right[s];
+            return r;
+  }
+  
+  ```
+}
+
+---
+
+## 이진탐색트리 - 삭제 알고리즘 파이썬
+
+def remove(self, data):
+self.searched = False
+self.cur_node = self.root
+self.parent = self.root
+while self.cur_node:
+if self.cur_node.data == data:
+self.searched = True
+break
+elif self.cur_node.data > data:
+self.parent = self.cur_node
+self.cur_node = self.cur_node.left
+else:
+self.parent = self.cur_node
+self.cur_node = self.cur_node.right
+if self.searched:
+# root를 지우는 경우
+if self.cur_node.data == self.parent.data:
+self.root = None
+else:
+# [CASE 1] 삭제하는 node가 leaf node인 경우
+if self.cur_node.left is None and self.cur_node.right is None:
+if self.parent.data > self.cur_node.data:
+self.parent.left = None
+else:
+self.parent.right = None
+
+            # [CASE 2] 삭제하는 node의 자식이 하나인 경우
+            elif self.cur_node.left is not None and self.cur_node.right is None:
+                if self.parent.data > data:
+                    self.parent.left = self.cur_node.left
+                else:
+                    self.parent.right = self.cur_node.left
+            elif self.cur_node.left is None and self.cur_node.right is not None:
+                if self.parent.data > data:
+                    self.parent.left = self.cur_node.right
+                else:
+                    self.parent.right = self.cur_node.right
+
+            # [CASE 3] 삭제하는 node의 자식이 둘인 경우
+            elif self.cur_node.left is not None and self.cur_node.right is not None:
+                self.tmp_parent = self.cur_node.right
+                self.tmp_cur = self.cur_node.right
+                while self.tmp_cur.left:
+                    self.tmp_parent = self.tmp_cur
+                    self.tmp_cur = self.tmp_cur.left
+                if self.tmp_cur.right is not None:
+                    self.tmp_parent.left = self.tmp_cur.right
+                else:
+                    self.tmp_parent.left = None
+                if self.parent.data > data:
+                    self.parent.left = self.tmp_cur
+                else:
+                    self.parent.right = self.tmp_cur
+                self.tmp_cur.left = self.cur_node.left
+                self.tmp_cur.right = self.cur_node.right
+    else:
+        print("존재하지 않는 데이터")
+
+---
+
+## 이진탐색트리 - 삭제 알고리즘 자바
+
+if(cursor.left == null && cursor.right == null) {
+if(cursor != root) {
+if(parent.left == cursor) {
+parent.left = null;
+} else {
+parent.right = null;
+}
+} else {
+root = null;
+}
+}
+
+else if (cursor.left != null && cursor.right != null) {
+// 삭제될 노드와 그 부모노드 사이의 최소 값을 지닌 노드를 찾는다.
+MyNode temp = findMinNode(cursor.right);
+int tempValue = temp.value;
+
+    // 최소값 노드를 삭제 후, 삭제될 노드에 최소값을 삽입한다.
+    remove(root, temp.value);
+    cursor.value = tempValue;
+}
+
+else {
+MyNode child = (cursor.left != null) ? cursor.left : cursor.right;
+
+    if(cursor != root) {
+        if(cursor == parent.left) {
+            parent.left = child;
+        } else {
+            parent.right = child;
+        }
+    } else {
+        root = child;
+    }
+}
+
+---
+
 
 
 
@@ -913,3 +1602,9 @@ public class MergeSorter {
 - https://www.daleseo.com/sort-insertion/
 - https://www.daleseo.com/sort-selection/
 - https://www.daleseo.com/sort-merge/
+- https://www.daleseo.com/sort-quick/
+- https://good-potato.tistory.com/m/50
+- https://seanpark11.tistory.com/68
+- https://velog.io/@xdfc1745/%EC%9D%B4%EC%A7%84%ED%8A%B8%EB%A6%AC-%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84
+- https://93jpark.tistory.com/109
+- https://honggom.tistory.com/40
