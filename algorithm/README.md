@@ -511,66 +511,65 @@ d[v]보다 짧다면 d[v]값을 d[u] + w(u,v)로 변경한다는 내용이다.
 
 **삽입정렬**
 
-
-
-**선택 정렬**
----
+## **선택 정렬**
 
 선택 정렬은 원리가 간단한 정렬 알고리즘이다.
 
-배열 A[1 . . . n]에서 가장 큰 원소를 찾아 이원소와 배열의 끝자리에 있는
+배열 A[1 . . . n]에서 가장 큰 원소를 찾아 이 원소와 배열의 끝자리에 있는
 A[n]과 자리를 바꾼다.
-해당 원소는 정렬이 완료되었으므로 다음작업에서는 해당 원소를 제외한
+해당 원소는 정렬이 완료되었으므로 다음 작업에서는 해당 원소를 제외한
 나머지 원소들로 같은 동작을 반복한다.
 
-선택정렬의 수행 시간은 (n-1)+(n-2)+...+2+1 = n(n-1)/2 이므로 항상 **O(n^2)**이다.
- 
----
-
-![](https://velog.velcdn.com/images/hs1430/post/a719000e-76f6-45c8-bb0b-2837c636092d/image.png)
+선택정렬의 수행 시간은 (n-1)+(n-2)+...+2+1 = n(n-1)/2 이므로 항상 **O(n^2)** 이다.
 
 ---
 
+![https://velog.velcdn.com/images/hs1430/post/a719000e-76f6-45c8-bb0b-2837c636092d/image.png](https://velog.velcdn.com/images/hs1430/post/a719000e-76f6-45c8-bb0b-2837c636092d/image.png)
 
-##   **선택 정렬 알고리즘**
+---
 
-
+## **선택 정렬 알고리즘**
 
 selectionSort(A[],n)
 {
 
-     for last <- n downto 2{   // downto 는 to의 반대 4 downto 1 = 1234
-          k <- theLargest(A, last);       
-          A[k] ↔ A[last];    // A[k]와 A[last]의 값 교환
-          
-      }
+```
+ for last <- n downto 2{   // downto 는 to의 반대 4 downto 1 = 1234
+      k <- theLargest(A, last);
+      A[k] ↔ A[last];    // A[k]와 A[last]의 값 교환
 
+  }
+
+```
 
 }
 
 theLargest(A[],last)
 {
 
-     largest <- 1;
-     
-      for i <- 2 to last      
-         if (A[i] > A[largest]) then largest <- 1;         
-      return largest;
+```
+ largest <- 1;
 
+  for i <- 2 to last
+     if (A[i] > A[largest]) then largest <- 1;
+  return largest;
+
+```
 
 }
- 
----
 
+---
 
 ##  **파이썬을 이용한 선택 정렬 구현**
 
  ```
-  def insertion_sort(arr):
-    for end in range(1, len(arr)):
-        for i in range(end, 0, -1):
-            if arr[i - 1] > arr[i]:
-                arr[i - 1], arr[i] = arr[i], arr[i - 1]
+  def selection_sort(arr):
+    for i in range(len(arr) - 1):
+        min_idx = i
+        for j in range(i + 1, len(arr)):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
  ```
  
 ---
@@ -578,27 +577,29 @@ theLargest(A[],last)
 ##  **자바를 이용한 선택 정렬 구현**
 
  ```
- public class Insertion {
+ public class Selection {
     public static void sort(int[] arr) {
-        for (int end = 1; end < arr.length; end++) {
-            int toInsert = arr[end];
-            int i = end;
-            while (i > 0 && arr[i - 1] > toInsert) {
-                arr[i] = arr[i - 1];
-                i--;
+        for (int i = 0; i < arr.length - 1; i++) {
+            int minIdx = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[minIdx])
+                    minIdx = j;
             }
-            arr[i] = toInsert;
+            swap(arr, i, minIdx);
         }
+    }
+
+    private static void swap(int[] arr, int a, int b) {
+        int tmp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = tmp;
     }
 }
  ```
- 
+
 ---
 
-
-##  **버블 정렬**
-
-
+## **버블 정렬**
 
 버블 정렬의 원리도 선택 정렬과 크게 다르지않다.
 
@@ -610,30 +611,35 @@ theLargest(A[],last)
 이를 반복하면 처음 오른쪽 끝에 도달했을때 제일 큰 숫자가 last위치에 오게된다.
 
 버블 정렬의 수행시간도 선택 정렬과 마찬가지로 (n-1)+(n-2)+...+2+1 = n(n-1)/2 이므로 항상 **O(n^2)**이다.
-하지만 개선된 버블 정렬을 이용하면 수행시간이 **O(n)**이 된다.
- 
+하지만 개선된 버블 정렬을 이용하면 최적의 경우 수행시간이 **O(n)** 이 된다.
+이때 최적의 경우는 정렬이 완료되어있는 경우이다.
+
 ---
 
-![](https://velog.velcdn.com/images/hs1430/post/6b0de2f4-e074-4aba-8a96-bb1b078a1221/image.png)
- 
+![https://velog.velcdn.com/images/hs1430/post/6b0de2f4-e074-4aba-8a96-bb1b078a1221/image.png](https://velog.velcdn.com/images/hs1430/post/6b0de2f4-e074-4aba-8a96-bb1b078a1221/image.png)
+
 ---
 
-##  **버블 정렬 알고리즘**
+## **버블 정렬 알고리즘**
 
 bubbleSort(A[], n)
 {
-```   
+
+```
   for last <- n downto 2
       for i to last-1
           if (A[i] > A[i+1]) then A[i] ↔ A[i+1];
+
 ```
+
 }
 
 - **개선된 버블 정렬 알고리즘**
 
 bubbleSort(A[], n)
 {
-```   
+
+```
   for last <- n downto 2
       sorted <- TRUE;
       for i to last-1{
@@ -642,20 +648,24 @@ bubbleSort(A[], n)
       }
       if(sorted = TRUE) then return;
   }
+
 ```
+
 }
 
 ---
 
 ## **파이썬을 이용한 버블 정렬 구현**
 
-``` 
+```
 def bubble_sort(arr):
     for i in range(len(arr) - 1, 0, -1):
         for j in range(i):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
 ```
+
 ---
 
 ## **자바를 이용한 버블 정렬 구현**
@@ -681,8 +691,529 @@ public class Bubble {
         arr[b] = tmp;
     }
 }
+
+```
+
+---
+
+## **삽입 정렬**
+
+삽입 정렬은 이미 정렬되어 있는 i개짜리 배열에 하나의 원소를 더 더하여
+정렬된 i+1개짜리 배열을 만드는 과정을 반복한다.
+선택 정렬과 버블 정렬이 n개 짜리 배열 에서 아직 **정렬되지 않은 배열**의 크기를 하나씩 줄이는 데 반해
+삽입 정렬은 한 개 짜리 배열에서 시작해서 **이미 정렬된 배열**의 크기를 하나씩 늘리는 정렬이다.
+
+삽입 정렬의 수행시간은 1+2+3+...+(n-1) = n(n-1)/2 이므로 **O(n^2)** 이지만
+배열이 완전히 정렬되어 있다면 while 루프를 한 번도 수행하지 않아 최적의 수행시간은 **O(n)** 이된다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/1468a15c-2529-4273-aa79-887d34f4076c/image.png)
+
+---
+
+## **삽입 정렬 알고리즘**
+
+insertionSort(A[],n)
+{
+
+     for i <- 2 to n {
+         loc <- i-1;
+         newItem <- A[i]; // 이 지점에서 A[1~i-1]은 정렬되어있는 상태
+     
+         while ( loc >= 1 and newItem < A[loc]) {
+            A[loc+1] <- A[loc];
+            loc--; // newItem과 loc를 하나씩 비교하며 마지막엔 탈출
+     
+         }
+         
+         A[loc+1] <- newItem; //while문을 거치지 않는 경우 맨앞에 추가
+         
+     }
+
+
+}
+
+
+---
+
+##  **파이썬을 이용한 삽입 정렬 구현**
+
+ ```
+  def insertion_sort(arr):
+    for end in range(1, len(arr)):
+        for i in range(end, 0, -1):
+            if arr[i - 1] > arr[i]:
+                arr[i - 1], arr[i] = arr[i], arr[i - 1]
+ ```
+ 
+---
+
+##  **자바를 이용한 삽입 정렬 구현**
+
+ ```
+ public class Insertion {
+    public static void sort(int[] arr) {
+        for (int end = 1; end < arr.length; end++) {
+            int toInsert = arr[end];
+            int i = end;
+            while (i > 0 && arr[i - 1] > toInsert) {
+                arr[i] = arr[i - 1];
+                i--;
+            }
+            arr[i] = toInsert;
+        }
+    }
+}
+ ```
+ 
+---
+
+# 고급 정렬 알고리즘
+
+- 고급 정렬 알고리즘
+
+**병합 정렬**
+
+**퀵 정렬**
+
+**힙 정렬**
+
+## 병합 정렬(Merge Sort)
+
+병합 정렬은 입력을 반으로 나누고, 이렇게 나눈 전반부와 후반부를 각각 독립적으로 정렬한다.
+마지막으로 정렬된 두 부분을 합쳐서,즉 병합하여 정렬된 배열을 얻는다.
+여기서 전반부,후반부를 정렬할 때도 반으로 나눈 다음 정렬해서 병합한다.
+이를 재귀적으로 반복하는것이 병합 정렬이다.
+
+병합 정렬의 수행시간은 항상 **O(nlogn)** 이다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/711043b9-8313-423e-ae68-5b0425dfd05a/image.png)
+전체적인 부분
+
+![](https://velog.velcdn.com/images/hs1430/post/2893f75f-7412-4bb4-8e48-1abb5c4318b8/image.png)
+
+전반부 후반부 정렬 완료후
+
+---
+
+## 병합 정렬 알고리즘
+
+MergeSort(A[],p,r)  // A[p ... r]
+{
+
+     if(p<r) then {
+        q <-⌊(p+r)/2⌋;         //p,r의 중간 지점 계산
+        mergeSort(A,p,q);     // 전반부 정렬
+        mergeSort(A,q+1,r);   // 후반부 정렬
+        merge(A,p,q,r);       // 병합
+     }
+
+
+}
+
+merge(A[]p,q,r)
+{
+
+     i <- p; j<-q+1; t<-1;
+     
+     while (i <= q and j <= r) {
+        if ( A[i] <= A[j])
+        then tmp[t++] <- A[i++]; //조건에 따라 tmp에 값저장
+        else tmp[t++] <- A[j++];
+    }                           //밑부분은 한쪽 배열이 모두 tmp에 저장되고 남은 부분 정렬
+    while(i<=q)                //왼쪽 부분 배열이 남은 경우
+       tmp[t++] <- A[i++];
+       
+    while(j<=r)               //오른쪽 부분 배열이 남은 경우
+       tmp[t++] <- A[j++];
+       
+       i <- p; t <- 1;
+       while(i<=r)               // 결과를 A[p ... r]에 저장
+       A[i++] <- tmp[t++];
+
+
+
+}
+ 
+---
+
+## **파이썬을 이용한 병합 정렬 구현**
+
+``` 
+def merge_sort(arr):
+    if len(arr) < 2:
+        return arr
+
+    mid = len(arr) // 2
+    low_arr = merge_sort(arr[:mid])
+    high_arr = merge_sort(arr[mid:])
+
+    merged_arr = []
+    l = h = 0
+    while l < len(low_arr) and h < len(high_arr):
+        if low_arr[l] < high_arr[h]:
+            merged_arr.append(low_arr[l])
+            l += 1
+        else:
+            merged_arr.append(high_arr[h])
+            h += 1
+    merged_arr += low_arr[l:]
+    merged_arr += high_arr[h:]
+    return merged_arr
 ```
 ---
+
+## **자바를 이용한 병합 정렬 구현**
+
+```
+public class MergeSorter {
+    public static int[] sort(int[] arr) {
+        if (arr.length < 2) return arr;
+
+        int mid = arr.length / 2;
+        int[] low_arr = sort(Arrays.copyOfRange(arr, 0, mid));
+        int[] high_arr = sort(Arrays.copyOfRange(arr, mid, arr.length));
+
+        int[] mergedArr = new int[arr.length];
+        int m = 0, l = 0, h = 0;
+        while (l < low_arr.length && h < high_arr.length) {
+            if (low_arr[l] < high_arr[h])
+                mergedArr[m++] = low_arr[l++];
+            else
+                mergedArr[m++] = high_arr[h++];
+        }
+        while (l < low_arr.length) {
+            mergedArr[m++] = low_arr[l++];
+        }
+        while (h < high_arr.length) {
+            mergedArr[m++] = high_arr[h++];
+        }
+        return mergedArr;
+    }
+}
+```
+---
+
+## 퀵 정렬
+
+퀵 정렬은 평균적으로 가장 좋은 성능을 가져 현장에서 가장 많이 쓰는 정렬 알고리즘이다.
+**정렬 후 병합** 을 하는 **병합 정렬** 과는 달리 **퀵정렬** 은 **병합을 한뒤에 정렬** 을 한다.
+
+퀵 정렬의 수행시간은 분할할때 한쪽에만 다 몰리는 최악의 경우에만 **O(n^2)** 이고
+나머지 경우에는 **O(nlogn)** 이다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/9b57cabc-6519-49f1-b610-b88f9785f7c0/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/ecb1b146-a295-4f1c-9003-902e78164972/image.png)
+
+
+---
+
+## 퀵 정렬 알고리즘
+
+quickSort(A[],p,r)  // A[p ... r]
+{
+
+     if(p<r) then {
+        q <- partition(A,P,R);         // 분할
+        quickSort(A,p,q-1);     // 전반부 정렬
+        quickSort(A,q+1,r);   // 후반부 정렬
+               
+     }
+
+
+}
+
+partition(A[]p,r)
+{
+
+     x <- A[r];
+     i <- p-1;
+     for j <- p to r-1
+          if (A[j]<=x) then A[++i] <-> A[j];
+     
+     A[i+1] <-> A[r];
+     return i+1;
+
+
+
+}
+ 
+---
+
+## **파이썬을 이용한 퀵 정렬 구현**
+
+``` 
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    lesser_arr, equal_arr, greater_arr = [], [], []
+    for num in arr:
+        if num < pivot:
+            lesser_arr.append(num)
+        elif num > pivot:
+            greater_arr.append(num)
+        else:
+            equal_arr.append(num)
+    return quick_sort(lesser_arr) + equal_arr + quick_sort(greater_arr)
+```
+---
+
+## **자바를 이용한 퀵 정렬 구현**
+
+```
+public class QuickSorter {
+    public static List<Integer> quickSort(List<Integer> list) {
+        if (list.size() <= 1) return list;
+        int pivot = list.get(list.size() / 2);
+
+        List<Integer> lesserArr = new LinkedList<>();
+        List<Integer> equalArr = new LinkedList<>();
+        List<Integer> greaterArr = new LinkedList<>();
+
+        for (int num : list) {
+            if (num < pivot) lesserArr.add(num);
+            else if (num > pivot) greaterArr.add(num);
+            else equalArr.add(num);
+        }
+
+        return Stream.of(quickSort(lesserArr), equalArr, quickSort(greaterArr))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+}
+```
+---
+
+## 힙 정렬
+
+힙은 이진 트리로서 맨 아래 층을 제외하고는 완전히 채워져 있고 맨 아래층은 왼쪽부터 꽉 채워져 있다.
+힙의 모든 노드는 하나씩의 값을 가지고 있는데 다음 힙성질을 만족한다.
+
+**각 노드의 값은 자기 자식의 값보다 작다(힙에 값이 같은 원소가 두 개 이상 있는 경우에는 "작다" 대신 "작거나 같다")**
+
+힙 정렬의 수행 시간은 항상 **O(nlogn)** 이다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/8c52fb63-4649-4775-82a9-3b3b4782bd51/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/99a37f90-5320-4950-a832-0c054afaf9e4/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/6e854097-423b-4223-b619-cc88aa5bae1f/image.png)
+
+위의 자료는 값이 큰순서대로 정렬된 것이고 실제로는 반대로 값이 작은 것이 루트에 와야 한다.
+
+
+![](https://velog.velcdn.com/images/hs1430/post/446cafd3-9be4-44a3-9691-389f514f0f0e/image.png)
+
+힙을 만들고 루트에 있는 원소를 제거하여 다른곳에 저장하는 동시에 배열의 맨 끝 값을 루트 노드로 옮긴다. 이때 힙의 성질이 깨지게 되는데
+깨진 힙을 heapify를 통해 다시 만드는것을 반복하며 정렬을 하는 과정이다.
+
+---
+
+## 힙 정렬 알고리즘
+
+buildHeap(A[],n)
+{
+  ```
+  for i <-⌊(n/2⌋ downto 1
+      heapify(A,i,n);
+ 
+ ```
+}
+
+heapify(A[],k,n) //힙 성질을 만족하도록 고쳐준다. k = 루트
+{
+
+  ```
+  left <- 2k; right <- 2k+1;
+  
+  // 작은 자식 구하기 smaller = 2k와 2k+1 중에 작은 원소
+  
+  if(right<=n) then {           // k 의 자식이 두개인 경우
+    if (A[left] < A[right]) then smaller <- left;  //둘 중 작은애 선택
+                            else smaller <- right;
+  }
+  
+  else if (left<=n) then smaller <- left; // k의 왼쪽 자식만 있는 경우
+  else return;                            // A[k]의 리프노드 끝남
+  
+  if (A[smaller] < A[k]) then { //자기 자식중 가장 작은 값이 자신보다 작다면 바꾸고 다시 heap 재귀한다.
+      A[k] <-> A[smaller];
+      heapify (A,smaller,n);
+  }
+  ```
+}
+
+heapSort(A,n)  
+{
+
+     buildHeap(A,n);
+     for i <- n downto 2 {
+         A[1] <-> A[i];   // 루트의 원소를 배열의 마지막 부분과 교환하여 저장하는 방식으로, 역순으로 저장된다.
+         heapify(A,1,i-1);
+     }
+
+
+}
+ 
+---
+
+## **파이썬을 이용한 힙 정렬 구현**
+
+``` 
+def heapify(unsorted, index, heap_size):
+  largest = index
+  left = 2 * index + 1
+  right = 2 * index + 2
+  
+  if left < heap_size and unsorted[right] > unsorted[largest]:
+    largest = left
+    
+  if right < heap_size and unsorted[right] > unsorted[largest]:
+    largest = right
+    
+  if largest != index:
+    unsorted[largest], unsorted[index] = unsorted[index], unsorted[largest]
+    heapify(unsorted, largest, heap_size)
+
+def heap_sort(unsorted):
+  n = len(unsorted)
+  
+  for i in range(n // 2 - 1, -1, -1):
+    heapify(unsorted, i, n)
+    
+  for i in range(n - 1, 0, -1):
+    unsorted[0], unsorted[i] = unsorted[i], unsorted[0]
+    heapify(unsorted, 0, i)
+
+  return unsorted
+```
+---
+
+## **자바를 이용한 힙 정렬 구현**
+
+```
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("배열의 크기를 입력하시오");
+        int n = scanner.nextInt()+1;
+        int[] arr = new int[n];
+
+        System.out.println("배열에 들어갈 숫자를 입력하시오");
+        for(int i = 1; i<n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        System.out.println("배열에 입력한 숫자");
+        System.out.println(Arrays.toString(arr));
+
+        buildHeap(arr); //배열을 힙으로 만드는 메서드
+
+        System.out.println("힙으로 변경한 배열");
+        System.out.println(Arrays.toString(arr));
+
+        heapSort(arr); //힙을 이용해서 정렬하는 메서드
+
+        System.out.println("정렬 완료된 배열");
+        System.out.println(Arrays.toString(arr));
+    }
+
+    static void heapSort(int[] arr) {
+        int eNN = arr.length-1;
+        while(eNN > 1) {
+            swap(arr, 1, eNN);
+            eNN--;
+            pushDown(arr, 1, eNN);
+        }
+    }
+
+    //eNN = endNodeNumber
+    //tNN = tempNodeNumber
+    static void buildHeap(int[] arr) {
+        int eNN = arr.length - 1; // 마지막 노드
+        int tNN = eNN/2 + 1; //1번째 리프노드 번호
+
+        while(tNN > 1) {
+            tNN--; // 자식을 가지고 있는 마지막 노드부터 시작
+            pushDown(arr, tNN, eNN);
+        }
+    }
+
+    static void pushDown(int[] arr, int tNN, int eNN) {
+        int y = findLarger(arr, tNN, eNN); 
+        //자식 노드중에서 루트 노드보다 더 큰 값을 가지는 노드 번호 얻어냄
+
+        while(arr[tNN] < arr[y]){
+            swap(arr, tNN, y);
+            tNN = y;
+            y = findLarger(arr, tNN, eNN);
+            // leaf노드 쪽으로 내려가면서 값의 제자리를 찾아간다.
+        }
+    }
+
+    static int findLarger(int[] arr, int tNN, int eNN){
+        int tmp = tNN*2+1; //오른쪽 자식 노드의 번호
+        int y = tNN;
+
+        if(tmp <= eNN){//자식 노드가 두개인 경우
+            if(arr[tNN] < arr[tmp]) //오른쪽 자식 노드의 value가 더 크다면
+                y = tmp;
+            if(arr[y] < arr[tmp-1]) //왼쪽 자식 노드의 value가 더 크다면
+                y = tmp-1;
+        }
+        else if(tmp-1 <= eNN){ //자식 노드가 1개인 경우
+            if(arr[tNN] < arr[tmp-1]) // 자식 노드의 value가 더 크다면
+                y = tmp-1;
+        }
+        return y;
+    }
+
+    static void swap(int[] arr, int a, int b){
+        int tmp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = tmp;
+    }
+}
+```
+
+---
+
+- 구현되어있는 메서드 사용
+
+```class Main {
+    public static void main(String[] args) {
+        Queue pq = new PriorityQueue();
+
+        int[] arr = {3,1,5,2,4};
+        for(int i=0; i<arr.length; i++)
+            pq.offer(arr[i]);
+
+        System.out.println(pq);
+
+        Object obj = null;
+        int a = 0;
+        while((obj = pq.poll())!=null)
+            System.out.printf("%s ",obj);
+    }
+}
+```
+
+
+---
+
 
 
 
@@ -696,5 +1227,3 @@ public class Bubble {
 - [https://baactree.tistory.com/26](https://baactree.tistory.com/26)
 - [https://blog.encrypted.gg/922](https://blog.encrypted.gg/922)
 - 쉽게 배우는 알고리즘
-- https://www.daleseo.com/sort-bubble/
-- https://www.daleseo.com/sort-insertion/
