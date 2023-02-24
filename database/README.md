@@ -633,12 +633,106 @@ SELECT 학생.학번, 이름, 학점 FROM 학생
 | 182 | 진욱 | NULL |
 | 183 | 원석 | NULL |
 
+# 트랜잭션
+
+## 트랜잭션(transaction)이란?
+
+> **한 묶음으로 처리**되도록 만든 SQL 명령문들을 묶은 **작업** **단위**
+
+
+대부분의 의미 있는 서비스 처리를 하려면 SQL 명령문 한번 (SELECT, UPDATE, …)만으로는 어렵다.
+
+**계좌이체**라는 작업을 예시로 들어보자. 만약 X의 돈을 100 감소시키는 UPDATE 문 직후에 서버가 다운되면 어떻게 될까? 더 이상 서버에선 쿼리문을 날리지 못하니, Y에겐 100만큼의 돈이 가지 않고 회사가 X의 돈을 훔친 꼴이 된다(!).
+
+그리고 갑작스러운 서버 다운, 네트워크 오류, 데이터센터 화재 등 데이터베이스의 **일관성**을 위협하는 요소들은 생각보다 많다.
+
+이를 해결하기 위해선 계좌이체라는 하나의 처리를 { X 잔고 UPDATE 문,  Y 잔고 UPDATE 문 } 한 단위로 묶어서 모두 실행이 끝나야만 정상 처리가 되도록 해야 한다.
+
+![https://media.geeksforgeeks.org/wp-content/uploads/11-6.jpg](https://media.geeksforgeeks.org/wp-content/uploads/11-6.jpg)
+
+트랜잭션 과정중에 하나의 쿼리문이라도 오류가 있으면 전체를 **취소**(ROLLBACK)해야 한다.
+
+- COMMIT : 트랜잭션의 실행 결과를 데이터베이스에 최종적으로 반영하는 것, 즉 DB가 일관성 있는 상태이므로 정상 종료하겠다는 것
+- ROLLBACK : 실행 결과를 반영하지 않고 취소하여 원래 상태로 되돌리는 것
+
+실제 트랜잭션 코드
+
+```mysql
+START TRANSACTION;
+
+INSERT INTO Student values(18005678,'성욱','INFP');
+INSERT INTO Student values(17000000,'진욱','ISTJ');
+# 여기까진 성욱, 진욱 존재함
+COMMIT;
+# 성욱, 진욱 데이터 삽입 확정
+```
+
+```mysql
+# 트랜잭션 시작, 아래 명령문들은 하나의 묶음으로 처리됨
+START TRANSACTION;
+
+INSERT INTO Student values(17001234, '1', '스펀지밥', 'ENFP', 1);
+INSERT INTO Student values(17001235, '2', '징징이', 'ISTP', 1);
+
+UPDATE Student 
+  SET MBTI='ENFJ'
+  WHERE 이름='스펀지밥';
+
+SELECT * FROM Student;
+# +----------+--------------+--------------+------+----------+
+# | 학번      | 주민번호       | 이름         | MBTI  | major_id |
+# +----------+--------------+--------------+------+----------+
+# | 17001234 | 1            | 스펀지밥       | ENFJ |        1 |
+# | 17001235 | 2            | 징징이         | ISTP |        1 |
+# +----------+--------------+--------------+------+----------+
+# 1 row in set (0.00 sec)
+
+# 롤백
+ROLLBACK;
+
+# 스펀지밥, 징징이 사라짐.
+SELECT * FROM Student;
+# Empty set (0.00 sec)
+```
+
+
+## 트랜잭션의 특징 - ACID
+
+### Atomicity(원자성)
+
+![https://pynative.com/wp-content/uploads/2018/06/python_mysql_transction_management-e1530354220769.png](https://pynative.com/wp-content/uploads/2018/06/python_mysql_transction_management-e1530354220769.png)
+
+> all or nothing!
+
+
+트랜잭션 안의 SQL 명령문들은 DB에 **모두 반영**(COMMIT)되거나, 혹은 **전혀 반영되지 않거나**(ROLLBACK) 둘 중 하나의 결과만을 낳아야 한다.
+
+### Consistency(일관성)
+
+트랜잭션 처리 결과로 DB는 논리적으로 항상 **일관성** 있어야 한다.
+
+![https://images.contentful.com/po4qc9xpmpuh/6jbcyfzdVJlc6XCUbzgMzb/96b1a9f0594f1d769f2254bd1abf25c1/database-transaction-1__1_.png](https://images.contentful.com/po4qc9xpmpuh/6jbcyfzdVJlc6XCUbzgMzb/96b1a9f0594f1d769f2254bd1abf25c1/database-transaction-1__1_.png)
+
+트랜잭션 진행중에 데이터베이스가 변경 되더라도, 업데이트된 데이터베이스로 트랜잭션이 진행되는것이 아니라, 트랜잭션을 진행 하기 위해 **처음에** **참조한 데이터베이스로 진행**된다.
+
+이렇게 함으로써 각 사용자는 일관성 있는 데이터를 볼 수 있게 된다.
+
+### Isolation(독립성)
+
+커밋되기 전까지 트랜잭션의 (임시) 실행 결과들은 다른 트랜잭션에게 **공개되지 않아야 한다**. 같은 데이터를 처리하려는 다른 트랜잭션들의 **간섭 방지**를 위해서이다.
+
+동시 실행중이며 커밋되지 않은 각 트랜잭션은 변경 내용을 **락**을 통해 고립시켜 다른 트랜잭션의 접근을 방지한다.
+
+### Durability(지속성)
+
+트랜잭션이 성공적으로 완료(커밋)되었으면, 그 결과는 **영구적**으로 반영되어야 한다.
+
 
 # TODO
-- TCL 보충.. 트랜잭션 모름
 - 데이터 독립성? 응용 프로그램과 데이터의 관계
 - SQL 코테 문제랑 연결해보기
 - 정규형 보충(BCNF, 4NF, 5NF)
+- 트랜잭션과 로그, 락
 
 # 출처
 - 데이터베이스의 정석 - 박성진
@@ -651,3 +745,7 @@ SELECT 학생.학번, 이름, 학점 FROM 학생
 - [https://www.geeksforgeeks.org/introduction-of-database-normalization/](https://www.geeksforgeeks.org/introduction-of-database-normalization/)
 - [https://gyoogle.dev/blog/computer-science/data-base/Join.html](https://gyoogle.dev/blog/computer-science/data-base/Join.html)
 - [https://www.geeksforgeeks.org/sql-join-set-1-inner-left-right-and-full-joins/](https://www.geeksforgeeks.org/sql-join-set-1-inner-left-right-and-full-joins/)
+- [https://fauna.com/blog/database-transaction](https://fauna.com/blog/database-transaction)
+- [https://www.geeksforgeeks.org/acid-properties-in-dbms/](https://www.geeksforgeeks.org/acid-properties-in-dbms/)
+- [https://inpa.tistory.com/entry/MYSQL-📚-트랜잭션Transaction-이란-💯-정리#트랜잭션_특징](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98Transaction-%EC%9D%B4%EB%9E%80-%F0%9F%92%AF-%EC%A0%95%EB%A6%AC#%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98_%ED%8A%B9%EC%A7%95)
+- [https://mangkyu.tistory.com/19](https://mangkyu.tistory.com/19)
