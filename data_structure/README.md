@@ -438,6 +438,174 @@ void postorder(struct Node* node){
 | 삭제    | O(log n) | O(n) |
 | 순회    | O(n)     | O(n) |
 
+---
+
+
+
+##  이진탐색트리
+
+**탐색**
+
+**삽입**
+
+**삭제**
+
+
+
+---
+
+## 이진탐색트리
+
+이진탐색트리는 다음과 같은 특성을 갖는다.
+
+- 1. 이진탐색트리의 각 노드는 키값을 하나씩 갖는다. 각 노드의 키값은 모두 달라야 한다.
+
+- 2. 최상위 레벨에 루트 노드가 있고, 각노드는 최대 두개의 자식 노드를 갖는다.
+
+- 3. 임의의 노드의 키값은 자신의 왼쪽 자식 노드의 키값보다 크고, 오른쪽 자식 노드의 키값보다 작다.
+
+이진탐색트리의 시간복잡도는 **O(h)** 이다.
+h는 트리의 높이인데 이를 n으로 치환하면 n = 2^h - 1 이므로 h = log(n-1)
+즉 **O(logn)** 이 된다.
+하지만 한쪽으로만 몰리게 되는 경우 최악의 시간복잡도는 **O(n)** 이 된다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/5691bbc0-3269-4070-bb6a-889fcf09ff7b/image.png)
+```
+
+```
+```
+
+```
+![](https://velog.velcdn.com/images/hs1430/post/988f237e-0966-4a2f-b405-b27d7b48eab9/image.png)
+
+
+
+
+---
+
+## 이진탐색트리 - 탐색 알고리즘
+
+treeSearch(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       if(t=NIL or key[t] = x) then return t; // 검색하고자 했던키가 루트 노드인 경우
+       // t = NIL이면 NIL을 리턴해 검색이 실패했음을 알려야 하는데 그게 없다.
+       if(x < key[t])   // 루트 노드 t의 키값과 x를 비교한다
+            then return treeSearch(left[t],x); //key[t]>x = 왼쪽 서브트리에 x
+            else return treeSearch(right[t],x); //key[t]<x 오른쪽 서브트리에 x
+   
+   
+   ```
+}
+
+---
+
+
+## 이진탐색트리 - 삽입
+
+![](https://velog.velcdn.com/images/hs1430/post/ac7e249c-3961-4cfe-a99c-2790dab1b08a/image.png)
+
+삽입은 탐색과 상당히 유사하다.
+
+첫 삽입시에만 루트 노드로 취급하고 이후에는 루트 노드와 비교하여
+
+작다면 왼쪽으로 크다면 오른쪽으로 자리를 찾아 삽입하게 된다.
+
+
+---
+
+## 이진탐색트리 - 삽입 알고리즘
+
+treeInsert(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       if(t=NIL) then {
+            key[r] <- x; left[r] <- NIL; right[r] <-NIL; //r = 새노드
+            return r;
+       }
+       
+       if(x < key[t])   // 루트 노드 t의 키값과 x를 비교한다
+            then {left[t] <- treeInsert(left[t],x); return t;}
+            else {right[t] <- treeInsert(right[t],x); return t;}
+   
+   
+   ```
+}
+
+
+---
+
+## 이진탐색트리 - 삭제
+
+이진탐색트리에서 삭제는 앞서 소개한 탐색, 삽입보다 어려운 편이다.
+이진탐색트리에서 원하는 노드 r을 삭제 하려면 다음 세 가지의 경우에 따라
+각각 다르게 처리를 해주어야 한다.
+
+- Case 1 : r이 리프 노드인 경우
+
+- Case 2 : r의 자식 노드가 하나인 경우
+
+- Case 3 : r의 자식 노드가 두 개인 경우
+
+Case 1, 2 는 처리가 비교적 간단하지만, Case 3는 다소 복잡하다.
+
+Case 1 인 경우 선택한 r을 그냥 제거 하면된다.
+
+Case 2 인 경우 r의 부모가 r의 자식을 직접 가리키도록 해야한다.
+
+Case 3 인 경우 r의 오른쪽 서브트리의 최소원소 노드 s를 삭제하고,
+s를 r 자리에 놓아야한다.
+
+이때 s 는 왼쪽 서브트리보다 크고 오른쪽 서브트리보다 작은 값을 가져야한다.
+
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/fc80b62e-f078-42c5-82ff-d7a3fa5fee43/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/3432994a-6f7e-4012-83dd-1b7e9ad4beda/image.png)
+
+---
+
+## 이진탐색트리 - 삭제 알고리즘
+
+treeDelete(t,r,p) // t: 트리의 루트 노드 r: 삭제하고자 하는 노드 p: r의 부모 노드
+{
+  ```
+  if(r=t) then root <- deleteNode(t);
+  else if (r=left[p])
+             then left[p] <- deleteNode(r);
+             else right[p] <- deleteNode(r);
+     
+  ```
+}
+deleteNode(r)
+{
+  ```
+  if(left[r] = right[r] =NIL) then return NIL; //Case 1
+  else if(left[r] = NIL and right[r] != NIL) then return right[r];  // Case 2
+  else if(left[r] != NIL and right[r] = NIL) then return left[r];
+  // Case 2
+  else{   // Case 3
+            s <- right[r];  // r의 오른쪽 자식 노드를 s로 지정
+            while(left[s] != NIL) // s의 왼쪽 자식 노드가 없을때까지 실행 즉 s가 최소값이 될때까지 실행
+               { parent <- s; s <- left[s];} //s였던 노드는 s의 부모가 되고 왼쪽 자식 노드값이 s값이 된다.
+            key[r] <- key[s];
+            if (s=right[r]) then right[r] <- right[s]; 
+                            else left[parent] <- right[s];
+            return r;
+  }
+  
+  ```
+}
+
+
+---
+
 # Graph (그래프)
 ## 그래프란?
 >   현실 세계의 사물, 객체, 추상적인 개념 간의 **연결 관계**를 표현한 것
@@ -867,3 +1035,7 @@ key의 범위마다 찾아가야할 **페이지 넘버**(포인터)가 있는데
 - [https://zorba91.tistory.com/293](https://zorba91.tistory.com/293)
 - [https://blog.jcole.us/2013/01/10/btree-index-structures-in-innodb/](https://blog.jcole.us/2013/01/10/btree-index-structures-in-innodb/)
 - [https://en.wikipedia.org/wiki/B%2B_tree](https://en.wikipedia.org/wiki/B%2B_tree)
+- https://velog.io/@xdfc1745/%EC%9D%B4%EC%A7%84%ED%8A%B8%EB%A6%AC-%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84
+- https://93jpark.tistory.com/109
+- https://honggom.tistory.com/40
+

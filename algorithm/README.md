@@ -897,6 +897,324 @@ public class MergeSorter {
 ```
 ---
 
+## 퀵 정렬
+
+퀵 정렬은 평균적으로 가장 좋은 성능을 가져 현장에서 가장 많이 쓰는 정렬 알고리즘이다.
+**정렬 후 병합** 을 하는 **병합 정렬** 과는 달리 **퀵정렬** 은 **병합을 한뒤에 정렬** 을 한다.
+
+퀵 정렬의 수행시간은 분할할때 한쪽에만 다 몰리는 최악의 경우에만 **O(n^2)** 이고
+나머지 경우에는 **O(nlogn)** 이다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/9b57cabc-6519-49f1-b610-b88f9785f7c0/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/ecb1b146-a295-4f1c-9003-902e78164972/image.png)
+
+
+---
+
+## 퀵 정렬 알고리즘
+
+quickSort(A[],p,r)  // A[p ... r]
+{
+
+     if(p<r) then {
+        q <- partition(A,P,R);         // 분할
+        quickSort(A,p,q-1);     // 전반부 정렬
+        quickSort(A,q+1,r);   // 후반부 정렬
+               
+     }
+
+
+}
+
+partition(A[]p,r)
+{
+
+     x <- A[r];
+     i <- p-1;
+     for j <- p to r-1
+          if (A[j]<=x) then A[++i] <-> A[j];
+     
+     A[i+1] <-> A[r];
+     return i+1;
+
+
+
+}
+ 
+---
+
+## **파이썬을 이용한 퀵 정렬 구현**
+
+``` 
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    lesser_arr, equal_arr, greater_arr = [], [], []
+    for num in arr:
+        if num < pivot:
+            lesser_arr.append(num)
+        elif num > pivot:
+            greater_arr.append(num)
+        else:
+            equal_arr.append(num)
+    return quick_sort(lesser_arr) + equal_arr + quick_sort(greater_arr)
+```
+---
+
+## **자바를 이용한 퀵 정렬 구현**
+
+```
+public class QuickSorter {
+    public static List<Integer> quickSort(List<Integer> list) {
+        if (list.size() <= 1) return list;
+        int pivot = list.get(list.size() / 2);
+
+        List<Integer> lesserArr = new LinkedList<>();
+        List<Integer> equalArr = new LinkedList<>();
+        List<Integer> greaterArr = new LinkedList<>();
+
+        for (int num : list) {
+            if (num < pivot) lesserArr.add(num);
+            else if (num > pivot) greaterArr.add(num);
+            else equalArr.add(num);
+        }
+
+        return Stream.of(quickSort(lesserArr), equalArr, quickSort(greaterArr))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+}
+```
+---
+
+## 힙 정렬
+
+힙은 이진 트리로서 맨 아래 층을 제외하고는 완전히 채워져 있고 맨 아래층은 왼쪽부터 꽉 채워져 있다.
+힙의 모든 노드는 하나씩의 값을 가지고 있는데 다음 힙성질을 만족한다.
+
+**각 노드의 값은 자기 자식의 값보다 작다(힙에 값이 같은 원소가 두 개 이상 있는 경우에는 "작다" 대신 "작거나 같다")**
+
+힙 정렬의 수행 시간은 항상 **O(nlogn)** 이다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/8c52fb63-4649-4775-82a9-3b3b4782bd51/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/99a37f90-5320-4950-a832-0c054afaf9e4/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/6e854097-423b-4223-b619-cc88aa5bae1f/image.png)
+
+위의 자료는 값이 큰순서대로 정렬된 것이고 실제로는 반대로 값이 작은 것이 루트에 와야 한다.
+
+
+![](https://velog.velcdn.com/images/hs1430/post/446cafd3-9be4-44a3-9691-389f514f0f0e/image.png)
+
+힙을 만들고 루트에 있는 원소를 제거하여 다른곳에 저장하는 동시에 배열의 맨 끝 값을 루트 노드로 옮긴다. 이때 힙의 성질이 깨지게 되는데
+깨진 힙을 heapify를 통해 다시 만드는것을 반복하며 정렬을 하는 과정이다.
+
+---
+
+## 힙 정렬 알고리즘
+
+buildHeap(A[],n)
+{
+  ```
+  for i <-⌊(n/2⌋ downto 1
+      heapify(A,i,n);
+ 
+ ```
+}
+
+heapify(A[],k,n) //힙 성질을 만족하도록 고쳐준다. k = 루트
+{
+
+  ```
+  left <- 2k; right <- 2k+1;
+  
+  // 작은 자식 구하기 smaller = 2k와 2k+1 중에 작은 원소
+  
+  if(right<=n) then {           // k 의 자식이 두개인 경우
+    if (A[left] < A[right]) then smaller <- left;  //둘 중 작은애 선택
+                            else smaller <- right;
+  }
+  
+  else if (left<=n) then smaller <- left; // k의 왼쪽 자식만 있는 경우
+  else return;                            // A[k]의 리프노드 끝남
+  
+  if (A[smaller] < A[k]) then { //자기 자식중 가장 작은 값이 자신보다 작다면 바꾸고 다시 heap 재귀한다.
+      A[k] <-> A[smaller];
+      heapify (A,smaller,n);
+  }
+  ```
+}
+
+heapSort(A,n)  
+{
+
+     buildHeap(A,n);
+     for i <- n downto 2 {
+         A[1] <-> A[i];   // 루트의 원소를 배열의 마지막 부분과 교환하여 저장하는 방식으로, 역순으로 저장된다.
+         heapify(A,1,i-1);
+     }
+
+
+}
+ 
+---
+
+## **파이썬을 이용한 힙 정렬 구현**
+
+``` 
+def heapify(unsorted, index, heap_size):
+  largest = index
+  left = 2 * index + 1
+  right = 2 * index + 2
+  
+  if left < heap_size and unsorted[right] > unsorted[largest]:
+    largest = left
+    
+  if right < heap_size and unsorted[right] > unsorted[largest]:
+    largest = right
+    
+  if largest != index:
+    unsorted[largest], unsorted[index] = unsorted[index], unsorted[largest]
+    heapify(unsorted, largest, heap_size)
+
+def heap_sort(unsorted):
+  n = len(unsorted)
+  
+  for i in range(n // 2 - 1, -1, -1):
+    heapify(unsorted, i, n)
+    
+  for i in range(n - 1, 0, -1):
+    unsorted[0], unsorted[i] = unsorted[i], unsorted[0]
+    heapify(unsorted, 0, i)
+
+  return unsorted
+```
+---
+
+## **자바를 이용한 힙 정렬 구현**
+
+```
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("배열의 크기를 입력하시오");
+        int n = scanner.nextInt()+1;
+        int[] arr = new int[n];
+
+        System.out.println("배열에 들어갈 숫자를 입력하시오");
+        for(int i = 1; i<n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        System.out.println("배열에 입력한 숫자");
+        System.out.println(Arrays.toString(arr));
+
+        buildHeap(arr); //배열을 힙으로 만드는 메서드
+
+        System.out.println("힙으로 변경한 배열");
+        System.out.println(Arrays.toString(arr));
+
+        heapSort(arr); //힙을 이용해서 정렬하는 메서드
+
+        System.out.println("정렬 완료된 배열");
+        System.out.println(Arrays.toString(arr));
+    }
+
+    static void heapSort(int[] arr) {
+        int eNN = arr.length-1;
+        while(eNN > 1) {
+            swap(arr, 1, eNN);
+            eNN--;
+            pushDown(arr, 1, eNN);
+        }
+    }
+
+    //eNN = endNodeNumber
+    //tNN = tempNodeNumber
+    static void buildHeap(int[] arr) {
+        int eNN = arr.length - 1; // 마지막 노드
+        int tNN = eNN/2 + 1; //1번째 리프노드 번호
+
+        while(tNN > 1) {
+            tNN--; // 자식을 가지고 있는 마지막 노드부터 시작
+            pushDown(arr, tNN, eNN);
+        }
+    }
+
+    static void pushDown(int[] arr, int tNN, int eNN) {
+        int y = findLarger(arr, tNN, eNN); 
+        //자식 노드중에서 루트 노드보다 더 큰 값을 가지는 노드 번호 얻어냄
+
+        while(arr[tNN] < arr[y]){
+            swap(arr, tNN, y);
+            tNN = y;
+            y = findLarger(arr, tNN, eNN);
+            // leaf노드 쪽으로 내려가면서 값의 제자리를 찾아간다.
+        }
+    }
+
+    static int findLarger(int[] arr, int tNN, int eNN){
+        int tmp = tNN*2+1; //오른쪽 자식 노드의 번호
+        int y = tNN;
+
+        if(tmp <= eNN){//자식 노드가 두개인 경우
+            if(arr[tNN] < arr[tmp]) //오른쪽 자식 노드의 value가 더 크다면
+                y = tmp;
+            if(arr[y] < arr[tmp-1]) //왼쪽 자식 노드의 value가 더 크다면
+                y = tmp-1;
+        }
+        else if(tmp-1 <= eNN){ //자식 노드가 1개인 경우
+            if(arr[tNN] < arr[tmp-1]) // 자식 노드의 value가 더 크다면
+                y = tmp-1;
+        }
+        return y;
+    }
+
+    static void swap(int[] arr, int a, int b){
+        int tmp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = tmp;
+    }
+}
+```
+
+---
+
+- 구현되어있는 메서드 사용
+
+```class Main {
+    public static void main(String[] args) {
+        Queue pq = new PriorityQueue();
+
+        int[] arr = {3,1,5,2,4};
+        for(int i=0; i<arr.length; i++)
+            pq.offer(arr[i]);
+
+        System.out.println(pq);
+
+        Object obj = null;
+        int a = 0;
+        while((obj = pq.poll())!=null)
+            System.out.printf("%s ",obj);
+    }
+}
+```
+
+
+---
+
+
 
 
 
@@ -913,3 +1231,7 @@ public class MergeSorter {
 - https://www.daleseo.com/sort-insertion/
 - https://www.daleseo.com/sort-selection/
 - https://www.daleseo.com/sort-merge/
+- https://www.daleseo.com/sort-quick/
+- https://good-potato.tistory.com/m/50
+- https://seanpark11.tistory.com/68
+- 

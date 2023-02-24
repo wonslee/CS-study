@@ -4,6 +4,8 @@
 - [Java 와 JVM의 구성요소](#java-와-jvm)
 - [Java Garbage Collection](#java-garbage-collection)
 - [Java Collection](#java-collection)
+- [오버로딩 vs 오버라이딩](#오버로딩-vs-오버라이딩)
+- [Generic](#generic)
 </details>
 
 
@@ -505,3 +507,449 @@ PriorityQueue<Integer> priorityQueueHighest = new PriorityQueue<>(Collections.re
 [https://gangnam-americano.tistory.com/41](https://gangnam-americano.tistory.com/41)
 
 [https://velog.io/@gillog/Java-Priority-Queue%EC%9A%B0%EC%84%A0-%EC%88%9C%EC%9C%84-%ED%81%90](https://velog.io/@gillog/Java-Priority-Queue%EC%9A%B0%EC%84%A0-%EC%88%9C%EC%9C%84-%ED%81%90)
+
+
+---
+
+
+# **오버로딩 vs 오버라이딩**
+
+### **개념**
+
+다형성이란 하나의 메서드나 클래스가 있을 때 그것이 다양한 방법으로 동작하는 것을 말하며, 자바에서는 주로 오버로딩(Overloading)과 오버라이딩(Overriding)을 통해서 다형성을 지원한다.
+
+오버로딩(Overloading) : 메서드의 이름은 같고 매개변수의 유형과 개수가 다르도록 하는 것을 의미한다.
+
+- 리턴값만을 다르게 갖는 오버로딩은 작성할 수 없다.
+
+오버라이딩 (Overriding) : 상위 클래스가 가지고 있는 메서드를 하위 클래스가 재정의해서 사용하는 것을 의미한다.
+
+- 메서드의 이름은 물론 파라미터의 개수나 타입도 동일해야 하며, 주로 상위 클래스의 동작을 상속받는 하위 클래스에서 변경하기 위해 사용된다.
+
+간략하게 요약하면,
+
+- 오버로딩(Overloading)은 기존에 없던 새로운 메서드를 정의하는 것이고,
+- 오버라이딩(Overriding)은 상속받은 메서드의 내용만 변경하는 것이다.
+
+---
+
+### **오버로딩 예제**
+
+```java
+class OverloadingMethods {
+    public void print() {
+        System.out.println("매개변수X - 오버로딩1");
+    }
+
+    String print(Integer a) {
+        System.out.println("Integer - 오버로딩2");
+        return a.toString();
+    }
+
+    void print(String a) {
+        System.out.println("String - 오버로딩3");
+        System.out.println(a);
+    }
+
+    String print(Integer a, Integer b) {
+        System.out.println("Integer, Integer - 오버로딩4");
+        return a.toString() + b.toString();
+    }
+
+}
+
+class OverloadingTest {
+
+    public static void main(String[] args) {
+        OverloadingMethods om = new OverloadingMethods();
+
+        om.print();
+        System.out.println(om.print(3));
+        om.print("Hello!");
+        System.out.println(om.print(4, 5));
+    }
+}
+```
+
+**실행결과**
+
+![https://blog.kakaocdn.net/dn/bc6nFV/btrYTMwoAJR/x765Ih06wM9kYebemo44lK/img.png](https://blog.kakaocdn.net/dn/bc6nFV/btrYTMwoAJR/x765Ih06wM9kYebemo44lK/img.png)
+
+### 
+
+**주의해야 할 점**
+
+```java
+class OverloadingMethods {
+    public void print() {
+        System.out.println("매개변수X - 오버로딩1");
+    }
+    public int print() {
+    	System.out.println("매개변수X - 오버로딩2");
+        return 1;
+    }
+
+    String print(Integer a) {
+        System.out.println("Integer - 오버로딩3");
+        return a.toString();
+    }
+
+    void print(String a) {
+        System.out.println("String - 오버로딩4");
+        System.out.println(a);
+    }
+
+    String print(Integer a, Integer b) {
+        System.out.println("Integer, Integer - 오버로딩5");
+        return a.toString() + b.toString();
+    }
+
+}
+```
+
+### 
+
+위의 코드에서 에러를 유발하는 곳이 있다.
+
+한번 그 코드를 찾아보자.(바로 아래에 정답이 있음)
+
+---
+
+### **정답**
+
+![https://blog.kakaocdn.net/dn/c2Zzq3/btrYTpVExIv/o6MUmh2nAngmNiNtyzyVgk/img.png](https://blog.kakaocdn.net/dn/c2Zzq3/btrYTpVExIv/o6MUmh2nAngmNiNtyzyVgk/img.png)
+
+아까 처음에 말했듯이 리턴값만 다른 것은 오버로딩을 할 수 없다. 따라서 print()라는 매개변수가 존재하지 않는 메서드가 두 개 존재하기 때문에 에러를 유발한다.
+
+결국 오버로딩은 매개변수의 차이로만 구현할 수 있다는 것이다. 매개변수가 다르다면 리턴 값은 다르게 지정할 수 있다.
+
+**다시 한번 강조하지만 리턴 값만 다른 것은 오버로딩 할 수 없다.**
+
+---
+
+### **오버로딩을 사용하는 이유**
+
+- 같은 기능을 하는 메서드를 하나의 이름으로 사용할 수 있기 때문이다.
+- 메서드의 이름을 절약할 수 있기 때문이다.
+
+많이 사용하는 println() 메서드를 예로 들면 이해하기 쉽다. println() 메서드는 오버로딩 되어있기 때문에 int형 인자, string형 인자, boolean형 인자, char형 인자 모두 받아서 동작할 수 있다.
+
+만약 오버로딩이 없다면, int형 인자를 받는 메서드는 printlnInt()로 String형 인자를 받는 메서드는 printInString()으로 boolean형 인자를 받는 메서드는 printInBoolean()처럼 각각의 메서드의 이름을 따로 만들어줘야 한다.
+
+오버로딩이 있기 때문에 같은 기능을 하는 메서드를 하나의 이름은 printIn()으로 사용할 수 있게 된다.
+
+### 
+
+---
+
+### 
+
+### **오버라이딩**
+
+### **오버라이딩의 조건**
+
+상위 클래스가 가지고 있는 멤버변수가 하위 클래스로 상속되는 것처럼 상위 클래스가 가지고 있는 메서드도 하위 클래스로 상속되어 하위 클래스에 사용할 수 있다. 또한 하위 클래스에서 메서드를 재정의해서도 사용할 수 있다.
+
+쉽게 말해 메서드의 이름이 서로 같고, 매개변수가 같고, 반환형이 같을 경우에 상속받은 메서드를 덮어쓴다고 생각하면 된다. '부모 클래스의 메서드는 무시하고, 자식 클래스의 메서드 기능을 사용하겠다'와 같다.
+
+### **오버라이딩 예제**
+
+```java
+class SuwonMember {
+    String test() {
+        return "저는 수원에 거주중입니다.";
+    }
+}
+
+class SuwonStudent extends SuwonMember{
+    String test() {
+        return "저는 YD 입니다.";
+    }
+}
+
+public class OverridingTest {
+
+    public static void main(String[] args) {
+        SuwonStudent student = new SuwonStudent();
+
+        System.out.println(student.test());
+    }
+
+}
+```
+
+### 
+
+**결과**
+
+![https://blog.kakaocdn.net/dn/cW93zs/btrY4mCSFqa/4vwzw6vI0L57C31HT43EIK/img.png](https://blog.kakaocdn.net/dn/cW93zs/btrY4mCSFqa/4vwzw6vI0L57C31HT43EIK/img.png)
+
+SuwonMember에서 정의한 test() 메서드의 값 -> '저는 수원에 거주중입니다'가 아닌
+
+SuwonStudent에서 재정의한 값 -> '저는 YD 입니다.' 가 출력되는 것을 확인할 수 있다.
+
+**주의해야 할 점**
+
+- 자식 클래스에서 오버라이딩하는 메소드의 접근 제어자는 부모 클래스보다 더 좁게 설정할 수 없다
+
+만약 부모클래스에서 default로 설정되어 있다면, 자식 클래스는 default 보다 같거나 더 넓은 범위의 접근 제어자만 설정할 수 있으므로 default, protected, public의 접근 제어자를 사용할 수 있다.
+
+- 예외(Exception)는 부모 클래스의 메소드보다 많이 선언할 수 없다.
+
+부모 클래스에서 어던 예외를 throws 한다고 하면, 자식 클래스에서는 그 예외보다 더 큰 범위의 예외를 throws 할 수 없다.
+
+- static메서드를 인스턴스의 메서드로 또는 그 반대로 바꿀 수 없다.
+
+상위 클래스의 static 메서드는 클래스에 속하는 메서드이기 때문에 상속되지 않고 따라서 오버라이드 되지도 않는다. (static 메서드는 런타임 시에 생성되는 것이 아니라 컴파일 시 생성되어 메모리에 적제 되는 방식이기 때문에 런타임 시에 해당 메서드를 구현한 실체 객체를 찾아가서 호출하게 된다. static 메서드에 대해서는 다형성이 적용되지 않는다.)
+
+다음과 같이 static을 붙인 메서드에서는 에러를 유발한다.
+
+![https://blog.kakaocdn.net/dn/z30I2/btrYSDs6NCQ/tSSVTqpv0a8e2snvDQVvNK/img.png](https://blog.kakaocdn.net/dn/z30I2/btrYSDs6NCQ/tSSVTqpv0a8e2snvDQVvNK/img.png)
+
+final이 지정된 메서드 역시 오버라이드가 불가하며, private 접근 제어자를 가진 메서드는 상속 자체가 불가능하기 때문에 오버라이드가 성립되지 않는다.
+
+(final의 경우 하위 클래스가 해당 메서드를 재정의 할 수 없도록 하기 위해서 사용된다.)
+
+---
+
+### **@Override 어노테이션을 쓰는 이유**
+
+@Override 어노테이션은 없어도 오버라이딩이 적용되어 정상적으로 잘 동작한다. 그렇다면 @Override 어노테이션을 왜 쓸까?
+
+1. @Override 어노테이션은 시스템에서 오버라이딩한 메서드라고 알리는 역할로 오버라이딩이 잘못된 경우 경고를 준다.
+
+예를 들어 백엔드 단에서 사용되는 라이브러리 중 하나가 업데이트되어 상속하는 클래스 메서드의 시그니처가 바뀌었다.
+
+@Override 어노테이션이 적용되지 않은 상태에서는 전에 오버라이드 한 메서드가 업데이트 이후 그냥 추가적인 메서드로 인식되어 컴파일 오류가 발생하지 않는다. 이때 @Override 어노테이션을 적용함으로써 의도적으로 컴파일 오류를 일으켜 작동방식이 바뀌는 것을 대비할 수 있다.
+
+2. @Override를 표시함으로써 코드 리딩 시에 해당 메서드가 오버라이딩하였다는 것을 쉽게 파악할 수 있다는 장점이 있다.
+
+---
+
+### 정리 - 오버로딩 vs 오버라이딩
+
+![https://blog.kakaocdn.net/dn/bwwIel/btrYUvOB1SF/dnKH0RwbW8Fsy2N4kFunK0/img.png](https://blog.kakaocdn.net/dn/bwwIel/btrYUvOB1SF/dnKH0RwbW8Fsy2N4kFunK0/img.png)
+
+---
+
+참고
+
+[https://hyoje420.tistory.com/14](https://hyoje420.tistory.com/14)
+
+[https://wildeveloperetrain.tistory.com/110](https://wildeveloperetrain.tistory.com/110)
+
+[https://lnsideout.tistory.com/entry/JAVA-%EC%9E%90%EB%B0%94-%EC%98%A4%EB%B2%84%EB%A1%9C%EB%94%A9%EA%B3%BC-%EC%98%A4%EB%B2%84%EB%9D%BC%EC%9D%B4%EB%94%A9-%EA%B0%9C%EB%85%90-%EC%99%84%EB%B2%BD%EC%A0%95%EB%A6%AC](https://lnsideout.tistory.com/entry/JAVA-%EC%9E%90%EB%B0%94-%EC%98%A4%EB%B2%84%EB%A1%9C%EB%94%A9%EA%B3%BC-%EC%98%A4%EB%B2%84%EB%9D%BC%EC%9D%B4%EB%94%A9-%EA%B0%9C%EB%85%90-%EC%99%84%EB%B2%BD%EC%A0%95%EB%A6%AC)
+
+
+
+---
+
+# **Generic**
+
+```java
+List<Integer> list = new ArrayList<>();
+Map<String, Integer> map = new HashMap<>();
+```
+
+우리는 위의 예제와 같이 클래스 타입이 명시된 패턴을 자주 발견할 수 있다. 이걸 **제네릭(Generic)** 이라고 부르며, 제네릭 파라미터는 꺽쇠안에 포함하여 전달한다.
+
+**JAVA에서 제네릭이란?**
+
+- 파라미터 타입이나 리턴 타입에 대한 정의를 외부로 미룬다.
+- 타입에 대해 유연성과 안정성을 확보한다.
+- 런타임 환경에 아무런 영향이 없는 컴파일 시점의 전처리 기술이다.
+
+**제네릭을 왜 사용할까?**
+
+> 타입을 유연하게 처리하며, 잘못된 타입 사용으로 발생할 수 있는 런타임 타입 에러를 컴파일 과정에 검출한다.
+>
+
+제네릭을 사용하면 실수로 지정한 타입이 들어오는 경우 컴파일 시점에서 미리 예방할 수 있게 된다. 또한 클래스 외부에서 데이터 타입을 지정하기 때문에, 타입을 고려해서 이리저리 변환할 필요가 없다. 따라서 코드의 재사용성이 높아지고 전체 코드 관리가 용이해진다.
+
+```java
+List v = new ArrayList();
+v.add("test");// A String that cannot be cast to an Integer
+Integer i = (Integer)v.get(0);// Run time error
+```
+
+위와 같은 코드는 런타임 에러를 발생한다. List에 String을 저장하고 Integer로 타입 변환하는 오류가 런타임에 잡히는 것이다.
+
+```java
+List<String> v = new ArrayList<String>();
+v.add("test");
+Integer i = (Integer)v.get(0);// (type error)  compilation-time error
+```
+
+하지만 위와 같이 제네릭을 이용하면 컴파일 에러를 발생시켜 컴파일 시에 오류를 잡아낼 수 있다. 런타임 에러보다 컴파일 에러가 훨씬 디버깅이 쉽기 때문에 이점이 많다.
+
+또한 제네릭에서는 <>안에서 데이터 타입을 자유롭게 설정할 수 있다. 특정 자료구조를 만들 때 Integer, String, Boolean 등 데이터 타입에 따라 다른 자료구조를 만든다면 매우 비효율적이다. 제네릭은 이러한 상황일 때 굉장히 효율적이다.
+
+```java
+ArrayList list = new ArrayList();//제네릭을 사용하지 않을경우
+list.add("test");
+String temp = (String) list.get(0);//타입변환이 필요함
+
+ArrayList<String> list2 = new ArrayList();//제네릭을 사용할 경우
+list2.add("test");
+temp = list2.get(0);//타입변환이 필요없음
+```
+
+### **제네릭에서 많이 사용되는 문자열들**
+
+이 문자열들은 개발자들이 암묵적으로 사용하는 코드일 뿐이지 사용자가 임의로 지정한 문자열을 넣어도 제네릭이 동작하는데에 아무런 영향을 미치지 않는다.
+
+![https://blog.kakaocdn.net/dn/dNXr6S/btrZqTn9qHj/07kKXQizxwJlMTyTeTZeZK/img.png](https://blog.kakaocdn.net/dn/dNXr6S/btrZqTn9qHj/07kKXQizxwJlMTyTeTZeZK/img.png)
+
+---
+
+### **예시**
+
+### **제네릭 클래스**
+
+```java
+class ExampleGeneric<T> {
+    private T t;
+
+    public void setT(T t) {
+        this.t = t;
+    }
+
+    public T getT() {
+        return t;
+    }
+}
+```
+
+클래스를 설계할 때 구체적인 타입을 명시하지 않고 타입 파라미터로 넣어두었다가 실제 설계한 클래스가 사용될 때 ExampleGeneric<String> YD = New ExampleGeneric<>(); 이런식으로 구체적인 타입을 지정하면서 사용하면 타입 변환을 최소화 할 수 있다.
+
+---
+
+### **제네릭 인터페이스**
+
+```java
+interface ExampleGeneric<T> {
+    T example();
+}
+
+class ExGeneric implements ExampleGeneric<String> {
+
+// ExampleGeneric<String> <- String으로 넘어왔기 때문에 example()의 반환값이 String이여야만 한다.@Override
+    public String example() {
+        return "YD";
+    }
+}
+```
+
+---
+
+### **멀티 타입 파라미터 사용**
+
+```java
+class ExMultiTypeGeneric<K, V> implements Map.Entry<K,V>{
+
+    private K key;
+    private V value;
+
+    @Override
+    public K getKey() {
+        return this.key;
+    }
+
+    @Override
+    public V getValue() {
+        return this.value;
+    }
+
+    @Override
+    public V setValue(V value) {
+        this.value = value;
+        return value;
+    }
+}
+```
+
+타입은 두 개 이상의 멀티 타입 파라미터를 사용할 수 있고, 이 경우 각 타입 파라미터를 콤마로 구분한다.
+
+---
+
+### **제네릭 메소드**
+
+**선언**
+
+```java
+// 제네릭 메소드 선언// 매개 변수 타입: T// 리턴 타입: Box<T>public <T> Box<T> boxing(T t) {
+    Box<T> box = new Box<T>();
+    box.set(t);
+    return box;
+}
+```
+
+먼저 리턴 타입(int, boolean, String, Box<T> 등등) 앞에 <T>와 같이 타입 파라미터를 기술한 다음,
+
+매개 변수에 제네릭 타입 파라미터를 기입하면 된다.
+
+**호출**
+
+```java
+public class BoxingMethodExample {
+	public static void main(String[] args) {
+		Box<Integer> box1 = <Integer>boxing(100);
+		int intValue = box1.get();
+
+		Box<String> box2 = boxing("YD");
+		String strValue = box2.get();
+	}
+}
+```
+
+메서드를 호출 할 때, <Integer> boxing(100); 처럼 타입 파라미터를 구체적으로 명시하여도 되고, 단순히 box(100);으로 작성하여도 타입 파라미터를 Integer로 추정하여 대입하게 된다.
+
+**제한된 타입 파라미터**
+
+```java
+// extends를 이용해 타입 제한public static <T extends Number> int compare(T t1, T t2) {
+		double v1 = t1.doubleValue();
+		double v2 = t2.doubleValue();
+
+		return Double.compare(v1, v2);
+}
+```
+
+위 제네릭 메소드에서 int 앞에 <T extends Number>라는 부분이 의미하는 바는
+
+Number 클래스 또는 Number 클래스의 하위 타입 클래스만 사용할 수 있음을 의미한다.
+
+그러므로 이 compare 제네릭 메소드에 String이나 기타 다른 타입이 삽입되는 것을 제한 할 수 있게 된다.
+
+**주의할 점**
+
+1. 상위 타입은 클래스뿐만 아니라 인터페이스도 가능하다. 하지만 그렇다고 extends를 implements라고 쓰진 않는다.
+
+2. 제네릭 메소드의 중괄호 {} 안에서 타입 파라미터 변수로 가능한 것은 상위 타입의 멤버(필드, 메소드)로 제한한다.
+
+- 즉 <T extends Number>라고 제네릭 메소드의 타입을 제한했다면, 메소드의 실행 부분에서 Number 타입의 필드와 메소드만 사용할 수 있다는 뜻이다. Integer에는 있고 Number에는 없는 필드나 메소드는 사용할 수 없다.
+
+---
+
+### **제네릭 와일드 카드**
+
+와일드카드는 물음표 ?로 표시하며 Java에서 unknown type이다. 와일드카드는 매개변수, 필드 또는 지역 변수의 유형 때론 반환 유형으로 다양한 상황에서 사용할 수 있다.
+
+와일드카드 타입에는 총 세가지의 형태가 있으며 물음표(?)라는 키워드로 표현된다.
+
+제네릭타입<?> : 타입 파라미터를 대치하는 것으로 모든 클래스나 인터페이스 타입이 올 수 있다.
+
+제네릭타입<? extends 상위타입> : 와일드카드의 범위를 특정 객체의 하위 클래스만 올 수 있다.
+
+제네릭타입<? super 하위타입> : 와일드카드의 범위를 특정 객체의 상위 클래스만 올 수 있다.
+
+---
+
+**출처**
+
+[https://coding-factory.tistory.com/573](https://coding-factory.tistory.com/573)
+
+[https://hahahoho5915.tistory.com/69](https://hahahoho5915.tistory.com/69)
+
+[https://jehuipark.github.io/java/java-generic](https://jehuipark.github.io/java/java-generic)
+---
