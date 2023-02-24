@@ -952,3 +952,126 @@ Number 클래스 또는 Number 클래스의 하위 타입 클래스만 사용할
 [https://hahahoho5915.tistory.com/69](https://hahahoho5915.tistory.com/69)
 
 [https://jehuipark.github.io/java/java-generic](https://jehuipark.github.io/java/java-generic)
+
+
+---
+# **Final**
+
+Java에서는 불변성을 확보할 수 있도록 final 키워드를 제공하고 있다. 클래스나 변수에 final을 붙이면 처음 정의된 상태가 변하지 않는 것을 보장한다는 의미이다. Java에서 변수들은 기본적으로 가변적인데, 변수에 final 키워드를 붙여 참조값을 변경 못하도록 해 불변성을 확보할 수 있다.
+
+---
+### **Final 사용법**
+
+### **final 필드**
+
+```java
+final int YD = 1;//final 타입 필드 [= 초기값];
+```
+
+final 필드는 위와 같이 선언하며 final 필드의 초기값을 줄 수 있는 방법은 딱 두가지 방법밖에 없습니다. 첫번째는 필드 선언시에 주는 방법이 있고, 두번째는 생성자를 통해서 주는 방법이 있습니다. 단순 값이라면 필드 선언시에 주는 것이 가장 간단하지만 복잡한 코드가 필요하거나 객체 생성 시에 외부 데이터로 초기화를 시켜야한다면 생성자를 통해서 초기값을 부여하는 방법을 써야 한다. 생성자는 final 필드의 최종 초기화를 마쳐야 하는데 만약 초기화가 되지 않은 final 필드가 있다면 컴파일 에러가 발생한다.
+
+### **final 객체**
+
+```java
+class Student{
+    String name = "사람이름";
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+public class Final_ex {
+    public static void main(String[] args) {
+    	final Student student = new Student();
+//student = new Student(); //객체를 한번 생성했다면 재생성 불가능
+    	student.setName("YD");//클래스의 필드는 변경가능
+    }
+}
+```
+
+객체 변수에 final로 선언하면 그 변수에 다른 참조 값을 지정할 수 없다. 즉 한번 생선된 final 객체는 같은 타입으로 재생성이 불가능하다. 객체 자체는 변경이 불가능하지만 객체 내부 변수는 변경이 가능하다.
+
+### **final 클래스**
+
+```java
+public final class YD {...}
+public class Suwon extends YD {...}// 상속 불가..!!!!!
+```
+
+final이 붙어있는 클래스는 상속할 수 없다. 이렇게 하면 보안이나 효율성 측면에서 장점이있다.
+
+예를 들어 java.lang.System이나 java.lang.String처럼 자바에서 기본적으로 제공하는 라이브러리 클래스는 final을 사용한다고 한다.
+
+### **final 메서드**
+
+```java
+class Suwon{
+
+    String student = "사람이름";
+
+    public final void print() {
+        System.out.println("사람 이름은 :"+student+" 입니다.");
+    }
+}
+
+class YD extends suwon{
+
+    String student = "YD";
+
+//메서드 오버라이드 불가능public void print() {
+
+    }
+}
+```
+
+만약 어떤 클래스를 상속하는데 그 안에 final 메서드가 있다면, 오버라이딩으로 수정할 수 없다.
+
+---
+
+### **Static**
+
+static은 변수나 함수에 붙는 키워드인데, 어디에 선언하는 지에 따라 조금씩 다른 의미를 가진다. 통용되는 일반적의 의미는 다음과 같다.
+
+- static을 붙이면 메모리에 딱 한 번만 할당되어 메모리를 효율적으로 사용할 수 있다.
+
+메모리에 딱 한번만 할당한다는 것은 곧 같은 주소값을 공유한다는 뜻이다. 그래서 여기저기에 변수 하나로 공유할 수 있다는 장점이 있다.
+
+이러한 딱 한번만 할당한다는 느낌때문에 final과 유사하다는 느낌이 든다.
+
+### **static과 final의 궁합**
+
+final 변수를 쓰면 그 값을 계속 그대로 쓴다는 의미이다. 그 값을 계속 쓸거면 메모리 낭비할 필요없이 하나로 쭉가도 되기 떄문에 static과 final을 같이 써서 효율성을 높입니다.
+
+단 static의 과도한 사용은 메모리에 영향을 준다. 따라서 애플리케이션 런타임 동안 자주 사용해야 하는 데이터에만 사용하는 것이 좋다.
+
+여기서 주의해야 할 점
+
+```java
+class BlankFinal {
+
+private final String name;
+
+public BlankFinal(String name){
+this.name = name;
+
+ }
+
+}
+```
+
+이와같이 생성자에서 초기화를 해주는 상태일 때, final이여도 초기화가 다르게 된다면 static을 사용하지 않게 된다.
+
+---
+
+참고:
+
+[https://coding-factory.tistory.com/525](https://coding-factory.tistory.com/525)
+
+[https://caliou.tistory.com/167](https://caliou.tistory.com/167)
+
+[https://makemethink.tistory.com/184](https://makemethink.tistory.com/184)
