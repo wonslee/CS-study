@@ -606,6 +606,128 @@ deleteNode(r)
 
 ---
 
+
+## B- 트리
+
+B-트리는 균형잡힌 다진검색트리로 다음의 성질을 만족한다.
+
+- 루트를 제외한 모든 노드는 k/2 ~ k 개의 키를 갖는다.
+- 모든 리프 노드는 같은 깊이를 가진다.
+
+B-트리는 분기의 수를 가능하면 늘리되 균형을 맞추기 위해
+각 노드가 채울 수 있는 최대 허용량의 반내림 이상의 키는 채워야 하는 검색트리다.
+
+이진탐색트리와 **공통점** 은 좌,우 자식 노드 개수의 밸런스를 유지한다는것이고,
+**차이점** 은 이진탐색트리에서는 하나의 노드에 **하나의값** 만 저장하지만
+B-트리에서는 하나의 노드에 **여러개의 값** 을 저장한다는 점이다.
+
+B- 트리의 시간복잡도는 이진탐색트리와 같은 **O(logN)** 이다.
+
+---
+
+## B- 트리 - 탐색 알고리즘
+
+treeSearch(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       if(t=NIL or key[t] = x) then return t; // 검색하고자 했던키가 루트 노드인 경우
+       // t = NIL이면 NIL을 리턴해 검색이 실패했음을 알려야 하는데 그게 없다.
+       if(x < key[t])   // 루트 노드 t의 키값과 x를 비교한다
+            then return treeSearch(left[t],x); //key[t]>x = 왼쪽 서브트리에 x
+            else return treeSearch(right[t],x); //key[t]<x 오른쪽 서브트리에 x
+   
+   
+   ```
+}
+
+B- 트리의 탐색알고리즘 구조는 위의 이진탐색트리와 같다.
+
+---
+
+## B- 트리 - 삽입 알고리즘
+
+BTreeInsert(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       x를 삽입할 리프 노드 r을 찾는다;
+       x를 r에 삽입한다;
+       if(r에 오버플로우 발생) then clearOverflow(r);
+   
+   
+   ```
+}
+
+clearOverflow(r)
+{
+
+   ```
+       if(r의 형제 노드 중 여유가 있는 노드가 있음)then{
+       r의 남는 키를 넘긴다
+       };
+       else{
+             r을 둘로 분할하고 가운데 키를 부모 노드로 넘긴다;
+             if(부모 노드 p에 오버플로우 발생)then clearOverflow(p);
+       }
+   
+   
+   ```
+}
+
+---
+![](https://velog.velcdn.com/images/hs1430/post/ecd14024-accb-484a-992b-c53c9ed2c801/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/06d01142-8644-46d4-b787-8f200b028b14/image.png)
+
+
+
+---
+
+## B- 트리 - 삭제 알고리즘
+
+BTreedelete(t,x,v) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+v= x를 갖고 있는 노드
+{
+
+   ```
+       if(v가 리프 노드 아님)then{
+            x의 직후 원소 y를 가진 리프노드를 찾는다;
+            x와y를 맞바꾼다;
+       }
+       리프 노드에서 x를 제거하고 이 리프 노드를 r이라고 한다;
+       if(r에서 언더플로우 발생)then clearUnderflow(r);
+   
+   
+   ```
+}
+
+clearUnderflow(r)
+
+{
+
+   ```
+       if(r의 형제 노드 중 키를 하나 내놓을 수 있는 여분을 가진 노드가 있음)
+       then {r의 키를 넘겨 받는다;}
+       else{
+              
+              r의 형제 노드와 r을 병합한다;
+              if(부모 노드 p에 언더플로우 발생) then clearUnderflow(p);
+       
+       }
+   
+   
+   ```
+}
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/adfed89b-a321-4da5-8e55-9b8f80989410/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/eb4cb830-77d9-413e-903b-54ce37228a60/image.png)
+
+---
+
 # Graph (그래프)
 ## 그래프란?
 >   현실 세계의 사물, 객체, 추상적인 개념 간의 **연결 관계**를 표현한 것
