@@ -952,3 +952,4 @@ Number 클래스 또는 Number 클래스의 하위 타입 클래스만 사용할
 [https://hahahoho5915.tistory.com/69](https://hahahoho5915.tistory.com/69)
 
 [https://jehuipark.github.io/java/java-generic](https://jehuipark.github.io/java/java-generic)
+---
