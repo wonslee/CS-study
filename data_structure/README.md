@@ -976,6 +976,88 @@ e.g. 아까 트리에다 13을 삽입하는 과정
 
 ![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fl8h8w%2FbtrdBqNyhwS%2F3dNoY02TCFniaHdEy5y6sk%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fl8h8w%2FbtrdBqNyhwS%2F3dNoY02TCFniaHdEy5y6sk%2Fimg.png)
 
+### B- 트리 - 삽입 알고리즘
+
+BTreeInsert(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       x를 삽입할 리프 노드 r을 찾는다;
+       x를 r에 삽입한다;
+       if(r에 오버플로우 발생) then clearOverflow(r);
+   
+   
+   ```
+}
+
+clearOverflow(r)
+{
+
+   ```
+       if(r의 형제 노드 중 여유가 있는 노드가 있음)then{
+       r의 남는 키를 넘긴다
+       };
+       else{
+             r을 둘로 분할하고 가운데 키를 부모 노드로 넘긴다;
+             if(부모 노드 p에 오버플로우 발생)then clearOverflow(p);
+       }
+   
+   
+   ```
+}
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/ecd14024-accb-484a-992b-c53c9ed2c801/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/06d01142-8644-46d4-b787-8f200b028b14/image.png)
+
+---
+
+### B- 트리 - 삭제 알고리즘
+
+BTreedelete(t,x,v) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+v= x를 갖고 있는 노드
+{
+
+   ```
+       if(v가 리프 노드 아님)then{
+            x의 직후 원소 y를 가진 리프노드를 찾는다;
+            x와y를 맞바꾼다;
+       }
+       리프 노드에서 x를 제거하고 이 리프 노드를 r이라고 한다;
+       if(r에서 언더플로우 발생)then clearUnderflow(r);
+   
+   
+   ```
+}
+
+clearUnderflow(r)
+
+{
+
+   ```
+       if(r의 형제 노드 중 키를 하나 내놓을 수 있는 여분을 가진 노드가 있음)
+       then {r의 키를 넘겨 받는다;}
+       else{
+              
+              r의 형제 노드와 r을 병합한다;
+              if(부모 노드 p에 언더플로우 발생) then clearUnderflow(p);
+       
+       }
+   
+   
+   ```
+}
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/adfed89b-a321-4da5-8e55-9b8f80989410/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/eb4cb830-77d9-413e-903b-54ce37228a60/image.png)
+
+---
+
 ## 시간복잡도
 
 결국 핵심 연산은 탐색이고, 이 과정이 **O(log n)** 이기 때문에 삽입과 삭제 또한 O(log n).
@@ -985,6 +1067,11 @@ e.g. 아까 트리에다 13을 삽입하는 과정
 | 탐색 | O(log n) | O(log n) |
 | 삽입 | O(log n) | O(log n) |
 | 삭제 | O(log n) | O(log n) |
+
+
+
+
+---
 
 
 ## B+tree란?
