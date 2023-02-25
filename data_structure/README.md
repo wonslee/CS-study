@@ -438,6 +438,174 @@ void postorder(struct Node* node){
 | 삭제    | O(log n) | O(n) |
 | 순회    | O(n)     | O(n) |
 
+---
+
+
+
+##  이진탐색트리
+
+**탐색**
+
+**삽입**
+
+**삭제**
+
+
+
+---
+
+## 이진탐색트리
+
+이진탐색트리는 다음과 같은 특성을 갖는다.
+
+- 1. 이진탐색트리의 각 노드는 키값을 하나씩 갖는다. 각 노드의 키값은 모두 달라야 한다.
+
+- 2. 최상위 레벨에 루트 노드가 있고, 각노드는 최대 두개의 자식 노드를 갖는다.
+
+- 3. 임의의 노드의 키값은 자신의 왼쪽 자식 노드의 키값보다 크고, 오른쪽 자식 노드의 키값보다 작다.
+
+이진탐색트리의 시간복잡도는 **O(h)** 이다.
+h는 트리의 높이인데 이를 n으로 치환하면 n = 2^h - 1 이므로 h = log(n-1)
+즉 **O(logn)** 이 된다.
+하지만 한쪽으로만 몰리게 되는 경우 최악의 시간복잡도는 **O(n)** 이 된다.
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/5691bbc0-3269-4070-bb6a-889fcf09ff7b/image.png)
+```
+
+```
+```
+
+```
+![](https://velog.velcdn.com/images/hs1430/post/988f237e-0966-4a2f-b405-b27d7b48eab9/image.png)
+
+
+
+
+---
+
+## 이진탐색트리 - 탐색 알고리즘
+
+treeSearch(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       if(t=NIL or key[t] = x) then return t; // 검색하고자 했던키가 루트 노드인 경우
+       // t = NIL이면 NIL을 리턴해 검색이 실패했음을 알려야 하는데 그게 없다.
+       if(x < key[t])   // 루트 노드 t의 키값과 x를 비교한다
+            then return treeSearch(left[t],x); //key[t]>x = 왼쪽 서브트리에 x
+            else return treeSearch(right[t],x); //key[t]<x 오른쪽 서브트리에 x
+   
+   
+   ```
+}
+
+---
+
+
+## 이진탐색트리 - 삽입
+
+![](https://velog.velcdn.com/images/hs1430/post/ac7e249c-3961-4cfe-a99c-2790dab1b08a/image.png)
+
+삽입은 탐색과 상당히 유사하다.
+
+첫 삽입시에만 루트 노드로 취급하고 이후에는 루트 노드와 비교하여
+
+작다면 왼쪽으로 크다면 오른쪽으로 자리를 찾아 삽입하게 된다.
+
+
+---
+
+## 이진탐색트리 - 삽입 알고리즘
+
+treeInsert(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       if(t=NIL) then {
+            key[r] <- x; left[r] <- NIL; right[r] <-NIL; //r = 새노드
+            return r;
+       }
+       
+       if(x < key[t])   // 루트 노드 t의 키값과 x를 비교한다
+            then {left[t] <- treeInsert(left[t],x); return t;}
+            else {right[t] <- treeInsert(right[t],x); return t;}
+   
+   
+   ```
+}
+
+
+---
+
+## 이진탐색트리 - 삭제
+
+이진탐색트리에서 삭제는 앞서 소개한 탐색, 삽입보다 어려운 편이다.
+이진탐색트리에서 원하는 노드 r을 삭제 하려면 다음 세 가지의 경우에 따라
+각각 다르게 처리를 해주어야 한다.
+
+- Case 1 : r이 리프 노드인 경우
+
+- Case 2 : r의 자식 노드가 하나인 경우
+
+- Case 3 : r의 자식 노드가 두 개인 경우
+
+Case 1, 2 는 처리가 비교적 간단하지만, Case 3는 다소 복잡하다.
+
+Case 1 인 경우 선택한 r을 그냥 제거 하면된다.
+
+Case 2 인 경우 r의 부모가 r의 자식을 직접 가리키도록 해야한다.
+
+Case 3 인 경우 r의 오른쪽 서브트리의 최소원소 노드 s를 삭제하고,
+s를 r 자리에 놓아야한다.
+
+이때 s 는 왼쪽 서브트리보다 크고 오른쪽 서브트리보다 작은 값을 가져야한다.
+
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/fc80b62e-f078-42c5-82ff-d7a3fa5fee43/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/3432994a-6f7e-4012-83dd-1b7e9ad4beda/image.png)
+
+---
+
+## 이진탐색트리 - 삭제 알고리즘
+
+treeDelete(t,r,p) // t: 트리의 루트 노드 r: 삭제하고자 하는 노드 p: r의 부모 노드
+{
+  ```
+  if(r=t) then root <- deleteNode(t);
+  else if (r=left[p])
+             then left[p] <- deleteNode(r);
+             else right[p] <- deleteNode(r);
+     
+  ```
+}
+deleteNode(r)
+{
+  ```
+  if(left[r] = right[r] =NIL) then return NIL; //Case 1
+  else if(left[r] = NIL and right[r] != NIL) then return right[r];  // Case 2
+  else if(left[r] != NIL and right[r] = NIL) then return left[r];
+  // Case 2
+  else{   // Case 3
+            s <- right[r];  // r의 오른쪽 자식 노드를 s로 지정
+            while(left[s] != NIL) // s의 왼쪽 자식 노드가 없을때까지 실행 즉 s가 최소값이 될때까지 실행
+               { parent <- s; s <- left[s];} //s였던 노드는 s의 부모가 되고 왼쪽 자식 노드값이 s값이 된다.
+            key[r] <- key[s];
+            if (s=right[r]) then right[r] <- right[s]; 
+                            else left[parent] <- right[s];
+            return r;
+  }
+  
+  ```
+}
+
+
+---
+
 # Graph (그래프)
 ## 그래프란?
 >   현실 세계의 사물, 객체, 추상적인 개념 간의 **연결 관계**를 표현한 것
@@ -739,6 +907,194 @@ void buildHeap(){
 | 원소 삭제         | O(log n) |
 | 힙 생성(heapify) | O(n) |
 
+
+# B-tree와 B+tree
+
+## B-tree란?
+
+
+: **이진트리를 확장**한 자료구조 **탐색 성능**을 높이기 위해 평소에 데이터들의 높이를 균형있게 유지하는 **Balanced Tree**의 일종이다.  
+
+![https://media.geeksforgeeks.org/wp-content/uploads/20200506235136/output253.png](https://media.geeksforgeeks.org/wp-content/uploads/20200506235136/output253.png)
+
+- 노드에는 **2개 이상**의 데이터(key)가 들어갈 수 있다.
+- 하나의 노드가 가질 수 있는 자식의 최대 숫자가 **2보다 크다.**
+- 모든 단말(leaf) 노드는 같은 레벨에 있어야 한다. 항상 균형을 유지한다 (**균형 잡힌 트리**).
+- 최대 M개의 자식을 가질 수 있는 B 트리를 M차(M-way) B트리라고 한다. 내부 노드는 **M/2 ~ M개의 자식**을 가질 수 있다.  (e.g. 3차 B트리 : 1~3개의 자식 노드 가능)
+- 노드 내에 **데이터(key)**는 floor(M/2)-1개부터 **최대 M-1개까지** 포함될 수 있다
+- 특정 노드의 **데이터(key)가 K개**라면, **자식 노드의 개수는 K+1개**여야 한다.
+
+![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FBLi5L%2FbtrdInhxyVP%2Febff3uYkmyoEty5lULR8kK%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FBLi5L%2FbtrdInhxyVP%2Febff3uYkmyoEty5lULR8kK%2Fimg.png)
+
+위의 그림은 3차 B 트리로, 각 노드에 데이터(key)와 그 자식들을 가리키는 포인터가 있다.
+
+- 노드 안에서 데이터(key)는 항상 정렬된 상태를 유지한다.
+- 이진 탐색 트리(BST)와 마찬가지로, 노드의 각 key의 왼쪽 자식은 자신보다 작고 오른쪽 자식은 자신보다 크다.
+
+## 그래서 왜 쓰는데?
+
+일반적인 트리인 경우 탐색하는데 평균적인 시간 복잡도로 **O(log N)**을 갖는다.
+
+트리가 **편향된 경우**가 문제인데, ****최악의 시간복잡도로 **O(N)**을 갖게 된다.
+
+이러한 트리의 단점을 보완하기 위해 트리가 편향되지 않도록 항상 균형을 유지하는게 B 트리다. 자식들의 밸런스를 잘 유지하면 **최악의 경우에도** **O(logN)**의 시간이 보장된다.
+
+## B 트리 연산들
+
+### 탐색
+
+[https://www.cs.usfca.edu/~galles/visualization/BTree.html](https://www.cs.usfca.edu/~galles/visualization/BTree.html)
+
+1. 루트 노드부터 탐색 시작
+2. **노드안의 key를 순회**하면서 K를 찾고, 존재하면 탐색을 종료
+3. K가 존재하지 않는다면, key들과의 **값 비교**를 한 후 그에 맞는 포인터를 통해 자식 node로 내려간다.
+4. leaf node까지 2~3을 반복한다.
+
+e.g. 아래 트리에서 값이 14인 key를 찾아보자.
+
+![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdbqer3%2FbtrduHVBXeZ%2FZJISmJgbgKJpp1k5UnFYM0%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdbqer3%2FbtrduHVBXeZ%2FZJISmJgbgKJpp1k5UnFYM0%2Fimg.png)
+
+![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcjW9kD%2FbtrdESnKFfM%2FWkRCeAitSffVPiKpBfxkbK%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcjW9kD%2FbtrdESnKFfM%2FWkRCeAitSffVPiKpBfxkbK%2Fimg.png)
+
+### 삽입
+
+균형을 유지해야 하는 B 트리의 성질 때문에, key를 삽입하고 균형이 맞지 않는 경우엔 트리를 변형시켜야 한다.
+
+1. 빈 트리인 경우, 루트 노드를 만들어 K를 삽입한다. root node가 가득 찬 경우, node를 분할하여 leaf node를 생성한다.
+2. K가 들어갈 **leaf node를 탐색**한다.
+3. 해당 leaf node에 자리가 남아있다면 **정렬을 유지**하도록 알맞은 위치에 삽입하고, leaf node가 **꽉 차 있다면** K를 삽입한 후 해당 node를 **중앙값을 기준으로 분할**한다. 중앙값은 부모 node로 합쳐지거나 새로운 node로 생성되고, 중앙값을 기준으로 왼쪽의 key는 왼쪽 자식, 오른쪽의 key는 오른쪽 자식으로 생성된다.
+
+e.g. 아까 트리에다 13을 삽입하는 과정
+
+![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FsCUPI%2FbtrdBrrwcKW%2FBNlLhjIHg9THT2HgC3araK%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FsCUPI%2FbtrdBrrwcKW%2FBNlLhjIHg9THT2HgC3araK%2Fimg.png)
+
+1. 13이 들어갈 leaf node 탐색
+2. 정렬을 유지하는 위치에 삽입
+3. 한 노드에 들어갈 수 있는 key 수보다 많이 삽입된 상태이므로, 중앙값(13)을 기준으로 분할하고, 13은 부모 노드로 합쳐준다. 이 과정이 반복된다
+
+![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FupFIB%2FbtrdzN9tLOL%2FxVKPr2jaSIh7pysy5k1Qr1%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FupFIB%2FbtrdzN9tLOL%2FxVKPr2jaSIh7pysy5k1Qr1%2Fimg.png)
+
+![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fl8h8w%2FbtrdBqNyhwS%2F3dNoY02TCFniaHdEy5y6sk%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fl8h8w%2FbtrdBqNyhwS%2F3dNoY02TCFniaHdEy5y6sk%2Fimg.png)
+
+### B- 트리 - 삽입 알고리즘
+
+BTreeInsert(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       x를 삽입할 리프 노드 r을 찾는다;
+       x를 r에 삽입한다;
+       if(r에 오버플로우 발생) then clearOverflow(r);
+   
+   
+   ```
+}
+
+clearOverflow(r)
+{
+
+   ```
+       if(r의 형제 노드 중 여유가 있는 노드가 있음)then{
+       r의 남는 키를 넘긴다
+       };
+       else{
+             r을 둘로 분할하고 가운데 키를 부모 노드로 넘긴다;
+             if(부모 노드 p에 오버플로우 발생)then clearOverflow(p);
+       }
+   
+   
+   ```
+}
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/ecd14024-accb-484a-992b-c53c9ed2c801/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/06d01142-8644-46d4-b787-8f200b028b14/image.png)
+
+---
+
+### B- 트리 - 삭제 알고리즘
+
+BTreedelete(t,x,v) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+v= x를 갖고 있는 노드
+{
+
+   ```
+       if(v가 리프 노드 아님)then{
+            x의 직후 원소 y를 가진 리프노드를 찾는다;
+            x와y를 맞바꾼다;
+       }
+       리프 노드에서 x를 제거하고 이 리프 노드를 r이라고 한다;
+       if(r에서 언더플로우 발생)then clearUnderflow(r);
+   
+   
+   ```
+}
+
+clearUnderflow(r)
+
+{
+
+   ```
+       if(r의 형제 노드 중 키를 하나 내놓을 수 있는 여분을 가진 노드가 있음)
+       then {r의 키를 넘겨 받는다;}
+       else{
+              
+              r의 형제 노드와 r을 병합한다;
+              if(부모 노드 p에 언더플로우 발생) then clearUnderflow(p);
+       
+       }
+   
+   
+   ```
+}
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/adfed89b-a321-4da5-8e55-9b8f80989410/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/eb4cb830-77d9-413e-903b-54ce37228a60/image.png)
+
+---
+
+## 시간복잡도
+
+결국 핵심 연산은 탐색이고, 이 과정이 **O(log n)** 이기 때문에 삽입과 삭제 또한 O(log n).
+
+|  | 평균 | 최악 |
+| --- | --- | --- |
+| 탐색 | O(log n) | O(log n) |
+| 삽입 | O(log n) | O(log n) |
+| 삭제 | O(log n) | O(log n) |
+
+
+
+
+---
+
+
+## B+tree란?
+
+- B-tree의 확장개념
+- 브랜치(중간) 노드에 **key만** 담아두고, data는 담지 않는 자료구조. 오직 **리프 노드에만 key와 data를 저장**한다. DB관점에서 생각해볼 때 레코드들은 모두 리프 노드에만 들어간다. 
+- 리프 노드끼리 **Linked list**로 연결되어 있다. 그래서 SQL에서 전체 조회를 할 때에도 속도가 빠르다.
+
+![https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Bplustree.png/600px-Bplustree.png](https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Bplustree.png/600px-Bplustree.png)
+
+- 데이터의 빠른 접근을 위한 **인덱스** **역할**만 하는 중간 노드(internal node, index node)가 추가로 있음. index노드가 탐색시간을 줄여서 조건부 검색을 빠르게 해준다.
+- 리프 노드를 제외하고는 데이터를 담아두지 않기 때문에 메모리 효율적이다.
+- 하나의 노드에 더 많은 key들을 담을 수 있기 때문에 **트리의 높이가 더 낮다**.(cache hit를 높일 수 있음)
+- SQL로 테이블 전체 조회를 할 때, B+tree는 전체 리프 노드들에 대해서만 한 번 선형탐색하면 되기 때문에 B-tree에 비해 빠르다. 반면 B-tree의 경우에는 모든 노드를 확인해야 한다.
+## InnoDB에서 사용된 B+tree
+
+![https://blog.kakaocdn.net/dn/Cbs9b/btqBVf7DVW2/8JOOKlHiwkoTsqbvbTt7R1/img.png](https://blog.kakaocdn.net/dn/Cbs9b/btqBVf7DVW2/8JOOKlHiwkoTsqbvbTt7R1/img.png)
+
+복잡하긴 하다. 같은 레벨의 노드들끼리는 Double Linked List를 사용했고, 자식 노드로는 Single Linked List로 연결되어있다.
+
+key의 범위마다 찾아가야할 **페이지 넘버**(포인터)가 있는데, 해당 페이지 넘버를 통해 곧바로 다음 노드로 넘어간다.
+
+
 # 더 배울 부분들
 - 각 자료구조의 응용, **사례와 연결지어 설명**
 - **구간 트리**(segment tree), **AVL 트리**
@@ -747,6 +1103,7 @@ void buildHeap(){
 - 배열과 Cache hit rate
 - 동적 배열과 overhead
 - 포인터의 메모리 크기는 왜 32, 64비트 컴퓨터마다 다를까?
+- cache hit란?
 
 # 참조
 - 종만북(알고리즘 문제해결전략)
@@ -761,3 +1118,11 @@ void buildHeap(){
 - https://www.geeksforgeeks.org/heap-data-structure/
 - https://www.geeksforgeeks.org/applications-priority-queue/
 - https://debugdaldal.tistory.com/28
+- [**https://rebro.kr/169**](https://rebro.kr/169)
+- [https://zorba91.tistory.com/293](https://zorba91.tistory.com/293)
+- [https://blog.jcole.us/2013/01/10/btree-index-structures-in-innodb/](https://blog.jcole.us/2013/01/10/btree-index-structures-in-innodb/)
+- [https://en.wikipedia.org/wiki/B%2B_tree](https://en.wikipedia.org/wiki/B%2B_tree)
+- https://velog.io/@xdfc1745/%EC%9D%B4%EC%A7%84%ED%8A%B8%EB%A6%AC-%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84
+- https://93jpark.tistory.com/109
+- https://honggom.tistory.com/40
+

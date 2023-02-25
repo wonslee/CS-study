@@ -2,7 +2,7 @@
 
 ## About
 - [ 전공자로서 알아야 할 기본 **CS 지식 52개** + 각자 관심 있는 **기술 α개** ]를 공부, 발표, 토론하고 정리해둔 공간입니다.  
-- 주목적은 면접 대비지만, 향후 다른 개발자들과 **소통**하여 좋은 영향을 주고 받을 수 있게 되는 것이 또 하나의 목표입니다.
+- 주목적은 **면접 대비**이고, 향후 다른 개발자들과 **소통**하여 좋은 영향을 주고 받을 수 있게 되는 것이 또 하나의 목표입니다.
 - 수원대학교 컴퓨터학부생 4명 (Java Spring 3명, Kotlin Android 1명)이 진행했습니다. 
 
 ## Contents
@@ -11,10 +11,11 @@
 - computer architecture (컴퓨터구조)
 - [operating system (운영체제)](https://github.com/wonseok2877/CS-study/tree/master/operation_system)
 - [network (네트워크)](https://github.com/wonseok2877/CS-study/tree/master/network)
-- [language (JAVA)](https://github.com/wonseok2877/CS-study/tree/master/language)
+- [language (Java, Kotlin)](https://github.com/wonseok2877/CS-study/tree/master/language)
 - [database (데이터베이스)](https://github.com/wonseok2877/CS-study/tree/master/database)
 - design pattern (디자인패턴)
 - software engineering
+- projects (프로젝트에 쓰인 기술들)
 - etc(기타)
 
 ## Rule
