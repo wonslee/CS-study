@@ -12,23 +12,13 @@
 
 > [github 작업 가이드 :guide_dog:](https://github.com/wonseok2877/CS-study/issues/45)
 
->  폴더 구조 : 각 대주제(폴더)마다 README 파일이 하나씩 있는 구조입니다. 
-  ```bash
-  .
-  ├── algorithm
-  │   └──── README.md
-  ├── database
-  │   └──── README.md
-  ├── data_structure
-  │   └──── README.md
-  .
-  .
-  .
-  ```
-> 구경하는 방법 : 원하는 폴더로 이동한 다음, 상단의 햄버거 버튼을 눌러 README 목차대로 보시면 됩니다.
+
+> 구경하는 방법 : 각 대주제(폴더)마다 README 파일이 하나씩 있는 구조입니다.   
+  원하는 폴더로 이동한 다음, 상단의 햄버거 버튼을 누르면 목차대로 보실 수 있습니다.  
+
   <img src="https://user-images.githubusercontent.com/72124326/221341370-066b6e11-41cd-4e7e-ac7d-1d70544e940c.png" width="50%" height="50%">
 
-## Contents
+## Contents (진행중)
 - [data structure (자료구조)](https://github.com/wonseok2877/CS-study/tree/master/data_structure)
   - Array
   - Linked List
