@@ -3,6 +3,7 @@
 
 - [프로세스와 스레드](#프로세스와-스레드)
 - [동기와 비동기 vs 블락킹과 논블락킹](#동기와-비동기-vs-블락킹과-논블락킹)
+- [뮤텍스](#뮤텍스와-세마포어)
 </details>
 
 ## 프로세스와-스레드
@@ -270,7 +271,160 @@ lifecycleScope.launch {
         lectureInfoViewModel.fetchLectureList()
    }
 }
+```   
+
+## 뮤텍스와 세마포어
+[참고 자료 1](https://hoyeonkim795.github.io/posts/mutex-semaphore/)   
+[참고 자료 2](https://velog.io/@heetaeheo/%EB%AE%A4%ED%85%8D%EC%8A%A4Mutex%EC%99%80-%EC%84%B8%EB%A7%88%ED%8F%AC%EC%96%B4Semaphore%EC%9D%98-%EC%B0%A8%EC%9D%B4)   
+[참고 자료 3](https://suintodev.tistory.com/4)   
+
+***
+
+여러 프로세스가 동시에 공유 데이터에 접근할 때 접근 순서에 따라 실행 결과가 달라지는 상황이 있다. 이런 상황에 놓인 프로세스들을 **경쟁 상태(race condition)**에 있다고 한다. 이러한 경쟁 상태를 예방하려면 병행 프로세스들을 동기화해야 하는데, 이는 임계 영역을 이용한 **상호배제**로 구현할 수 있다.   
+
+> * 임계 영역   
+> 여러 프로세스가 데이터를 공유하며 수행될 때, 각 프로세스에서 공유 데이터에 접근하는 프로그램 코드 부분   
+
+
+다만, 임계 영역만으로 경쟁 조건이 만들어지지 않을 때가 있다. 공유 메모리를 사용하는 병렬 프로세스가 올바르고 효율적으로 수행되려면 다음과 같은 추가 조건이 필요하다.   
+
+* Mutual exclusion
+  * 두 개 이상의 프로세스들이 동시에 임계 영역에 있어서는 안 된다.
+* Progress
+  * 임계 구역 바깥에 있는 프로세스가 다른 프로세스의 임계 구역 진입을 막아서는 안 된다.
+* Bounded Waiting
+  * 어떤 프로세스도 임계 구역으로 들어가는 것이 무한정 연기되어서는 안된다.
+* 프로세스들의 상대적인 속도에 대해서 어떤 가정도 해서는 안된다.
+  * CPU의 성능과 속도에 영향을 받지 않아야 한다.
+
+
+### 뮤텍스
+동시 프로그래밍에서 공유 불가능한 자원의 동시 사용을 피하기 위해 사용하는 알고리즘 중 하나로 특징은 다음과 같다.
+
+* 임계구역을 가진 스레드들의 실행시간이 서로 겹치지 않고 각각 단독으로 실행(상호배제 Mutual Exclution)되도록 하는 기술
+* 한 프로세스에 의해 소유될 수 있는 Key를 기반으로 한 상호배제 기법. Key에 해당하는 어떤 객체(Object)가 있으며, 이 객체를 소유한 스레드/프로세스만 이 공유자원에 접근할 수 있다.
+
+* 다중 프로세스들의 공유 리소스에 대한 접근을 조율하기 위해 동기화 또는 락을 사용합니다.
+
+* 즉 뮤텍스 객체를 두 스레드가 동시에 사용할 수 없습니다.   
+
+![](https://velog.velcdn.com/images/heetaeheo/post/993d9d0a-bd05-40a3-a4ed-ed45fb84d8ca/image.png)   
+
+### 데커(Dekker) 알고리즘
+최초의 뮤텍스 알고리즘   
+
+```C
+Flag1 = true;
+  while(Flag2) {
+    if(turn!=1) {
+      Flag1 = false;
+
+      while(turn!=1) {
+         // busy wait
+      }
+
+      Flag1 = true;
+    }
+  }
+
+  // Start of Critical Section
+  ...
+  ...
+  
+  turn = 2;
+  Flag1 = false;
+  // End of Critical Section
 ```
+
+```C
+Flag2 = true;
+
+  while(Flag1) {
+    if(turn!=2) {
+      Flag2 = false;
+      while(turn!=2) {
+         // busy wait
+      }
+      Flag2 = true;
+    }
+  }
+  
+  // Start of Critical Section
+  ...
+  ...
+
+  turn = 1;
+  Flag2 = false;
+  // End of Critical Section
+```   
+
+turn은 Flag1과 Flag2가 모두 True 일 때 우선 순위를 구분하기 위해 사용한다. turn이 1이면 1번 스레드가 먼저 진입, 2이면 2번 스레드가 먼저 진입   
+
+* 단점
+  * 속도가 느림
+  * 구현이 복잡함
+  * Busy waiting -> 기다리는 동안에도 while문을 계속 수행
+
+### 피터슨 알고리즘
+```C
+//A 프로세스의 구조
+
+while(1){
+    flag[A] = true;
+    turn = B;
+    while(flag[B] && turn == B);
+    V++; //critical section
+    flag[A] = false;
+}
+```
+```C
+//B 프로세스의 구조
+
+while(1){
+    flag[B] = true;
+    turn = A;
+    while(flag[A] && turn == A);
+    V++; //critical section
+    flag[B] = false;
+}
+```
+
+* A 프로세스를 동작시키고 싶다면 임계 영역에 들어가고 싶다는 표시로 flag [A]를 true로 만든다.
+* turn 변수를 B로 설정하고 내부 while문을 수행한다.
+* 이때 B 프로세스가 들어갈 의사표시를 하지 않았다면, 즉 flag [B]가 false라면 A 프로세스는 임계 영역에 바로 들어갈 수 있다.
+* 그러나 만약 두 프로세스가 동시에 동작하려고 하면 turn 변수가 늦게 수행된 프로세스가 내부 while문에서 기다리며 순서를 양보한다.
+* 먼저 임계 영역에 들어갔던 프로세스는 나오면서 자신의 flag를 false로 만들고 다른 프로세스가 임계 영역에 들어가는 것을 허용한다.
+* 따라서 두 프로세스가 동시에 수행될 때 내부 while문의 turn값에 따라서 어떤 프로세스가 임계 영역에 들어갈지가 결정된다. turn이 A이면 B 프로세스가 수행되고 turn이 B이면 A 프로세스가 먼저 수행된다.
+
+데커 알고리즘과는 상대방(다른 프로세스 혹은 스레드)에게 진입기회를 양보한다는 차이가 있다.
+
+### 제과점 알고리즘
+제과점 알고리즘은 위의 2개와 달리, 여러개의 프로세스(혹은 스레드)에 대한 처리가 가능하다. 가장 작은 수의 번호표를 가지고 있는 프로세스가 임계영역에 진입한다.   
+
+```c
+while(1) {
+...
+  isReady[i] = true;                 // 번호표를 받을 준비
+  number[i] = max(number[0~n-1]) +1  // 현재 실행 중인 프로세스 중 가장 큰 번호로 배정
+  isReady[i] = false;                // 번호표 수령 완료
+ 
+  for( j =0; j < n; j++ ) {          // 모든 프로세스에 대해 번호표를 비교한다.
+    while( isReady[j] );               // 비교할 프로세스가 번호표를 받을 때까지 대기
+    while(number[j] && number[j] < number[i] && j<i);
+    // 프로세스 j가 번호표를 가지고 있고,
+    // 프로세스 j의 번호표가 프로세스i의 번호표보다 작거나 같을 경우
+    // j가 i보다 작다면(프로세스 j가 i보다 먼저 온 프로세스이면)
+    // 프로세스 j의 종료(number[j]=0)까지 대기
+    }
+
+/* 이곳은 임계영역이다. */
+...
+number[i] = 0;                     // 임계영역 사용 완료
+...
+
+}
+```
+
 
 
 
