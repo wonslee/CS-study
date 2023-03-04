@@ -10,6 +10,7 @@
 - [DNS와 DNS Round Robin](#dns--domain-name-system-)
 - [웹 통신의 전체적인 흐름](#웹-통신의-전체적인-흐름)
 - [Session과 JWT](#session과-jwt)
+- [HTTP 상태코드](#http-상태코드)
 </details>
 
 
@@ -1086,3 +1087,301 @@ JWT는 발급한 후 삭제가 불가능하기 때문에, 유효시간을 부여
 
 ac token 만 요청 : stateless
 refresh token : stateful (단, 자주 일어나지 않음 - 세션은 계속 stateful인데, re token은 ac token 재발급할때만 stateful임)
+
+---
+
+# **HTTP 상태코드**
+
+HTTP 상태코드란 클라이언트가 보낸 요청의 처리상태를 응답에서 알려주는 기능이다. 상태 코드에 따라 요청의 성공/실패 여부를 판단한다.
+
+---
+
+### **상태 코드 분류**
+
+상태 코드는 5가지로 분류한다.
+
+- 1xx (Informational) : 요청이 수신되어 처리중이란 뜻 // 거의 사용하지 않음
+- 2xx (Successful) : 클라이언트의 요청을 성공적으로 처리 ex) 200 OK, 201 Created, 202 Accepted, 204 No Content
+- 3xx (Redirection) : 요청을 완료하기 위해 유저 에이전트의 추가 조치 필요
+- 4xx (Client Error) : 클라이언트 오류
+- 5xx (Server Error) : 서버 오류
+
+---
+
+### **상세 내용**
+
+### **1xx (Informational) : 조건부 응답**
+
+**100 Continue**
+
+- 클라이언트가 서버로 보낸 요청에 문제가 없으니 다음 요청을 이어서 보내도 된다는 것을 의미한다. 만약 클라이언트의 작업이 완료되었다면 이 응답은 무시해도 된다.
+
+101 Switching Protocol (프로토콜 전환), 102 Processing (처리), 103 Early Hints (사전 도움) 등 여러 가지가 있지만 거의 사용하지 않는다.
+
+---
+
+### **2xx (Success) : 성공**
+
+**200 OK (성공)**
+
+- 요청이 성공적으로 수행되었음을 의미한다. 주로 Get 요청에 대한 응답이다.
+
+**201 Created (작성됨)**
+
+- 요청이 성공적으로 수행되었으며, 그 결과로 새로운 리소스가 생성됨을 의미한다. 주로 Post 요청에 대한 응답이다.
+
+**202 Accepted (허용됨)**
+
+- 요청은 접수되었지만, 처리는 완료되지 않음을 의미한다. 배치 처리와 같이 요청 접수 후 일정 시간이 지난 후 요청을 처리하는 경우의 응답이다. 예시) 요청 접수 후 1시간 뒤에 배치 프로세스가 요청을 처리함
+
+**204 No Content**
+
+- 서버가 요청을 성공적으로 수행했지만, 응답 페이로드에 보낼 데이터가 없음
+
+예시) 웹 문서 편집기에서 save 버튼을 눌러도 아무 내용이 없어도 된다. save 버튼을 눌러도 같은 화면을 유지해야 한다.
+
+---
+
+### **3xx (Redirection) : 리다이렉션 완료**
+
+리다이렉트(Redirect)란 Location 위치로 자동 이동하는 것이다.
+
+![https://blog.kakaocdn.net/dn/b1wUJ5/btr1lBSWZ9L/pj0ZATR5ca9Mw1HNSgqumK/img.png](https://blog.kakaocdn.net/dn/b1wUJ5/btr1lBSWZ9L/pj0ZATR5ca9Mw1HNSgqumK/img.png)
+
+위의 예시를 보면 모바일 환경으로 naver에 접속을 시도하면 모바일 전용 naver로 리다이렉트를 시켜주는 것이다.
+
+즉 [http://www.naver.com/](http://www.naver.com/) -> [http://m.naver.com](http://m.naver.com/) 으로 이동시켜주는 역할을 한다.
+
+**리다이렉션의 종류**
+
+**영구 리다이렉션 (301, 308)**
+
+- 특정 리소스의 URI가 영구적으로 이동
+
+예시) /members -> /users , /event -> /new-event
+
+**301 Moved Permanently**
+
+- 리다이렉트시 요청 메서드가 GET으로 변하고, 본문이 제거될 수 있음
+
+```java
+POST /event HTTP/1.1
+Host: localhost:8080// HTTP 헤더
+
+name=YD&age=24// HTTP 바디
+```
+
+리다이렉트 후
+
+```java
+GET /event HTTP/1.1// GET으로 변경
+Host: localhost:8080// HTTP 헤더// 메시지 제거
+```
+
+**308 Permanent Redirect**
+
+- 301과 기능은 같으나 리다이렉트시 요청 메서드와 본문 유지를 한다. (처음 POST를 보내면 리다이렉트도 POST 유지)
+
+```bash
+POST /event HTTP/1.1
+Host: localhost:8080     // HTTP 헤더
+
+name=YD&age=24           // HTTP 바디
+```
+
+리다이렉트 후
+
+```bash
+POST /event HTTP/1.1     // POST 유지
+Host: localhost:8080     // HTTP 헤더
+
+name=YD&age=24           // HTTP 바디 유지
+```
+
+**일시 리다이렉션 (302, 303, 307)**
+
+- 일시적인 변경
+
+예시) 주문 완료 후 주문 내역 화면으로 이동
+
+**302 Found**
+
+- 리다이렉트시 요청 메서드가 GET으로 변하고, 본문이 제거될 수 있음
+
+**303 See Other**
+
+- 302와 기능은 같음
+- 리다이렉트 시 요청 메서드가 GET으로 변함
+
+**307 Temporary Redirect**
+
+- 302와 기능은 같음
+- 리다이렉트시 요청 메서드와 본문 유지(요청 메서드를 변경하면 안된다)
+
+PRG: Post/Redirect/Get
+
+// POST로 주문 후에 웹 브라우저를 새로고침했을 시 중복 요청이 됨
+
+따라서 Post -> Redirect -> Get 으로 변경해서 새로고침해도 Get으로 요청하게 함
+
+**PRG 쓰기 전**
+
+1.요청 (Client -> Server)
+
+```bash
+POST /order HTTP/1.1
+Host: localhost:8080
+
+itemId=YD&count=24
+```
+
+2.주문 데이터 저장
+
+3.응답 (Server -> Client)
+
+```bash
+HTTP/1.1 200 OK
+
+<html>주문완료</html>
+```
+
+4.새로고침
+
+5. 요청 (Client -> Server)
+
+```bash
+POST /order HTTP/1.1
+Host: localhost:8080
+
+itemId=YD&count=24		//새로고침하면 똑같은 주문이 들어가게됨
+```
+
+6. 주문데이터 저장
+
+7. 응답 (Server -> Client)
+
+```bash
+HTTP/1.1 200 OK
+
+<html>주문완료</html>
+```
+
+이처럼 Post후에 Redirect를 하지 않을시 새로고침을 하면 똑같은 주문이 2개가 들어가는 것을 확인할 수 있다.
+
+하지만 RGB를 사용한다면 어떻게 될까?
+
+1. 요청 (Client -> Server)
+
+```bash
+POST /order HTTP/1.1
+Host: localhost:8080
+
+itemId=YD&count=24
+```
+
+2. 주문데이터 저장
+
+3. 응답 (Server -> Client)
+
+```bash
+HTTP/1.1 302 Found
+Location: /order-result/1
+```
+
+4. 자동 리다이렉트
+
+5. 요청 (Client -> Server)
+
+```bash
+GET /order-result/1 HTTP/1.1
+Host: localhost:8080
+```
+
+6. 주문데이터 1번 조회
+
+7. 응답 (Server -> Client)
+
+```bash
+HTTP/1.1 200 OK
+<html>주문완료</html>
+```
+
+8. 결과 화면에서 새로고침해도 5번으로 이동함. 즉 주문이 중복으로 이뤄지지 않음.
+
+**특수 리다이렉션 (304)**
+
+**304 Not Modified**
+
+- 캐시를 목적으로 사용
+- 클라이언트에게 리소스가 수정되지 않았음을 알려준다. 따라서 클라이언트는 로컬PC에 저장된 캐시를 재사용한다.
+
+(캐시로 리다이렉트 한다)
+
+- 304 응답은 응답에 메시지 바디를 포함하면 안된다. (로컬 캐시를 사용해야 하므로)
+- 조건부 GET, HEAD 요청시 사용
+
+---
+
+### **4xx (Client Error) : 클라이언트 오류**
+
+- 클라이언트의 요청에 잘못된 문법등으로 서버가 요청을 수행할 수 없음
+- 오류의 원인이 클라이언트에 있음
+- 클라이언트가 이미 잘못된 요청, 데이터를 보내고 있기 때문에, 똑같은 재시도가 실패함
+
+**400 Bad Request**
+
+클라이언트가 잘못된 요청을 해서 서버가 요청을 처리할 수 없음
+
+- 요청 구문, 메시지 등등 오류
+- 클라이언트는 요청 내용을 다시 검토하고, 보내야함
+- 예) 요청 파라미터가 잘못되거나, API 스펙이 맞지 않을 때
+
+**401 Unauthorized**
+
+클라이언트가 해당 리소스에 대한 인증이 필요함
+
+- 인증(Authenthication) 되지 않음
+- 401 오류 발생시 응답에 WWW-Authenticate 헤더와 함께 인증 방법을 설명
+- 보통 로그인이 필요한 API를 비로그인 사용자가 호출했을 때 사용된다.
+
+**403 Forbidden**
+
+서버가 요청을 이해했지만 승인을 거부함
+
+- 주로 인증 자격 증명은 있지만, 접근 권한이 불충분한 경우
+- 예시) 어드민 등급이 아닌 사용자가 로그인은 했지만, 어드민 등급의 리소스에 접근하는 경우
+
+**404 Not Found**
+
+요청 리소스를 찾을 수 없음
+
+- 요청 리소스가 서버에 없음
+- 또는 클라이언트가 권한이 부족한 리소스에 접근할 때 해당 리소스를 숨기고 싶을 때
+
+---
+
+### **5xx (Server Error) : 서버 오류**
+
+- 서버 문제로 오류 발생
+- 서버에 문제가 있기 때문에 재시도 하면 성공할 수도 있음(복구가 되거나 등등)
+
+**500 Internal Server Error**
+
+서버 문제로 오류 발생, 애매하면 500 오류
+
+**503 Service unavailable**
+
+서비스 이용 불가
+
+- 서버가 일시적인 과부하 또는 예정된 작업으로 잠시 요청을 처리할 수 없음
+- Retry-After 헤더 필드로 얼마뒤에 복구되는지 보낼 수도 있음
+
+---
+
+참고:
+
+[https://velog.io/@sangyeon217/http-status-code](https://velog.io/@sangyeon217/http-status-code)
+
+[https://surprisecomputer.tistory.com/47](https://surprisecomputer.tistory.com/47)
+
+[https://m.blog.naver.com/fbfbf1/222682972994](https://m.blog.naver.com/fbfbf1/222682972994)
