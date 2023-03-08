@@ -853,7 +853,6 @@ WWW (world wide web)의 약자이며 인터넷으로 연결된 컴퓨터를 통�
 
 터미널을 켠뒤 nslookup google.com 을 입력해보면, google.com 도메인이 갖는 IP주소를 알 수 있고, 주소창에 해당 IP주소를 입력하면 도메인을 입력했을 때와 같은 결과를 얻는다.
 
-※ 시간에 따라 IP주소는 달라진다
 
 ![https://blog.kakaocdn.net/dn/lYXpl/btrXtSDwTDn/P31X3AnUFfWOD1IJxQSMgK/img.png](https://blog.kakaocdn.net/dn/lYXpl/btrXtSDwTDn/P31X3AnUFfWOD1IJxQSMgK/img.png)
 
