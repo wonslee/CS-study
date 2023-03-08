@@ -1,3 +1,11 @@
+<details>
+<summary>Table of Contents</summary>
+
+- [컴퓨터의 구성요소들](#컴퓨터의-구성요소들)
+- [컴퓨터 구조와 기능, CPU](#컴퓨터-구조와-기능,-CPU)
+
+</details>
+
 # 컴퓨터의 구성요소들
 
 ## 컴퓨터의 구성
@@ -70,12 +78,6 @@
 - [https://hongong.hanbit.co.kr/컴퓨터의-4가지-핵심-부품cpu-메모리-보조기억장/](https://hongong.hanbit.co.kr/%EC%BB%B4%ED%93%A8%ED%84%B0%EC%9D%98-4%EA%B0%80%EC%A7%80-%ED%95%B5%EC%8B%AC-%EB%B6%80%ED%92%88cpu-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%B3%B4%EC%A1%B0%EA%B8%B0%EC%96%B5%EC%9E%A5/)
 - [https://en.wikipedia.org/wiki/Computer_architecture](https://en.wikipedia.org/wiki/Computer_architecture)
 - [https://dheldh77.tistory.com/entry/컴퓨터구조-시스템-버스System-bus](https://dheldh77.tistory.com/entry/%EC%BB%B4%ED%93%A8%ED%84%B0%EA%B5%AC%EC%A1%B0-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%B2%84%EC%8A%A4System-bus)
-<details>
-<summary>Table of Contents</summary>
-
-- [컴퓨터 구조와 기능, CPU](#컴퓨터-구조와-기능,-CPU)
-
-</details>
 
 # 컴퓨터구조
 ## 컴퓨터 구조와 기능, CPU
