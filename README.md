@@ -40,6 +40,9 @@
   - 탐욕 알고리즘
   - 동적 계획법 (Dynamic Programming)
   - 최단 경로
+- [information_security](https://github.com/wonseok2877/CS-study/tree/master/information_security)
+  - sql injection
+  - csrf
 - computer architecture (컴퓨터구조)
   - 컴퓨터의 구성
   - 중앙처리장치(CPU) 작동 원리
