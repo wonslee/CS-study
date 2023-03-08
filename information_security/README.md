@@ -206,6 +206,86 @@ PDO(PHP Data Objects)를 활용하여 미리 생성(prepare)된 쿼리에
 
 ---
 
+## CSRF
+
+CSRF(Cross Site Request Forgery)
+
+CSRF는 악성 스크립트를 공격자가 실행 시키는 것이 아닌 타 사용자로부터 서버에 Request를 하게하여 공격자가 원한는 상황이 발생하게 하는 것이다.
+
+즉, 공격자 수행하지 못하는 행위를 자신보다 높은 권한을 가진 계정(ex.관리자)에게 강제로 수행하게 하는 악성 스크립트를 실행시켜 피해자가 의도치않게 공격자 대신 서버에 요청해주어 정보 유출, 계정 탈취 등의 피해를 입게 된다.
+ 
+---
+## CSRF TOKEN
+
+CSRF Token은 임의의 난수를 생성하고 세션에 저장한다.
+
+그리고 사용자의 매 요청마다 해당 난수 값을 포함시켜서 전송시킨다.
+
+이후 백엔드에서는 요청을 받을 때 마다 세션에 저장된 토큰값과 요청 파라미터에 전달된 토큰 값이 같은지 검사한다.
+
+스프링 시큐리티에서는 공식적으로 이 CSRF 공격에 대한 방어 기능을 시큐리티 모듈에서 제공해주고 있다.
+
+
+---
+## CSRF 예시
+
+![](https://velog.velcdn.com/images/hs1430/post/429be633-e04c-4ce1-96fc-9647d427fc8f/image.png)
+
+프록시를 이용하여 Change를 눌렀을때의 패킷을 분석해보면,
+
+패스워드 변경 시 현재 비밀번호를 확인하지 않고 있으며, 프록시 툴로 패스워드 변경 요청 값을 중간에서 잡아본 결과 GET으로 요청하기 때문에 URL 값만으로도 CSRF 공격을 시도할 수 있다.
+또한 url 변수는 password_new 와 password_conf 인것을 알 수 있다.
+
+![](https://velog.velcdn.com/images/hs1430/post/7af81fdd-08b6-4920-b375-b41ada51f60f/image.png)
+
+CSRF 공격을 하기 위해 XSS(Stored)로 이동하였다.
+
+잘못된 이미지 경로를 지정하여 에러를 발생하게하고 에러 발생 시 사용자 패스워드 변경 시키는 URL을 강제 Request 시키는 코드를 통해 XSS 취약점이 존재하는 페이지에 접속 시 마다 패스워드가 변경되게 만들어보자.
+
+```
+<img src="x" onerror='this.src="http://172.30.1.7/vulnerabilities/csrf/?password_new=TEST123&password_conf=TEST123&Change=Change"'>
+```
+
+
+![](https://velog.velcdn.com/images/hs1430/post/050d825d-149e-4255-a769-d510204b4ab0/image.png)
+
+Message 칸에 코드를 넣으려 했으나 칸수가 모자라 실패하였다.
+Elements를 살펴본 결과 maxlength 값을 조정하면 될것 같았다.
+
+![](https://velog.velcdn.com/images/hs1430/post/7c0df669-17e3-4647-bb80-53ff624251b1/image.png)
+
+maxlength 값을 500으로 늘리니까 글자수 제한이 늘어나서
+나머지 코드도 입력이 잘된다.
+
+
+![](https://velog.velcdn.com/images/hs1430/post/d804e3c3-0928-4676-ab74-d09ed45e257c/image.png)
+
+코드를 입력하여 게시글을 작성하게되면, 해당 사이트에 방문한 유저는
+우리가 짠 코드에 노출되어버린다.
+
+위의 사진은
+```
+<img src="x" onerror='this.src="http://172.30.1.7/vulnerabilities/csrf/?password_new=TEST123&password_conf=TEST123&Change=Change"'>
+```
+에서 TEST123 부분을 원래 비밀번호인 password로 입력한 결과값이다.
+방문할때마다 비밀번호가 password로 자동으로 바뀌게 되는 모습을 볼 수 있다.
+
+추가 예제
+
+```
+<img src="http://asq.kr/RGQQXKMuyErhy" onerror=alert("CSRF_TEST")>
+```
+
+---
+
+## CSRF - 해결방법
+
+1. 패스워드 변경시 공격자가 모르는 정보인 **사용자의 현재 비밀번호**를 같이 입력하게 한다.
+
+2.  2차 인증 수단 등의 본인 인증 확인 절차를 가진다. (CSRF TOKEN)
+
+---
+
 출처
 
 - https://unabated.tistory.com/entry/2-SQL-INJECTION
@@ -213,4 +293,8 @@ PDO(PHP Data Objects)를 활용하여 미리 생성(prepare)된 쿼리에
 - https://iamstudying.tistory.com/25
 
 - https://haruhiism.tistory.com/131
+
+- https://414s.tistory.com/6
+
+- https://minkukjo.github.io/cs/2020/08/15/Security-1/
 
