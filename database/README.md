@@ -3,6 +3,7 @@
 
 - [데이터베이스](#데이터베이스)
 - [릴레이션과 키](#릴레이션--relation--과-키--key-)
+- [RDBMS와 NOSQL 차이점](#rdbms-vs-nosql)
 
 </details>
 
@@ -816,6 +817,130 @@ SELECT * FROM Student;
 - 트랜잭션과 로그, 락
 - 주기억장치, 보조기억장치란?
 - 디스크 I/O 란?
+---
+# **RDBMS vs NoSQL**
+# **RDBMS(Relational Database Management System)**
+
+RDMS 즉 관계형 데이터베이스 관리 시스템은 데이터베이스의 한 종류로 가장 많이 사용된다. 이는 데이터베이스에 데이터를 열(Column)과 행(Row)의 테이블 형태로 저장하고, 테이블 형태의 스키마를 지켜야 한다. 가장 대표적인 RDBMS는 Oracle, MySQL 등이 있다. 그리고 이 관계형 데이터베이스를 다루기 위한 언어를 SQL이라고 한다.
+
+관계형 데이터베이스(RDBMS)는 다른 테이블과 관계를 맺고 모여있는 집합체로 이해할 수 있다. 이러한 관계를 나타내기 위해 외래 키(foreign key)라는 것을 사용해 테이블 간 Join이 가능하다는 게 RDBMS의 가장 큰 특징이다.
+
+---
+
+# **NoSQL(Not Only SQL)**
+
+NoSQL 즉 비관계형 데이터베이스는 관계형 테이블과는 다른 형식으로 데이터를 저장한다. RDBMS와 달리 테이블 간 관계를 정의하지 않는다 즉 테이블 간 Join도 불가능하다.
+
+데이터 일관성은 포기하되 비용을 고려하여 여러 대의 데이터에 분산하여 저장하는 Scale-Out을 목표로 등장했다.
+
+NoSQL은  다음 그림과 같이 다양한 형태의 저장 기술을 지원하고 있다.
+
+![https://blog.kakaocdn.net/dn/lmQ97/btr1UROMNXw/G6qFcvMZbF6bnHe7gVNaSk/img.png](https://blog.kakaocdn.net/dn/lmQ97/btr1UROMNXw/G6qFcvMZbF6bnHe7gVNaSk/img.png)
+
+### **NoSQL 저장 기술**
+
+**1. Key-Value Database**
+
+- **데이터가 Key와 Value에 접근하는 구조**
+- 단순한 저장구조를 가지며, 복잡한 조회 연산을 지원하지 않는다.
+- Key 값은 어떠한 형태의 데이터라도 담을 수 있다. 이미지나 비디오도 가능하다.
+- 또한 간단한 API를 제공하는 만큼 질의의 속도가 굉장히 빠른 편이다.
+- 대표적인 Model로는 , Riak, Amazon Dynamo DB 등이 있다.
+
+  Redis
+
+
+![https://blog.kakaocdn.net/dn/bbXQ7T/btr1XPQucTl/nkH7tmWhZKxPmlHY0T95UK/img.png](https://blog.kakaocdn.net/dn/bbXQ7T/btr1XPQucTl/nkH7tmWhZKxPmlHY0T95UK/img.png)
+
+Redis의 Key-value Model
+
+**2. Document Database**
+
+- Key/Value 즉 1번의 확장된 형태로, value에 Document라는 타입을 저장한다. Document는 구조화된 문서 데이터(XML, Json,Yaml 등)을 말한다.
+- 복잡한 데이터 구조를 표현가능하다.
+- 주요한 특징으로는 객체-관계 매핑이 필요하지 않다. 객체를 Document의 형태로 바로 저장 가능하기 떄문이다.
+- 단점이라면 사용이 번거롭고 쿼리가 SQL과 다르다. 도큐먼트 모델에서는 질의의 결과가 JSON이나 XML 형태로 출력되기 때문에 그 사용 방법이 RDBMS에서의 질의 결과를 사용하는 방법과 다르다.
+- 대표적인 Model로는 , CouthDB 등이 있다.
+
+  MongoDB
+
+
+![https://blog.kakaocdn.net/dn/byD6W9/btr1XyuFSbt/23AUE5BkLes965xEfUnmYk/img.png](https://blog.kakaocdn.net/dn/byD6W9/btr1XyuFSbt/23AUE5BkLes965xEfUnmYk/img.png)
+
+MongoDB의 Document Model
+
+**3. Wide Column Database**
+
+- 이전의 모델들이 Key-Value 값을 이용해 필드를 결정했다면, 특이하게도 이 모델은 키에서 필드를 결정한다. 키는 Row(키 값)와 Column-family, Column-name을 가진다. 연관된 데이터들은 같은 Column-family 안에 속해 있으며, 각자의 Column-name을 가진다. 관계형 모델로 설명하자면 어트리뷰트가 계층적인 구조를 가지고 있는 셈이다. 이렇게 저장된 데이터는 하나의 커다란 테이블로 표현이 가능하며, 질의는 Row, Column-family, Column-name을 통해 수행된다.
+- 대표적인 Model로는 HBase, Hypertable 등이 있다.
+
+![https://blog.kakaocdn.net/dn/cdSceO/btr2GKudvRe/mkeK4wrN1rjRcwJc2fcKS1/img.png](https://blog.kakaocdn.net/dn/cdSceO/btr2GKudvRe/mkeK4wrN1rjRcwJc2fcKS1/img.png)
+
+**4. Graph Database**
+
+- Graph Model에서는 데이터를 Node와 Edge, Porperty와 함께 그래프 구조를 사용하여 데아터를 표현하고 저장하는 Database이다.
+- 개채와 관계를 그래프 형태로 표현한 것이므로 관계형 모델이라고 할 수 있으며, 데이터 간의 관계가 탐색의 키일 경우에 적합하다.
+- 페이스북이나 트위터 같은 소셜 네트워크에서(내 친구의 친구를 찾는 질의 등) 적합하고, 연관된 데이터를 추천해주는 추천 엔진이나 패턴 인식 등의 데이터베이스로도 적합하다.
+- 대표 Model로는 Neo4J가 있다.
+
+![https://blog.kakaocdn.net/dn/bTtuGZ/btr2CvLJDUB/9RJDWyG0plaeqmSlFqsQ71/img.webp](https://blog.kakaocdn.net/dn/bTtuGZ/btr2CvLJDUB/9RJDWyG0plaeqmSlFqsQ71/img.webp)
+
+---
+
+![https://blog.kakaocdn.net/dn/csjCxd/btr1140PZde/Q7AGwuKd9IPlii36KnHKy0/img.png](https://blog.kakaocdn.net/dn/csjCxd/btr1140PZde/Q7AGwuKd9IPlii36KnHKy0/img.png)
+
+### **RDBMS와 NoSQL의 장단점**
+
+### **RDBMS**
+
+장점
+
+- 정해진 스키마에 따라 데이터를 저장하여야 하므로 명확한 데이터 구조를 보장한다.
+- 또한 각 데이터를 중복없이 한 번만 저장할 수 있다.
+
+단점
+
+- 테이블간 관계를 맺고 있어 시스템이 커질 경우 JOIN문이 많은 복잡한 쿼리가 만들어질 수 있다.
+- 성능 향상을 위해서는 Scale-up만을 지원한다. 이로 인해 비용이 기하급수적으로 늘어날 수 있다.
+- 스키마로 인해 데이터가 유연하지 못하다. 나중에 스키마가 변경될 경우 번거롭고 어렵다.
+
+### **NoSQL**
+
+장점
+
+- 스키마가 없기 때문에 유연하며 자유로운 데이터 구조를 가질 수 있다.
+- 언제든 저장된 데이터를 조정하고 새로운 필드를 추가할 수 있다.
+- 데이터 분산이 용이하며 성능 향상을 위한 Scale-up 뿐만이 아닌 Scale-out 또한 가능하다
+
+단점
+
+- 데이터 중복이 발생할 수 있으며 중복된 데이터가 변경될 경우 수정을 모든 컬렉션에서 수행해야 한다.
+- 스키마가 존재하지 않기에 명확한 데이터 구조를 보장하지 않으며 데이터 구조 결정하기가 어려울 수 있다.
+
+**※ Scale up**
+
+![https://blog.kakaocdn.net/dn/FIBWn/btr2GLGEwkQ/KQUjQGLusnY2wyb7pj6jbk/img.png](https://blog.kakaocdn.net/dn/FIBWn/btr2GLGEwkQ/KQUjQGLusnY2wyb7pj6jbk/img.png)
+
+스케일 업(Scale-up)은 쉽게 말하면 기존의 서버를 보다 높은 사양으로 업그레이드 하는 것으로 서버 하나의 능력을 증강하기 때문에 수직 스케일링(vertical scaling)이라고도 한다.
+
+**※ scale-out**
+
+![https://blog.kakaocdn.net/dn/xpGUT/btr2DDW0Jry/yQNAQVT4OMaBgBjWZxTlkk/img.png](https://blog.kakaocdn.net/dn/xpGUT/btr2DDW0Jry/yQNAQVT4OMaBgBjWZxTlkk/img.png)
+
+스케일 아웃(Scale-out)은 장비를 추가해서 확장하는 방식을 말한다. 기존 서버만으로 용량이나 성능의 한계에 도달했을 때, 비슷한 사양의 서버를 추가로 연결해 처리할 수 있는 데이터 용량이 증가할 뿐만 아니라 기존 서버의 부하를 분담해 성능 향상의 효과를 기대할 수 있다.
+
+서버를 추가로 확장하기 때문에 수평 스케일링(horizontal scaling)이라고도 불린다.
+
+---
+
+### **RDBMS, NoSQL 언제 사용해야 할까?**
+
+RDBMS는 데이터 구조가 명확하며 변경 될 여지가 없으며 명확한 스키마가 중요한 경우. 또한 중복된 데이터가 없어(데이터 무결성) 변경이 용이하기 때문에 관계를 맺고 있는 데이터가 자주 변경이 이루어지는 시스템에 적합하다.
+
+NoSQL은 정확한 데이터 구조를 알 수 없고 데이터가 변경/확장이 될 수 있는 경우에 사용하는 것이 좋다. 하지만 데이터 중복이 발생할 수 있으며 중복된 데이터가 변경될 시에는 모든 컬렉션에서 수정을 해야 하기 때문에 Update가 많이 이루어지지 않는 시스템이 좋다. 또한 Scale-out이 가능하다는 장점을 활용해 막대한 데이터를 저장해야 되는 시스템에 적합하다.
+
+---
+
 
 # 출처
 - 데이터베이스의 정석 - 박성진
@@ -835,3 +960,6 @@ SELECT * FROM Student;
 - [https://mangkyu.tistory.com/96](https://mangkyu.tistory.com/96)
 - [https://coding-factory.tistory.com/746](https://coding-factory.tistory.com/746)
 - [https://www.geeksforgeeks.org/indexing-in-databases-set-1/](https://www.geeksforgeeks.org/indexing-in-databases-set-1/)
+- [https://tecoble.techcourse.co.kr/post/2021-10-12-scale-up-scale-out/](https://tecoble.techcourse.co.kr/post/2021-10-12-scale-up-scale-out/)
+- [https://khj93.tistory.com/entry/Database-RDBMS%EC%99%80-NOSQL-%EC%B0%A8%EC%9D%B4%EC%A0%90](https://khj93.tistory.com/entry/Database-RDBMS%EC%99%80-NOSQL-%EC%B0%A8%EC%9D%B4%EC%A0%90)
+- [https://pythontoomuchinformation.tistory.com/528](https://pythontoomuchinformation.tistory.com/528)
