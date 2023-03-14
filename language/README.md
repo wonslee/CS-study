@@ -511,7 +511,137 @@ PriorityQueue<Integer> priorityQueueHighest = new PriorityQueue<>(Collections.re
 
 
 ---
+# OOP
 
+## 객체지향이란?
+
+> **분류**(classification)란 특정한 객체를 특정한 개념의 객체 집합에 포함시키거나 포함시키지 않는 작업을 의미한다.
+>
+> 객체를 적절한 개념에 따라 분류한 애플리케이션은 **유지보수가 용이**하고 변경에 유연하게 대처할 수 있다.   
+> 더 중요한 것은 적절한 분류 체계는 애플리케이션을 다루는 개발자의 머릿속에 객체를 쉽게 찾고 조작할 수 있는 **정신적인 지도**를 제공한다는 것이다. - 객체지향의 사실과 오해
+>
+
+![https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Tube_map_1908-2.jpg/450px-Tube_map_1908-2.jpg](https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Tube_map_1908-2.jpg/450px-Tube_map_1908-2.jpg)
+
+![https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/London_Underground_Zone_1.svg/450px-London_Underground_Zone_1.svg.png](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/London_Underground_Zone_1.svg/450px-London_Underground_Zone_1.svg.png)
+
+
+## 추상화
+
+사물로부터 애플리케이션이 필요로 하는 속성이나 행동을 추출하는 작업(모델화)
+
+사물들의 공통적인 특징을 하나의 개념(집합)으로 다루는 방법  
+
+객체지향에서 클래스는 함수와 자료형이 함께 묶여 관리되는 특정한 개념이다.   
+즉 객체 내부에 자료형(필드)와 함수(메소드)가 같이 존재 한다.
+
+
+```java
+// 절차형 프로그래밍에서는 함수와 자료형을 묶어서 클래스로 관리하지 않는다. 
+switch(동물의 종류){
+ case 사자 : 으르렁거리기
+ case 호랑이 : 사냥하기
+ case 토끼 : 뛰어다니기
+}
+```
+
+```java
+public class Animal{
+	private void doSomething(){
+	}
+}
+
+public class Lion extends Animal{
+	private void doSomething(){
+		으르렁거리기
+	}
+}
+
+public class Tiger extends Animal{
+	private void doSomething(){
+		사냥하기
+	}
+}
+// ...
+
+Animal a1 = new Tiger();
+a1.doSomething();
+
+void func(Animal a){
+ a.doSomething();
+}
+```
+
+## 상속 (일반화)
+
+상위 클래스의 모든 속성(필드)과 연산(메소드)을 하위 클래스가 물려 받는 것.
+
+- 상속받은 속성과 연산 외에 새로운 속성과 연산을 추가하여 사용 가능하다.
+- 클래스를 재사용함으로써 소프트웨어 재사용성을 증대시키는 중요한 개념이다.
+
+## 다형성
+
+> 동일한 요청에 대해 서로 다른 방식으로 응답할 수 있는 능력
+>
+
+한 마디로 **다**양한 **형**태를 가질 수 있는 능력이다. 클래스가 **상속 관계**에 있을 때 나타나는 자식 클래스들의 다채로운 성질이다. 프로그램을 **변화에 유연하게** 만든다.
+
+동일한 타입(상위 클래스)에 속한 객체는 내부의 데이터 표현 방식이 다르더라도 동일한 메세지를 수신하고 이를 처리할 수 있다. 다만 내부의 표현 방식이 다르기 때문에 메세지를 처리하는 방식은 각기 달라지게 된다.
+
+
+메서드를 확장하거나 재정의하는 overloading / overriding도 다형성의 맥락에서 볼 수 있다. 다만 이건 메서드에 대한 다형성이다.
+
+## 캡슐화
+
+
+현실 속의 객체와 소프트웨어 객체의 가장 큰 차이점은 무엇일까? 그것은 소프트웨어 객체가 자율적이고 능동적이라는 것이다.
+
+객체지향 애플리케이션이라는 협력 공동체의 일원으로써 객체는 협력적이기도 하지만, 동시에 충분히 **자율적**, **독립적**이어야 한다. 객체의 자율성은 객체의 내부와 외부를 명확하게 구분하는 것으로부터 나온다. 객체의 사적(private)인 부분은 객체 스스로 관리하고 외부에서 일체 간섭할 수 없도록 차단해야 한다.
+
+즉, 객체끼리는 서로 무엇을 수행하는지는 알 수 있지만 그걸 어떻게 수행하는지는 알 수 없다.
+
+
+> 훌륭한 객체지향 설계는 외부에 행동만을 제공하고 **데이터는 행동 뒤로 감춰야 한다**.
+어떤 객체를 외부에서 다룰 때는, 행동(메서드)만이 고려 대상이여야한다.
+>
+
+자바 프로그래밍을 하면서 자주 보게 되는 `getter`, `setter`은 캡슐화를 위한 것이라고 볼 수 있음. 이를 통해 객체가 독립성을 갖게 된다.
+
+```java
+class Time {
+		// 접근 제어자 private으로 선언된 데이터. 외부에서는 직접적으로 접근할 수 없다.
+    private int hour; 
+    private int minute;
+    private int second;
+
+    public void setHour(int hour) { // public 메서드. 외부에 제공됨
+				if (hour < 0 || hour > 24) {// 데이터를 어떻게 다룰지는 이 객체가 결정한다.
+            return;
+        }
+ 
+        this.hour = hour;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+}
+```
+
+```java
+Time myTime = new Time();
+
+myTime.hour = 10 // Error! 접근 불가
+myTime.setHour(10) // 가능
+```
+
+ 참고
+
+- 객체지향의 사실과 오해
+- [https://inpa.tistory.com/entry/OOP-JAVA의-다형성Polymorphism-완벽-이해](https://inpa.tistory.com/entry/OOP-JAVA%EC%9D%98-%EB%8B%A4%ED%98%95%EC%84%B1Polymorphism-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4)
+- [https://gyoogle.dev/blog/computer-science/software-engineering/Object-Oriented Programming.html](https://gyoogle.dev/blog/computer-science/software-engineering/Object-Oriented%20Programming.html)
+
+---
 
 # **오버로딩 vs 오버라이딩**
 
