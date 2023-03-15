@@ -3,6 +3,8 @@
 
 - [WEB Security](#웹보안)
 - [SQL Injection](#sql-injection)
+- [CSRF](#csrf)
+- [Brute Force](#brute-force)
 
 
 </details>
@@ -15,6 +17,7 @@
 
 - XSS ( Cross-Site Scripting )
 
+- Brute Force
 
 
 ---
@@ -286,6 +289,119 @@ maxlength 값을 500으로 늘리니까 글자수 제한이 늘어나서
 
 ---
 
+## Brute Force
+
+
+암호학에서 무차별 대입 공격(영어: brute-force attack)은 특정한 암호를 풀기 위해 가능한 모든 값을 대입하는 것을 의미한다.
+
+대부분의 암호화 방식은 이론적으로 무차별 대입 공격에 대해 안전하지 못하며, 충분한 시간이 존재한다면 암호화된 정보를 해독할 수 있다.
+
+하지만 대부분의 경우 모든 계산을 마치려면 실용적이지 못한 비용이나 시간을 소요하게 되어, 공격을 방지하게 한다.
+(비밀번호를 일정횟수 틀리면 일정시간동안 입력을 못하게 하는 기능,
+아예 계정을 잠그는 기능, 로봇인지 아닌지 확인하는 기능, 보안문자 입력 기능
+등이 이에 해당한다.)
+
+Brute Force의 공격방법은 두가지로 나뉜다.
+
+1. 하나하나 처음부터 끝까지 모든 경우의 수를 다 넣어보는 **순차대입공격**
+
+2. 비밀번호일것으로 추측되는 리스트를 작성해 그것들을 넣어보는  **사전 공격(Dictionary Attack)**
+
+
+![](https://velog.velcdn.com/images/hs1430/post/11bf59d4-0a9c-4279-8359-898a8cea996c/image.png)
+
+위의 사진을 보면 알겠지만 최근 사이트에서 요구하는 일반적인 비밀번호 기준인
+
+10자리 이상 영문+숫자+특수기호 조건을 Brute Force를 이용해 알아내려면
+536,211,932,256 번 시도해야한다.
+
+---
+
+## DVWA 예시
+
+
+![](https://velog.velcdn.com/images/hs1430/post/1e6af767-c90e-440e-9be4-b384b49259e9/image.png)
+
+
+우선 Brute Force 공격을 하기위한 창으로 이동한다.
+
+
+![](https://velog.velcdn.com/images/hs1430/post/cfd69f32-592f-43e2-a967-34841351fe00/image.png)
+
+로그인을 하는 창인데 여기서 id만 맞게 입력하고 비밀번호는 의도적으로 틀리게
+1234를 입력해준다.
+
+![](https://velog.velcdn.com/images/hs1430/post/9dfecb82-5ad2-40fd-883f-bdd8a35ff943/image.png)
+
+잘못된 비밀번호를 입력하여 Username and/or password incorrect 라는 문구가 뜨는걸 확인했으면 Burp Suite 에서 HTTP history로 이동해
+기록을 확인해본다.
+
+![](https://velog.velcdn.com/images/hs1430/post/4d44117f-9164-4293-9929-6d2541755931/image.png)
+
+해당 기록을 찾으면 Send to intruder로 intruder로 보낸다.
+
+![](https://velog.velcdn.com/images/hs1430/post/29c96e44-88ea-4074-8dc2-9728d3f27b42/image.png)
+
+intruder로 이동하면 첫줄에서 id와 비밀번호를 보내는것이 보인다.
+아이디,비밀번호 그외에도 여러곳에 밑줄이 쳐져있다.
+이곳에서 우리는 Brute Force 방식을 이용해 공격을 시도할 부분을 선택해줘야 한다.
+
+![](https://velog.velcdn.com/images/hs1430/post/ff3835f6-61e9-46a1-a604-fb5dbb2145a2/image.png)
+
+우리는 비밀번호만 알아내면 되기에 비밀번호에만 add를 해준다.
+
+![](https://velog.velcdn.com/images/hs1430/post/28f1173f-41a6-4bd5-acd0-3eff3a38e68c/image.png)
+
+add를 해주었다면 payload 창으로 넘어간다.
+여기에서 무슨 값을 넣을지 선택을 하고 그것을 토대로 Brute Force 공격을 시도한다.
+
+방식은 크게 두가지가 있는데
+비밀번호로 유력한것같은 리스트를 작성해 그것들을 대입하는 방식인
+simple list와
+
+사용할수있는 숫자, 영문, 특수기호 그리고 문자의 총 길이 를 지정해두고
+무작위로 대입하는
+Brute Forcer가 있다.
+
+![](https://velog.velcdn.com/images/hs1430/post/ac7f2f9d-3299-45ec-9986-16b0a7c1eb50/image.png)
+
+먼저 simple list를 이용해서 공격해보겠다.
+
+내 비밀번호인 password를 포함한 5가지 정도의 비밀번호 리스트를 만들어 놓았다.
+여기서 우측 상단에 start attack을 눌러 공격을 시도하면 된다.
+
+![](https://velog.velcdn.com/images/hs1430/post/503c30d5-5af7-44bf-9529-24900b7fa556/image.png)
+
+공격해본 결과 실제 비밀번호인 password에서만 Length의 값이 4601로 다르게 나타나는것을 확인할 수 있다.
+
+![](https://velog.velcdn.com/images/hs1430/post/75a07623-13bf-4cd9-9e1f-72cb7c65cfeb/image.png)
+
+Brute Forcer는 Character set에서 비밀번호로 쓰일수있는 것들을 모두 입력해준다.
+해당화면에서는 a~z까지의 알파벳 0~9까지의 숫자가 입력되었다.
+이외에도 특수기호등을 추가시킬수있다.
+바로 밑에서는 최소길이와 최대길이를 입력할 수 있다.
+
+![](https://velog.velcdn.com/images/hs1430/post/29e85b92-532b-44c5-a897-973ecc545dee/image.png)
+
+이 방법의 경우에는 너무 많은 시간이 소요되기에 값을 알아내는것은 생략했다.
+위의 사진과 같이 aaaa부터 9999까지 모든 값을 입력한뒤에는
+aaaaa부터 99999 까지 입력하는 식으로 길이를 늘려가는 식으로 대입한다.
+
+---
+
+## Brute Force - 해결방법
+
+1. 보안에 사용할 비밀번호를 최대한 길게 설정한다.
+   (쉬운 비밀번호를 사용하지않는다)
+
+2. 비밀번호를 일정횟수 틀리면 일정시간동안 입력을 못하게 하는 기능,
+   아예 계정을 잠그는 기능, 로봇인지 아닌지 확인하는 기능, 보안문자 입력 기능
+   등으로 공격하기 불편하게 만든다.
+
+3. 내장 세션 관리자를 사용한다.
+
+---
+
 출처
 
 - https://unabated.tistory.com/entry/2-SQL-INJECTION
@@ -297,4 +413,6 @@ maxlength 값을 500으로 늘리니까 글자수 제한이 늘어나서
 - https://414s.tistory.com/6
 
 - https://minkukjo.github.io/cs/2020/08/15/Security-1/
+
+- https://ko.wikipedia.org/wiki/%EB%AC%B4%EC%B0%A8%EB%B3%84_%EB%8C%80%EC%9E%85_%EA%B3%B5%EA%B2%A9
 
