@@ -875,6 +875,153 @@ final이 지정된 메서드 역시 오버라이드가 불가하며, private 접
 
 ---
 
+# 제어자
+## 접근 제어자 (Public, Private, Protected)
+
+> 접근제어자를 사용하는 이유는 객체지향 개념의 **캡슐화**의 맥락에서 이해되어야 한다.
+>
+>
+>  즉 클래스 내부의 데이터를 외부로부터 보호하기 위해서이다.
+>
+
+- public : 접근 제한이 전혀 **없음**
+- protected : 다른 패키지의 **자손 클래스**에서 혹은 같은 패키지 내에서 접근 가능.
+  보통 **상속**을 통해 확장될 것으로 예상되는 멤버에다 씀.
+  → 외부로부터는 접근 제한을 주되, 메서드의 경우엔 오버라이딩을 할 수 있게 되고 변수의 경우엔
+- (default) : 같은 패키지 내에서만 접근 가능.
+  한 파일 안에서 만드는 class 들이 default에 해당됨
+- private : **같은 클래스 내에서만** 접근 가능
+
+접근 범위로 나열했을 때 순서.
+
+> public > protected > (default) > private
+>
+
+## static 변수
+
+```java
+class Card{
+	String kind; // 인스턴스 변수
+	int number;
+
+	static int width; // 클래스 변수
+	static int height;
+}
+```
+
+`static` 변수의 특징
+
+- 모든 인스턴스가 **하나의 저장공간을 공유**한다. 
+→ 한 인스턴스의 클래스 변수 값을 바꿔버리면 해당 클래스에 대한 모든 인스턴스의 값이 모두 바뀐다.
+- 인스턴스를 생성하지 않고도 사용가능하다.
+- 클래스가 **메모리에 로드될 때 생성**된다.
+
+
+```java
+public class Card {
+    String kind; // 인스턴스 변수
+    int number;
+
+    static int width; // 클래스 변수
+    static int height;
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setWidth(int width) {
+        Card.width = width;
+    }
+
+    public void setHeight(int height) {
+        Card.height = height;
+    }
+
+}
+
+```
+
+```java
+Card c1 = new Card();
+Card c2 = new Card();
+
+c1.setHeight(100);
+c1.setWidth(250);
+
+System.out.println(c2.getHeight()); // 100
+System.out.println(c2.getWidth()); // 250
+```
+
+## static 메서드
+
+```java
+public class Card {
+		// ...
+
+    public static int getWidth() {
+        return width;
+    }
+
+    public static int getHeight() {
+        return height;
+    }
+
+    public static void setWidth(int width) {
+        Card.width = width;
+    }
+
+    public static void setHeight(int height) {
+        Card.height = height;
+    }
+
+    public static void change() {
+        this.kind = "heart"; // Error !!
+    }
+}
+```
+
+`static` 메서드의 특징
+
+- 인스턴스를 생성하지 않고도 호출이 가능하다.
+- 인스턴스 멤버들을 직접 사용할 수 없다.
+
+```java
+Card.setHeight(10);
+Card.setWidth(25);
+
+Card c1 = new Card();
+Card c2 = new Card();
+
+System.out.println(c1.getHeight()); // 10
+System.out.println(c1.getWidth()); // 25
+```
+
+```java
+public class Card {
+    String kind; // 인스턴스 변수
+    int number;
+
+    static int width; // 클래스 변수
+    static int height;
+}
+```
+
+`this` 는 해당 인스턴스를 가리키는 키워드이기 때문에, static 메서드 내부(static context)에선 언급조차 못했다.
+
+## final
+- final 클래스 : **변경될 수 없고**, **확장될 수 없는** 클래스. 즉, final 클래스는 다른 클래스의 조상이 될 수 없다.
+
+- final 메서드 : 변경될 수 없는 메서드로, **오버라이딩을 통해 재정의될 수 없다**.
+  메서드에 private과 final을 같이 사용할 필요는 없다. private을 쓰는 순간 이미 오버라이딩될 수 없기 때문. 따라서 **private만 사용해도 의미가 충분**하다. protected의 경우엔 다름.
+
+- final 변수 : 값을 변경할 수 없는 **상수**
+  static과 final을 동시에 쓰면, 프로그램이 시작하자마자 정적으로 변하지 않는 변수가 생긴다.
+
+
 # **Generic**
 
 ```java
