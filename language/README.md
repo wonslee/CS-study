@@ -5,8 +5,10 @@
 - [Java Garbage Collection](#java-garbage-collection)
 - [Java Collection](#java-collection)
 - [오버로딩 vs 오버라이딩](#오버로딩-vs-오버라이딩)
+- [제어자](#제어자)
 - [Generic](#generic)
 - [Final](#final)
+- [람다 & 스트림](#lambda--stream)
 </details>
 
 
@@ -1351,3 +1353,238 @@ this.name = name;
 [https://coding-factory.tistory.com/525](https://coding-factory.tistory.com/525)  
 [https://caliou.tistory.com/167](https://caliou.tistory.com/167)  
 [https://makemethink.tistory.com/184](https://makemethink.tistory.com/184)
+
+
+---
+
+# **Lambda & Stream**
+
+### **람다(Lambda)**
+
+자바8부터 '람다식(Lambda Expression)이 지원되면서 자바는 완전히 새로운 언어처럼 보이기 시작했다. 제네릭이 자바를 크게 변화시킨 것처럼 람다 또한 자바를 어마어마하게 변화시켰다. 람다의 등장으로 자바는 객체지향 언어의 특징과 함께 함수형 언어의 특성을 갖추게 되었다.
+
+람다식을 이용하면 코드가 간결해지고, 지연 연산 등을 통해서 성능 향상을 도모할 수 있지만, 반면 모든 요소들을 순회하는 경우에는 성능이 떨어질 수도 있고, 코드를 분석하기 어려워진다는 단점도 있다.
+
+---
+
+### **람다 이전의 코드**
+
+```java
+//MaxNumber Interfacepublic interface MaxNumber {
+    int getMaxNumber(int x, int y);
+}
+```
+
+```java
+//MaxNumber Interface 구현 클래스public class MaxNumberImpl implements MaxNumber {
+    @Override
+    public int getMaxNumber(int x, int y) {
+        return x >= y ? x : y;
+    }
+}
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+//1. 인터페이스를 직접 클래스로 구현 후 메인 메소드에서 생성 후 호출
+        MaxNumber maxNumber = new MaxNumberImpl();
+
+        System.out.println(maxNumber.getMaxNumber(3,1));
+    }
+}
+//출력 결과 : 3
+```
+
+![https://blog.kakaocdn.net/dn/mVOFg/btr41wNo6jK/eAap7NKob3jBeblHsIKwi1/img.png](https://blog.kakaocdn.net/dn/mVOFg/btr41wNo6jK/eAap7NKob3jBeblHsIKwi1/img.png)
+
+기존의 코드는 이런식으로 흘러갔다.
+
+### **인터페이스를 익명 함수로 구현해서 사용하는 방법**
+
+```java
+public class Main {
+    public static void main(String[] args) {
+//2. 익명함수로 메인 클래스 내에서 구현하여 호출
+        MaxNumber maxNumber = new MaxNumber() {
+            @Override
+            public int getMaxNumber(int x, int y) {
+                return x >= y ? x : y;
+            }
+        };
+        System.out.println(maxNumber.getMaxNumber(3,1));
+    }
+}
+```
+
+기존의 코드의 인터페이스를 익명 함수로 구현해서 사용하는 방법이다. 이 방법의 문제점은 MaxNumber의 인스턴스를 자주 사용할 시, 매번 오버라이딩하여 작성하기에 코드가 굉장히 복잡해질 수 있다.
+
+이를 람다식으로 구현한 것을 보자.
+
+### **람다식 구현**
+
+```java
+public class Main {
+    public static void main(String[] args) {
+//3. 람다식을 이용하여 호출 방식
+        MaxNumber maxNumber = (x, y) -> x >= y ? x : y;
+        System.out.println(maxNumber.getMaxNumber(3,1));
+    }
+}
+```
+
+코드가 굉장히 간결해 진 것을 확인할 수 있다.
+
+![https://blog.kakaocdn.net/dn/kIIJZ/btr4JKTToCu/Hjx1Yo0DfabEekUE8T3hJ1/img.png](https://blog.kakaocdn.net/dn/kIIJZ/btr4JKTToCu/Hjx1Yo0DfabEekUE8T3hJ1/img.png)
+
+---
+
+### **람다식 표현법**
+
+람다식은 매개변수 + 실행문으로 구성된다. 즉 접근자, 반환형 모두 생략되는 구조이다.
+
+() -> {};
+
+() : 인터페이스의 추상메서드에 대한 매개변수
+
+{} : 인터페이스의 추상메소드에 대한 구현체
+
+모양은 다음과 같다.
+
+### **람다의 형태**
+
+![https://blog.kakaocdn.net/dn/bx32vo/btr413YsOVG/HiTWhBSMEDcB53tOyeIkXk/img.png](https://blog.kakaocdn.net/dn/bx32vo/btr413YsOVG/HiTWhBSMEDcB53tOyeIkXk/img.png)
+
+### **람다식 작성법**
+
+![https://blog.kakaocdn.net/dn/cfY4mg/btr4Pr0LwVW/eeya3mQakPJDwcDa8Cf4Lk/img.png](https://blog.kakaocdn.net/dn/cfY4mg/btr4Pr0LwVW/eeya3mQakPJDwcDa8Cf4Lk/img.png)
+
+### **주의사항**
+
+![https://blog.kakaocdn.net/dn/bbcnAQ/btr41ItjrN9/OAdLTLKkkgPTgOlGZZ6nvK/img.png](https://blog.kakaocdn.net/dn/bbcnAQ/btr41ItjrN9/OAdLTLKkkgPTgOlGZZ6nvK/img.png)
+
+---
+
+### **스트림(Stream)**
+
+JDK 8 버전부터 제공된 컬렉션 혹은 배열에 저장된 요소를 하나씩 참조하여 람다 표현식으로 처리할 수 있는 반복자이다. 스트림이 존재하기 이전에는 Iterator 인터페이스를 사용했다고 한다.
+
+### **과거 Iterator를 사용한 반복 처리**
+
+```java
+List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
+Iterator iterator = numbers.iterator();
+
+while (iterator.hasNext()) {
+    System.out.println(iterator.next());
+}
+```
+
+### **Stream을 사용한 반복 처리**
+
+```java
+List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
+Stream<Integer> stream = numbers.stream();
+
+stream.forEach(number -> System.out.println(number));
+```
+
+### **외부 반복자와 내부 반복자**
+
+![https://blog.kakaocdn.net/dn/bc2WFX/btr41v13JvO/Y3lOdMg6Kcewu3LlUZQBQ1/img.png](https://blog.kakaocdn.net/dn/bc2WFX/btr41v13JvO/Y3lOdMg6Kcewu3LlUZQBQ1/img.png)
+
+스트림은 내부 반복자(Internal Iterator) 를 사용하여 병렬처리에 적합하다. 외부 반복자 (External Iterator)는 개발자가 직접 컬렉션에서 요소를 반복해서 가져오는 코드 패턴을 의미한다. 그에 반해 내부 반복자는 컬렉션 내부에서 직접 요소를 반복시키고 개발자는 개별 요소를 처리 방법만 코드를 제공하면 된다. 즉 개발자는 요소 처리 코드에만 집중할 수 있다.
+
+위에서 예시로 든 Iterator 의 hasNext를 사용한 반복 구조는 외부 반복자라고 할 수 있다.
+
+### **Stream의 특징**
+
+- 람다 표현식
+
+스트림은 람다식으로 요소 처리 코드를 제공한다. 스트림이 제공하는 대부분의 요소 처리 메소드는 함수형 인터페이스를 사용하므로, 람다식으로 요소 처리 코드를 제공할 수 있다.
+
+- 생성, 중간처리, 최종처리
+
+스트림의 처리는 생성, 중간처리, 최종처리로 3단계로 구분된다.
+
+- 재사용 불가능
+
+스트림이 생성되고, 중간처리를 거쳐 최종처리까지 완료되면 닫히게 된다. 이미 닫힌 스트림은 재사용할 수 없으며, 재사용을 시도할 경우 예외가 발생한다. 즉 스트림은 일회용이다.
+
+ex)
+
+```java
+List<Integer> numbers = List.of(10, 20, 25, 15, 30, 35, 12, 24, 34);
+Stream<Integer> integerStream = numbers.stream()
+        .filter(number -> number > 20);
+
+integerStream.count();
+// java.lang.IllegalStateException: stream has already been operated upon or closed
+```
+
+- 원본 데이터를 변경하지 않는다.
+
+스트림은 원본 객체의 값을 사용하기만 할 뿐 변경하지 않는다. 스트림은 최종 처리를 통해 원본과 무관한 새로운 객체를 생성한다.
+
+---
+
+### **Stream 사용법**
+
+**student 클래스 정의**
+
+```java
+class Student {
+    private final int grade;
+    private final int score;
+
+    Student(final int grade, final int score) {
+        this.grade = grade;
+        this.score = score;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public int getScore() {
+        return score;
+    }
+```
+
+학년을 저장하는 grade 필드와 성적을 저장하는 score 필드를 저장한다. 그 후, 아래와 같이 학생 컬렉션을 준비한다.
+
+```java
+List<Student> students = List.of(
+    new Student(2, 100),
+    new Student(3, 50),
+    new Student(1, 56),
+    new Student(2, 90),
+    new Student(3, 90),
+    new Student(2, 100),
+    new Student(1, 30)
+);
+```
+
+3학년 학생의 평균 성적은 70점으로 계산되어야 할 것이다. 이제 스트림을 통해 이를 계산한다.
+
+```java
+double averageScore = students.stream()// Stream 생성
+    .filter(student -> student.getGrade() == 3)// 필터링 (중간처리)
+    .mapToInt(student -> student.getScore())// 매핑 (중간처리)
+    .average()// 평균 집계 (최종처리)
+    .getAsDouble();
+
+System.out.println("평균 성적: " + averageScore);// 70.0
+```
+
+평균 성적: 70.0이 출력된다.
+
+---
+
+참고:
+
+[https://hudi.blog/java-stream/](https://hudi.blog/java-stream/)
+
+[https://velog.io/@tsi0521/java-Lambda](https://velog.io/@tsi0521/java-Lambda)
+
+[https://galid1.tistory.com/509](https://galid1.tistory.com/509)
