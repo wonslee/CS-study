@@ -1590,7 +1590,7 @@ System.out.println("평균 성적: " + averageScore);// 70.0
 
 [https://galid1.tistory.com/509](https://galid1.tistory.com/509)   
 
-#synchronized와 volatile 그리고 Atomic  
+# synchronized와 volatile 그리고 Atomic  
 ![img.png](images/img.png)   
 자바의 메모리 구조는 위의 그림과 같이, CPU - RAM 아키텍처 기반으로 이루어진다.
 
