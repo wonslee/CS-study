@@ -707,6 +707,13 @@ SSL은 웹사이트와 브라우저 사이(또는 두 서버 사이)에 전송�
 
 SSL은 공개키 암호화를 기반으로 동작하는 프로토콜이다.
 
+## SSL TLS
+
+SSL(Secure Socket Layer) 과 TLS(Transport Layer Socket) 는 얼핏 보면 다르게 보이지만
+단순하게 SSL의 향상된 버전이 TLS이다.
+1999년에 IETF가  SSL 3.1을 발표했는데,
+이것이 TLS 버전 1.0 이었다. 즉 SSL과 TLS는 같다.
+
 ### **TLS(Transport Layer Socket) 이란?**
 SSL(Secure Socket Layer) 과 TLS(Transport Layer Socket) 는 얼핏 보면 다르게 보이지만
 단순하게 SSL의 향상된 버전이 TLS이다.
