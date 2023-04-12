@@ -976,6 +976,88 @@ e.g. 아까 트리에다 13을 삽입하는 과정
 
 ![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fl8h8w%2FbtrdBqNyhwS%2F3dNoY02TCFniaHdEy5y6sk%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fl8h8w%2FbtrdBqNyhwS%2F3dNoY02TCFniaHdEy5y6sk%2Fimg.png)
 
+### B- 트리 - 삽입 알고리즘
+
+BTreeInsert(t,x) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+{
+
+   ```
+       x를 삽입할 리프 노드 r을 찾는다;
+       x를 r에 삽입한다;
+       if(r에 오버플로우 발생) then clearOverflow(r);
+   
+   
+   ```
+}
+
+clearOverflow(r)
+{
+
+   ```
+       if(r의 형제 노드 중 여유가 있는 노드가 있음)then{
+       r의 남는 키를 넘긴다
+       };
+       else{
+             r을 둘로 분할하고 가운데 키를 부모 노드로 넘긴다;
+             if(부모 노드 p에 오버플로우 발생)then clearOverflow(p);
+       }
+   
+   
+   ```
+}
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/ecd14024-accb-484a-992b-c53c9ed2c801/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/06d01142-8644-46d4-b787-8f200b028b14/image.png)
+
+---
+
+### B- 트리 - 삭제 알고리즘
+
+BTreedelete(t,x,v) // t = 트리의 루트 노드 x = 검색하고자 하는 키
+v= x를 갖고 있는 노드
+{
+
+   ```
+       if(v가 리프 노드 아님)then{
+            x의 직후 원소 y를 가진 리프노드를 찾는다;
+            x와y를 맞바꾼다;
+       }
+       리프 노드에서 x를 제거하고 이 리프 노드를 r이라고 한다;
+       if(r에서 언더플로우 발생)then clearUnderflow(r);
+   
+   
+   ```
+}
+
+clearUnderflow(r)
+
+{
+
+   ```
+       if(r의 형제 노드 중 키를 하나 내놓을 수 있는 여분을 가진 노드가 있음)
+       then {r의 키를 넘겨 받는다;}
+       else{
+              
+              r의 형제 노드와 r을 병합한다;
+              if(부모 노드 p에 언더플로우 발생) then clearUnderflow(p);
+       
+       }
+   
+   
+   ```
+}
+
+---
+
+![](https://velog.velcdn.com/images/hs1430/post/adfed89b-a321-4da5-8e55-9b8f80989410/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/eb4cb830-77d9-413e-903b-54ce37228a60/image.png)
+
+---
+
 ## 시간복잡도
 
 결국 핵심 연산은 탐색이고, 이 과정이 **O(log n)** 이기 때문에 삽입과 삭제 또한 O(log n).
@@ -985,6 +1067,11 @@ e.g. 아까 트리에다 13을 삽입하는 과정
 | 탐색 | O(log n) | O(log n) |
 | 삽입 | O(log n) | O(log n) |
 | 삭제 | O(log n) | O(log n) |
+
+
+
+
+---
 
 
 ## B+tree란?
@@ -1006,6 +1093,63 @@ e.g. 아까 트리에다 13을 삽입하는 과정
 복잡하긴 하다. 같은 레벨의 노드들끼리는 Double Linked List를 사용했고, 자식 노드로는 Single Linked List로 연결되어있다.
 
 key의 범위마다 찾아가야할 **페이지 넘버**(포인터)가 있는데, 해당 페이지 넘버를 통해 곧바로 다음 노드로 넘어간다.
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2b169cdd-ee3b-43ee-b3c4-40c0b6501c4f/Untitled.png)
+
+# 해시 테이블
+
+## 해시 테이블이란?
+
+여러가지 물건들이 있는데, 이걸 일렬로 세워놓지 말고 바구니 몇개 만들어서 바구니 A, 바구니 B, …에 넣어두자는거다.
+
+> **key, value 쌍**으로 자료를 저장하는 자료구조중 하나.  
+내부적으로 배열을 사용해 index를 통해 접근하기 때문에 O(1)로 빠르다.  
+key → 해시값 → index → value  
+**해시 함수**를 사용하여 **key**를 해시값으로 매핑하고, 이 해시값을 **index** 혹은 주소 삼아 데이터의 값(**value**)을 키와 함께 저장하고 검색하는 자료구조.
+>
+
+![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https://blog.kakaocdn.net/dn/b1zOw1/btqL6HAW7jy/jpBA5pPkQFnfiZcPLakg00/img.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https://blog.kakaocdn.net/dn/b1zOw1/btqL6HAW7jy/jpBA5pPkQFnfiZcPLakg00/img.png)
+
+**해시 함수(hash function)** 란, 데이터의 효율적 관리를 목적으로 임의의 길이의 데이터를 **고정된 길이의 데이터로 매핑**하는 함수.
+
+이 때 매핑 전 원래 데이터의 값을 **키**(key), 매핑 후 데이터의 값을 **해시값**(hash value), 매핑하는 과정 자체를 **해싱**(hashing)이라고 한다.
+
+
+## 시간 복잡도
+
+시간복잡도로는 O(N) ~ O(1)로 가능한데, O(1)이 가능한 이유는 각각의 key와 value가 1:1 매핑되어있다면 바로 원하는 key로 value에 접근이 가능하기 때문이다. (딕셔너리와 유사)
+
+그렇다면 O(N)이 나오는 이유는 무엇일까?
+
+해시 함수는 해시값의 개수보다 대개 많은 키값을 해시값으로 변환하는데, 해시함수가 서로 다른 두 개의 키에 대해 동일한 해시값을 내거나 인덱스가 같아지는 **해시 충돌(collision)**이 발생하게 됨. 그러기 시작하면 O(N)이 걸리게 된다.
+
+![https://i.imgur.com/NnEBDcX.png](https://i.imgur.com/NnEBDcX.png)
+
+## 해싱 충돌의 해결 방법
+
+### **Chaining**
+
+![https://i.imgur.com/7PTT8dT.png](https://i.imgur.com/7PTT8dT.png)
+
+**링크드리스트**를 생각하면 된다.
+
+데이터의 개수가 n이고 해시테이블이 쓰는 배열의 크기가 m이라고 할 때, 링크드 리스트들의 평균 길이(한 버킷에 매핑되는 키의 평균 개수)는 **n/m**(=α)이다. 따라서 이 경우에 해시테이블의 각 연산은 평균적으로 O(n/m)이 걸린다라고 할 수 있다. 공간을 많이 줄수록 시간복잡도가 줄어듬.
+
+|  | 평균 | 최악 |
+| --- | --- | --- |
+| 삽입(head) | O(1) | O(1) |
+| 삭제 | O(α) | O(n) |
+| 탐색 | O(α) | O(n) |
+
+탐색,삭제의 시간복잡도는 버킷당 요소 개수의 평균 **α가 좌지우지**하는 구조다. 최악의 경우 한 버킷에 모든 데이터가 들어있어 O(n)이 될 수 있다. 하지만 보통의 경우 데이터의 개수가 해시테이블 크기의 두 세배쯤(α가 2~3)만 되어도 탐색, 삭제는 O(1)에 가까워진다.
+
+- 장점 : **간단**하게 구현이 가능하며 삭제 작업이 간단하다. 그리고 해시 테이블의 확장이 필요없다.
+- 단점 : 공간이 적거나 데이터의 수가 많아지면 그만큼 연결되는 리스트가 많아지고 **효율성이 떨어진다**.
+
+### 나머지 방법들
+
+- Open Addressing(개방 주소법) : 해시 함수로 얻은 주소가 아닌 다른 주소에 데이터를 저장할 수 있도록 허용한다. 해당 키 값에 저장되어있으면 다음 주소에 저장하는 방식. 보통 고정적인 크기의 배열을 사용
+  - 선형 탐사 : 정해진 고정 폭으로 옮겨 해시값의 중복을 피함
+  - 제곱 탐사 : 정해진 고정 폭을 제곱수로 옮겨 해시값의 중복을 피함
 
 
 # 더 배울 부분들
@@ -1038,4 +1182,6 @@ key의 범위마다 찾아가야할 **페이지 넘버**(포인터)가 있는데
 - https://velog.io/@xdfc1745/%EC%9D%B4%EC%A7%84%ED%8A%B8%EB%A6%AC-%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84
 - https://93jpark.tistory.com/109
 - https://honggom.tistory.com/40
-
+- [https://ratsgo.github.io/data structure&algorithm/2017/10/25/hash/](https://ratsgo.github.io/data%20structure&algorithm/2017/10/25/hash/)
+- [https://www.youtube.com/watch?v=Vi0hauJemxA](https://www.youtube.com/watch?v=Vi0hauJemxA)
+- [https://gyoogle.dev/blog/computer-science/data-structure/Hash.html](https://gyoogle.dev/blog/computer-science/data-structure/Hash.html)

@@ -5,8 +5,11 @@
 - [Java Garbage Collection](#java-garbage-collection)
 - [Java Collection](#java-collection)
 - [오버로딩 vs 오버라이딩](#오버로딩-vs-오버라이딩)
+- [제어자](#제어자)
 - [Generic](#generic)
 - [Final](#final)
+- [람다 & 스트림](#lambda--stream)
+- [synchronized와 volatile 그리고 Atomic](#synchronized와-volatile-그리고-Atomic)
 </details>
 
 
@@ -511,7 +514,137 @@ PriorityQueue<Integer> priorityQueueHighest = new PriorityQueue<>(Collections.re
 
 
 ---
+# OOP
 
+## 객체지향이란?
+
+> **분류**(classification)란 특정한 객체를 특정한 개념의 객체 집합에 포함시키거나 포함시키지 않는 작업을 의미한다.
+>
+> 객체를 적절한 개념에 따라 분류한 애플리케이션은 **유지보수가 용이**하고 변경에 유연하게 대처할 수 있다.   
+> 더 중요한 것은 적절한 분류 체계는 애플리케이션을 다루는 개발자의 머릿속에 객체를 쉽게 찾고 조작할 수 있는 **정신적인 지도**를 제공한다는 것이다. - 객체지향의 사실과 오해
+>
+
+![https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Tube_map_1908-2.jpg/450px-Tube_map_1908-2.jpg](https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Tube_map_1908-2.jpg/450px-Tube_map_1908-2.jpg)
+
+![https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/London_Underground_Zone_1.svg/450px-London_Underground_Zone_1.svg.png](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/London_Underground_Zone_1.svg/450px-London_Underground_Zone_1.svg.png)
+
+
+## 추상화
+
+사물로부터 애플리케이션이 필요로 하는 속성이나 행동을 추출하는 작업(모델화)
+
+사물들의 공통적인 특징을 하나의 개념(집합)으로 다루는 방법  
+
+객체지향에서 클래스는 함수와 자료형이 함께 묶여 관리되는 특정한 개념이다.   
+즉 객체 내부에 자료형(필드)와 함수(메소드)가 같이 존재 한다.
+
+
+```java
+// 절차형 프로그래밍에서는 함수와 자료형을 묶어서 클래스로 관리하지 않는다. 
+switch(동물의 종류){
+ case 사자 : 으르렁거리기
+ case 호랑이 : 사냥하기
+ case 토끼 : 뛰어다니기
+}
+```
+
+```java
+public class Animal{
+	private void doSomething(){
+	}
+}
+
+public class Lion extends Animal{
+	private void doSomething(){
+		으르렁거리기
+	}
+}
+
+public class Tiger extends Animal{
+	private void doSomething(){
+		사냥하기
+	}
+}
+// ...
+
+Animal a1 = new Tiger();
+a1.doSomething();
+
+void func(Animal a){
+ a.doSomething();
+}
+```
+
+## 상속 (일반화)
+
+상위 클래스의 모든 속성(필드)과 연산(메소드)을 하위 클래스가 물려 받는 것.
+
+- 상속받은 속성과 연산 외에 새로운 속성과 연산을 추가하여 사용 가능하다.
+- 클래스를 재사용함으로써 소프트웨어 재사용성을 증대시키는 중요한 개념이다.
+
+## 다형성
+
+> 동일한 요청에 대해 서로 다른 방식으로 응답할 수 있는 능력
+>
+
+한 마디로 **다**양한 **형**태를 가질 수 있는 능력이다. 클래스가 **상속 관계**에 있을 때 나타나는 자식 클래스들의 다채로운 성질이다. 프로그램을 **변화에 유연하게** 만든다.
+
+동일한 타입(상위 클래스)에 속한 객체는 내부의 데이터 표현 방식이 다르더라도 동일한 메세지를 수신하고 이를 처리할 수 있다. 다만 내부의 표현 방식이 다르기 때문에 메세지를 처리하는 방식은 각기 달라지게 된다.
+
+
+메서드를 확장하거나 재정의하는 overloading / overriding도 다형성의 맥락에서 볼 수 있다. 다만 이건 메서드에 대한 다형성이다.
+
+## 캡슐화
+
+
+현실 속의 객체와 소프트웨어 객체의 가장 큰 차이점은 무엇일까? 그것은 소프트웨어 객체가 자율적이고 능동적이라는 것이다.
+
+객체지향 애플리케이션이라는 협력 공동체의 일원으로써 객체는 협력적이기도 하지만, 동시에 충분히 **자율적**, **독립적**이어야 한다. 객체의 자율성은 객체의 내부와 외부를 명확하게 구분하는 것으로부터 나온다. 객체의 사적(private)인 부분은 객체 스스로 관리하고 외부에서 일체 간섭할 수 없도록 차단해야 한다.
+
+즉, 객체끼리는 서로 무엇을 수행하는지는 알 수 있지만 그걸 어떻게 수행하는지는 알 수 없다.
+
+
+> 훌륭한 객체지향 설계는 외부에 행동만을 제공하고 **데이터는 행동 뒤로 감춰야 한다**.
+어떤 객체를 외부에서 다룰 때는, 행동(메서드)만이 고려 대상이여야한다.
+>
+
+자바 프로그래밍을 하면서 자주 보게 되는 `getter`, `setter`은 캡슐화를 위한 것이라고 볼 수 있음. 이를 통해 객체가 독립성을 갖게 된다.
+
+```java
+class Time {
+		// 접근 제어자 private으로 선언된 데이터. 외부에서는 직접적으로 접근할 수 없다.
+    private int hour; 
+    private int minute;
+    private int second;
+
+    public void setHour(int hour) { // public 메서드. 외부에 제공됨
+				if (hour < 0 || hour > 24) {// 데이터를 어떻게 다룰지는 이 객체가 결정한다.
+            return;
+        }
+ 
+        this.hour = hour;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+}
+```
+
+```java
+Time myTime = new Time();
+
+myTime.hour = 10 // Error! 접근 불가
+myTime.setHour(10) // 가능
+```
+
+ 참고
+
+- 객체지향의 사실과 오해
+- [https://inpa.tistory.com/entry/OOP-JAVA의-다형성Polymorphism-완벽-이해](https://inpa.tistory.com/entry/OOP-JAVA%EC%9D%98-%EB%8B%A4%ED%98%95%EC%84%B1Polymorphism-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4)
+- [https://gyoogle.dev/blog/computer-science/software-engineering/Object-Oriented Programming.html](https://gyoogle.dev/blog/computer-science/software-engineering/Object-Oriented%20Programming.html)
+
+---
 
 # **오버로딩 vs 오버라이딩**
 
@@ -744,6 +877,153 @@ final이 지정된 메서드 역시 오버라이드가 불가하며, private 접
 
 
 ---
+
+# 제어자
+## 접근 제어자 (Public, Private, Protected)
+
+> 접근제어자를 사용하는 이유는 객체지향 개념의 **캡슐화**의 맥락에서 이해되어야 한다.
+>
+>
+>  즉 클래스 내부의 데이터를 외부로부터 보호하기 위해서이다.
+>
+
+- public : 접근 제한이 전혀 **없음**
+- protected : 다른 패키지의 **자손 클래스**에서 혹은 같은 패키지 내에서 접근 가능.
+  보통 **상속**을 통해 확장될 것으로 예상되는 멤버에다 씀.
+  → 외부로부터는 접근 제한을 주되, 메서드의 경우엔 오버라이딩을 할 수 있게 되고 변수의 경우엔
+- (default) : 같은 패키지 내에서만 접근 가능.
+  한 파일 안에서 만드는 class 들이 default에 해당됨
+- private : **같은 클래스 내에서만** 접근 가능
+
+접근 범위로 나열했을 때 순서.
+
+> public > protected > (default) > private
+>
+
+## static 변수
+
+```java
+class Card{
+	String kind; // 인스턴스 변수
+	int number;
+
+	static int width; // 클래스 변수
+	static int height;
+}
+```
+
+`static` 변수의 특징
+
+- 모든 인스턴스가 **하나의 저장공간을 공유**한다. 
+→ 한 인스턴스의 클래스 변수 값을 바꿔버리면 해당 클래스에 대한 모든 인스턴스의 값이 모두 바뀐다.
+- 인스턴스를 생성하지 않고도 사용가능하다.
+- 클래스가 **메모리에 로드될 때 생성**된다.
+
+
+```java
+public class Card {
+    String kind; // 인스턴스 변수
+    int number;
+
+    static int width; // 클래스 변수
+    static int height;
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setWidth(int width) {
+        Card.width = width;
+    }
+
+    public void setHeight(int height) {
+        Card.height = height;
+    }
+
+}
+
+```
+
+```java
+Card c1 = new Card();
+Card c2 = new Card();
+
+c1.setHeight(100);
+c1.setWidth(250);
+
+System.out.println(c2.getHeight()); // 100
+System.out.println(c2.getWidth()); // 250
+```
+
+## static 메서드
+
+```java
+public class Card {
+		// ...
+
+    public static int getWidth() {
+        return width;
+    }
+
+    public static int getHeight() {
+        return height;
+    }
+
+    public static void setWidth(int width) {
+        Card.width = width;
+    }
+
+    public static void setHeight(int height) {
+        Card.height = height;
+    }
+
+    public static void change() {
+        this.kind = "heart"; // Error !!
+    }
+}
+```
+
+`static` 메서드의 특징
+
+- 인스턴스를 생성하지 않고도 호출이 가능하다.
+- 인스턴스 멤버들을 직접 사용할 수 없다.
+
+```java
+Card.setHeight(10);
+Card.setWidth(25);
+
+Card c1 = new Card();
+Card c2 = new Card();
+
+System.out.println(c1.getHeight()); // 10
+System.out.println(c1.getWidth()); // 25
+```
+
+```java
+public class Card {
+    String kind; // 인스턴스 변수
+    int number;
+
+    static int width; // 클래스 변수
+    static int height;
+}
+```
+
+`this` 는 해당 인스턴스를 가리키는 키워드이기 때문에, static 메서드 내부(static context)에선 언급조차 못했다.
+
+## final
+- final 클래스 : **변경될 수 없고**, **확장될 수 없는** 클래스. 즉, final 클래스는 다른 클래스의 조상이 될 수 없다.
+
+- final 메서드 : 변경될 수 없는 메서드로, **오버라이딩을 통해 재정의될 수 없다**.
+  메서드에 private과 final을 같이 사용할 필요는 없다. private을 쓰는 순간 이미 오버라이딩될 수 없기 때문. 따라서 **private만 사용해도 의미가 충분**하다. protected의 경우엔 다름.
+
+- final 변수 : 값을 변경할 수 없는 **상수**
+  static과 final을 동시에 쓰면, 프로그램이 시작하자마자 정적으로 변하지 않는 변수가 생긴다.
+
 
 # **Generic**
 
@@ -1074,3 +1354,428 @@ this.name = name;
 [https://coding-factory.tistory.com/525](https://coding-factory.tistory.com/525)  
 [https://caliou.tistory.com/167](https://caliou.tistory.com/167)  
 [https://makemethink.tistory.com/184](https://makemethink.tistory.com/184)
+
+
+---
+
+# **Lambda & Stream**
+
+### **람다(Lambda)**
+
+자바8부터 '람다식(Lambda Expression)이 지원되면서 자바는 완전히 새로운 언어처럼 보이기 시작했다. 제네릭이 자바를 크게 변화시킨 것처럼 람다 또한 자바를 어마어마하게 변화시켰다. 람다의 등장으로 자바는 객체지향 언어의 특징과 함께 함수형 언어의 특성을 갖추게 되었다.
+
+람다식을 이용하면 코드가 간결해지고, 지연 연산 등을 통해서 성능 향상을 도모할 수 있지만, 반면 모든 요소들을 순회하는 경우에는 성능이 떨어질 수도 있고, 코드를 분석하기 어려워진다는 단점도 있다.
+
+---
+
+### **람다 이전의 코드**
+
+```java
+//MaxNumber Interfacepublic interface MaxNumber {
+    int getMaxNumber(int x, int y);
+}
+```
+
+```java
+//MaxNumber Interface 구현 클래스public class MaxNumberImpl implements MaxNumber {
+    @Override
+    public int getMaxNumber(int x, int y) {
+        return x >= y ? x : y;
+    }
+}
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+//1. 인터페이스를 직접 클래스로 구현 후 메인 메소드에서 생성 후 호출
+        MaxNumber maxNumber = new MaxNumberImpl();
+
+        System.out.println(maxNumber.getMaxNumber(3,1));
+    }
+}
+//출력 결과 : 3
+```
+
+![https://blog.kakaocdn.net/dn/mVOFg/btr41wNo6jK/eAap7NKob3jBeblHsIKwi1/img.png](https://blog.kakaocdn.net/dn/mVOFg/btr41wNo6jK/eAap7NKob3jBeblHsIKwi1/img.png)
+
+기존의 코드는 이런식으로 흘러갔다.
+
+### **인터페이스를 익명 함수로 구현해서 사용하는 방법**
+
+```java
+public class Main {
+    public static void main(String[] args) {
+//2. 익명함수로 메인 클래스 내에서 구현하여 호출
+        MaxNumber maxNumber = new MaxNumber() {
+            @Override
+            public int getMaxNumber(int x, int y) {
+                return x >= y ? x : y;
+            }
+        };
+        System.out.println(maxNumber.getMaxNumber(3,1));
+    }
+}
+```
+
+기존의 코드의 인터페이스를 익명 함수로 구현해서 사용하는 방법이다. 이 방법의 문제점은 MaxNumber의 인스턴스를 자주 사용할 시, 매번 오버라이딩하여 작성하기에 코드가 굉장히 복잡해질 수 있다.
+
+이를 람다식으로 구현한 것을 보자.
+
+### **람다식 구현**
+
+```java
+public class Main {
+    public static void main(String[] args) {
+//3. 람다식을 이용하여 호출 방식
+        MaxNumber maxNumber = (x, y) -> x >= y ? x : y;
+        System.out.println(maxNumber.getMaxNumber(3,1));
+    }
+}
+```
+
+코드가 굉장히 간결해 진 것을 확인할 수 있다.
+
+![https://blog.kakaocdn.net/dn/kIIJZ/btr4JKTToCu/Hjx1Yo0DfabEekUE8T3hJ1/img.png](https://blog.kakaocdn.net/dn/kIIJZ/btr4JKTToCu/Hjx1Yo0DfabEekUE8T3hJ1/img.png)
+
+---
+
+### **람다식 표현법**
+
+람다식은 매개변수 + 실행문으로 구성된다. 즉 접근자, 반환형 모두 생략되는 구조이다.
+
+() -> {};
+
+() : 인터페이스의 추상메서드에 대한 매개변수
+
+{} : 인터페이스의 추상메소드에 대한 구현체
+
+모양은 다음과 같다.
+
+### **람다의 형태**
+
+![https://blog.kakaocdn.net/dn/bx32vo/btr413YsOVG/HiTWhBSMEDcB53tOyeIkXk/img.png](https://blog.kakaocdn.net/dn/bx32vo/btr413YsOVG/HiTWhBSMEDcB53tOyeIkXk/img.png)
+
+### **람다식 작성법**
+
+![https://blog.kakaocdn.net/dn/cfY4mg/btr4Pr0LwVW/eeya3mQakPJDwcDa8Cf4Lk/img.png](https://blog.kakaocdn.net/dn/cfY4mg/btr4Pr0LwVW/eeya3mQakPJDwcDa8Cf4Lk/img.png)
+
+### **주의사항**
+
+![https://blog.kakaocdn.net/dn/bbcnAQ/btr41ItjrN9/OAdLTLKkkgPTgOlGZZ6nvK/img.png](https://blog.kakaocdn.net/dn/bbcnAQ/btr41ItjrN9/OAdLTLKkkgPTgOlGZZ6nvK/img.png)
+
+---
+
+### **스트림(Stream)**
+
+JDK 8 버전부터 제공된 컬렉션 혹은 배열에 저장된 요소를 하나씩 참조하여 람다 표현식으로 처리할 수 있는 반복자이다. 스트림이 존재하기 이전에는 Iterator 인터페이스를 사용했다고 한다.
+
+### **과거 Iterator를 사용한 반복 처리**
+
+```java
+List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
+Iterator iterator = numbers.iterator();
+
+while (iterator.hasNext()) {
+    System.out.println(iterator.next());
+}
+```
+
+### **Stream을 사용한 반복 처리**
+
+```java
+List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
+Stream<Integer> stream = numbers.stream();
+
+stream.forEach(number -> System.out.println(number));
+```
+
+### **외부 반복자와 내부 반복자**
+
+![https://blog.kakaocdn.net/dn/bc2WFX/btr41v13JvO/Y3lOdMg6Kcewu3LlUZQBQ1/img.png](https://blog.kakaocdn.net/dn/bc2WFX/btr41v13JvO/Y3lOdMg6Kcewu3LlUZQBQ1/img.png)
+
+스트림은 내부 반복자(Internal Iterator) 를 사용하여 병렬처리에 적합하다. 외부 반복자 (External Iterator)는 개발자가 직접 컬렉션에서 요소를 반복해서 가져오는 코드 패턴을 의미한다. 그에 반해 내부 반복자는 컬렉션 내부에서 직접 요소를 반복시키고 개발자는 개별 요소를 처리 방법만 코드를 제공하면 된다. 즉 개발자는 요소 처리 코드에만 집중할 수 있다.
+
+위에서 예시로 든 Iterator 의 hasNext를 사용한 반복 구조는 외부 반복자라고 할 수 있다.
+
+### **Stream의 특징**
+
+- 람다 표현식
+
+스트림은 람다식으로 요소 처리 코드를 제공한다. 스트림이 제공하는 대부분의 요소 처리 메소드는 함수형 인터페이스를 사용하므로, 람다식으로 요소 처리 코드를 제공할 수 있다.
+
+- 생성, 중간처리, 최종처리
+
+스트림의 처리는 생성, 중간처리, 최종처리로 3단계로 구분된다.
+
+- 재사용 불가능
+
+스트림이 생성되고, 중간처리를 거쳐 최종처리까지 완료되면 닫히게 된다. 이미 닫힌 스트림은 재사용할 수 없으며, 재사용을 시도할 경우 예외가 발생한다. 즉 스트림은 일회용이다.
+
+ex)
+
+```java
+List<Integer> numbers = List.of(10, 20, 25, 15, 30, 35, 12, 24, 34);
+Stream<Integer> integerStream = numbers.stream()
+        .filter(number -> number > 20);
+
+integerStream.count();
+// java.lang.IllegalStateException: stream has already been operated upon or closed
+```
+
+- 원본 데이터를 변경하지 않는다.
+
+스트림은 원본 객체의 값을 사용하기만 할 뿐 변경하지 않는다. 스트림은 최종 처리를 통해 원본과 무관한 새로운 객체를 생성한다.
+
+---
+
+### **Stream 사용법**
+
+**student 클래스 정의**
+
+```java
+class Student {
+    private final int grade;
+    private final int score;
+
+    Student(final int grade, final int score) {
+        this.grade = grade;
+        this.score = score;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public int getScore() {
+        return score;
+    }
+```
+
+학년을 저장하는 grade 필드와 성적을 저장하는 score 필드를 저장한다. 그 후, 아래와 같이 학생 컬렉션을 준비한다.
+
+```java
+List<Student> students = List.of(
+    new Student(2, 100),
+    new Student(3, 50),
+    new Student(1, 56),
+    new Student(2, 90),
+    new Student(3, 90),
+    new Student(2, 100),
+    new Student(1, 30)
+);
+```
+
+3학년 학생의 평균 성적은 70점으로 계산되어야 할 것이다. 이제 스트림을 통해 이를 계산한다.
+
+```java
+double averageScore = students.stream()// Stream 생성
+    .filter(student -> student.getGrade() == 3)// 필터링 (중간처리)
+    .mapToInt(student -> student.getScore())// 매핑 (중간처리)
+    .average()// 평균 집계 (최종처리)
+    .getAsDouble();
+
+System.out.println("평균 성적: " + averageScore);// 70.0
+```
+
+평균 성적: 70.0이 출력된다.
+
+---
+
+참고:
+
+[https://hudi.blog/java-stream/](https://hudi.blog/java-stream/)
+
+[https://velog.io/@tsi0521/java-Lambda](https://velog.io/@tsi0521/java-Lambda)
+
+[https://galid1.tistory.com/509](https://galid1.tistory.com/509)   
+
+# synchronized와 volatile 그리고 Atomic  
+![img.png](images/img.png)   
+자바의 메모리 구조는 위의 그림과 같이, CPU - RAM 아키텍처 기반으로 이루어진다.
+
+- CPU 가 작업을 처기하기 위해 필요한 데이터를 RAM 에서 읽어들여서 CPU Cache Memory 에 복제한다.
+- 작업을 처리한 뒤, 변경된 CPU Cache Memory 의 데이터를 RAM 에 덮어씌운다(RAM 쓰기작업)   
+
+이때, CPU 가 여러개일 경우, 각 CPU 별 Cache Memory 에 저장된 데이터가 달라 문제가 발생할 수 있다.   
+
+이러한 문제는 **가시성 문제** 와 **동시 접근 문제** 두 가지로 나뉜다.   
+
+## 가시성 문제란?   
+> 여러 개의 스레드가 사용됨에 따라, CPU Cache Memory와 RAM의 데이터가 서로 일치하지 않아 생기는 문제를 의미한다. 이를 해결하기 위해서는 가시성이 보장되어야 하는 변수를 CPU Cache Memory가 아니라 RAM에서 바로 읽도록 보장해야 한다.
+
+## 가시성을 보장하지 못한 예제
+```java
+public class Volatile {
+
+    private static boolean stopRequested;
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread backgroundThread = new Thread(() -> {
+            int i = 0;
+            while (!stopRequested) {
+                i++;
+            }
+        });
+        backgroundThread.start();
+
+        Thread.sleep(1000);
+        stopRequested = true;
+    }
+}
+```   
+
+메인 스레드가 1초 후 stopRequested 변수를 true로 설정하기 때문에 backgroupThread는 1초 후 반복문을 빠져나올 것처럼 보인다. 그러나 실제로 실행하면 위 코드는 아래처럼 반복문을 오랜 시간 빠져 나오지 못하거나, 기타 다른 요인이 더 추가되면 영원히 못 나올 수도 있다.   
+
+### 원인
+![img.png](images/img2.png)   
+CPU 1에서 수행된 스레드를 backgroundThread, CPU 2에서 수행된 스레드를 mainThread라고 하자. mainThread는 CPU Cache Memory 2와 RAM에 공유 변수인 stopRequested를 true로 쓰기 작업을 완료하였으나, backgroundThread는 CPU Cache Memory 1에서 읽은 업데이트 되지 않은 stopRequested 값을 사용한다. 이 값은 false이므로 계속해서 반복문을 수행하게 된다. 즉, mainThread가 수정한 값을 backgroundThread가 언제 보게 될지 보증할 수 없고 이러한 문제를 가시성 문제라고 한다.
+
+이 문제를 해결하기 위해서는 stopRequested 변수를 volatile로 선언하면 된다. 그럼 다음 그림과 같이 CPU Cache Memory를 거치지 않고, RAM으로 직접 읽고 쓰는 작업을 수행하게 된다.   
+
+![img.png](images/img3.png)   
+
+### Voliate를 사용한 코드
+```java
+public class Volatile {
+
+    private static volatile boolean stopRequested;
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread backgroundThread = new Thread(() -> {
+            int i = 0;
+            while (!stopRequested) {
+                i++;
+            }
+        });
+        backgroundThread.start();
+
+        Thread.sleep(1000);
+        stopRequested = true;
+    }
+}
+```   
+
+## 동시성 문제   
+> 여러 스레드에서 공유자원(변수, 객체 등)을 동시에 접근하였을 때, 연산이 가장 늦게 끝난 결과값으로 덮어씌워진다.   
+ 
+```java
+public class Problem {
+    private static int t;
+    public static void main(String[] args) {
+        for (int i = 0; i < 100; i++) {
+            new Thread(() -> {
+                for (int j = 0; j < 1000; j++)
+                    System.out.println(t++);
+            }).start();
+        }
+    }
+}
+```   
+
+* 예상 실행 결과
+```kotlin
+1
+2
+3
+//중략
+99999
+100000
+```   
+
+* 실제 실행 결과
+```kotlin
+1
+2
+3
+//중략
+99995
+99995
+99997
+```     
+
+### 왜 이런 현상이 발생할까?   
+Java에서 i++를 하면 CPU에서는 어떠한 작업을 수행할까?     
+
+| Java 에서의 명령 | CPU 가 수행하는 명령                             |   
+|-------------|-------------------------------------------|  
+| i++         | i 를 Main Memory로부터 읽어 Cache Memory에 옮겨온다  |  
+|             | Cache Memory의 값에 1을 더한다.                  |  
+|             | 더한 값을 다시 Cache Memory 에 넣는다.              |  
+|             | Cache Memory 에 저장된 값을 Main Memory 에 반영한다. |   
+
+여러 스레드에서 동시에 i++ 이라는 연산을 수행하면 어떻게 될까?     
+
+| AThread 에서의 명령 | BThread 에서의 명령 | CPU가 수행하는 명령                                                          |
+|----------------|----------------|-----------------------------------------------------------------------|
+| i++            |                | i 를 Main Memory로부터 읽어 Cache Memory에 옮겨온다. 이때 Main Memory에 있는 i의 값은 100이다. |
+| 수행중            |            | Cache Memory의 값에 1을 더한다.                                              |
+|                | i++            | i 를 Main Memory로부터 읽어 Cache Memory에 옮겨온다. Main Memory에 있는 i의 값은 아직 100이다. |
+| 수행중            |            | 더한 값을 다시 Cache Memory 에 넣는다. Cache Memory에 있는 i의 값은 101이다.            |
+|            | 수행중            | Cache Memory의 값에 1을 더한다.                                              |
+|           | 수행중            | 더한 값을 다시 Cache Memory 에 넣는다. Cache Memory에 있는 i의 값은 101이다.            |
+| 수행중            |            | Cache Memory 에 저장된 값을 Main Memory 에 반영한다. Main Memory에 있는 i의 값은 101이다. |
+|           | 수행중            | Cache Memory 에 저장된 값을 Main Memory 에 반영한다. Main Memory에 있는 i의 값은 101이다.|
+
+이는 i++ 라는 연산이 **원자성**이 확보되지 않았기 때문이다.   
+> 원자성 : 어떤 것이 더 이상 쪼개질 수 없는 성질 - 위키 백과   
+ 
+i++ 연산은 하나의 문장처럼 보이지만, 이를 CPU가 수행하기 위해서는 총 4가지 작업이 필요하기 때문이다.   
+
+## 동시성 문제 해결 방법  
+### synchronized
+> multi thread 환경에서 동일한 자원에 대한 동시 접근을 막는 방식   
+
+synchronized 키워드를 붙인 자원은 동시에 접근할 수 없다.
+만약 여러 쓰레드에서 해당 자원에 동시에 접근할 경우, 가장 처음 접근한 쓰레드가 작업을 끝낼 때 까지, 자원에 lock 을 걸어서, 다른 쓰레드에서의 접근을 완전 차단한다.   
+따라서, 가시성 문제를 해결할 수 있으며, 원자성을 보장(한 연산이 수행할때 다른 연산에 간섭받지 않음)하기에 동시 접근 문제 또한 해결할 수 있다.
+이러한 synchronized 키워드를 사용하는 방법은 syncrhronized 메서드와 synchronized 블록 두가지 방식이 있다.   
+
+* synchronized 메서드
+```java
+public synchronized void doSomething() {} 
+```   
+해당 메서드에 오직 하나의 Thread 만 접근 가능하게 한다. 즉, doSomething 메서드는 같은 시간에 하나의 쓰레드에서만 실행할 수 있다.   
+
+* synchronized 블록   
+```java
+public void add(int value) {
+
+synchronized(this){
+        this.count += value;
+        }
+}
+```   
+동기화 블록이 괄호 안에 한 객체를 전달받고 있음에 주목하자. 예제에서는 'this' 가 사용되었다. 이는 이 add() 메소드가 호출된 객체를 의미한다. 이 동기화 블록 안에 전달된 객체를 모니터 객체(a monitor object) 라 한다. 이 코드는 이 모니터 객체를 기준으로 동기화가 이루어짐을 나타내고 있다. 동기화된 인스턴스 메소드는 자신(메소드)을 내부에 가지고 있는 객체를 모니터 객체로 사용한다.
+
+같은 모니터 객체를 기준으로 동기화된 블록 안의 코드를 오직 한 쓰레드만이 실행할 수 있다.   
+
+해당 블록 내에 있는 구문은 하나의 Thread 에서만 접근 가능하다 기존 synchronized 메서드를 사용하면 메서드 접근 자체를 하나의 쓰레드에서만 가능하게 막아버리기에 성능이 많이 저하되는데 synchronized 블록을 써서, 동기화가 필요한 로직에만 lock 을 걸도록 하면 성능저하를 줄일 수 있다.   
+
+하지만, synchronized 키워드를 남용할 경우 lock 이 걸리는 쓰레드가 많아지고, synchronized 메서드 혹은 로직에 대한 병목현상 이 발생하기 쉬워, 아래에 나오는 volatile 이나 Atomic 을 주로 사용하는 추세이다.   
+
+## volatile   
+아쉽지만 volatile은 여러 쓰레드에서 Main Memory 에 있는 공유자원에 동시에 접근 할 수 있기 때문에 동시성 문제는 해결할 수 없다.   
+
+## Atomic 변수   
+Atomic 변수는 원자성을 보장하는 변수라는 의미로, 기존에 원자성을 보장하였던 synchronized 키워드의 성능 저하 문제 를 해결하기위해 고안된 방법이다.
+
+Atomic 변수의 경우 CAS (Compare And Swap)알고리즘을 통해 동작한다.
+
+CAS 알고리즘이란 현재 쓰레드가 존재하는 CPU 의 CacheMemory 와 MainMemory 에 저장된 값을 비교하여, 일치하는 경우 새로운 값으로 교체하고, 일치하지 않을 경우 기존 교체가 실패되고, 이에 대해 계속 재시도를 하는 방식이다.
+
+즉, CPU가 MainMemory 의 자원을 CPU Cache Memory 로 가져와 연산을 수행하는 동안,
+다른 쓰레드에서 연산이 수행되어 MainMemory 의 자원이 바뀌었을 경우,
+기존 연산을 실패처리하고, 새로 바뀐 MainMemory 값으로 재수행하는 방식이다.
+
+원래 volatile 의 경우, synchronized 키워드와는 달리 동시 접근 문제를 해결하지 못한다. 즉, 원자성을 보장하지 못한다.
+
+따라서, CAS 알고리즘을 통해 원자성을 보장하도록 만든 비동기 방식이 Atomic변수이다.
+
+따라서, Atomic 변수는 synchronized 키워드처럼 동시접근 문제와 가시성 문제 모두 해결할 수 있다
+
+## 참고 자료
+[자료 1](https://velog.io/@xylopeofficial/asynchronized-%EC%99%80-volatile-%EA%B7%B8%EB%A6%AC%EA%B3%A0-Atomic)
+[자료 2](https://steady-coding.tistory.com/554)   
+[자료 3](https://steady-coding.tistory.com/555) [자료 4](https://velog.io/@syleemk/Java-Concurrent-Programming-%EA%B0%80%EC%8B%9C%EC%84%B1%EA%B3%BC-%EC%9B%90%EC%9E%90%EC%84%B1)   
+[자료 5](https://parkcheolu.tistory.com/15)
