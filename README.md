@@ -93,7 +93,7 @@
 <a href="https://github.com/wonseok2877">
   <img src="https://avatars.githubusercontent.com/u/72124326?v=4" width="100">
 </a>
-<a href="https://github.com/WooYoungDoo">
+<a href="https://github.com/woo0doo">
   <img src="https://avatars.githubusercontent.com/u/114072164?v=4" width="100">
 </a>
 <a href="https://github.com/hs1430">
