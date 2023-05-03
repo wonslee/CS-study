@@ -1215,11 +1215,107 @@ class Main {
 ---
 
 
+# DP
+
+## DP 란?
+
+DP는 특정한 알고리즘이라기보다 **문제해결 패러다임**으로 볼 수 있다.
+
+큰 문제를 잘게 나눠서 결과를 저장해가며 그 **답을 저장해두고 재활용**한다.
+
+> DP는 사실… 이론적으로는 별거 없다. 결국 **풀이 경험**이 중요하다…!
+>
+
+## 왜 쓸까? 피보나치 수열로 배워보자
+
+일반적인 재귀를 사용할 때, 하나의 큰 문제를 풀기 위해 작은 문제들을 여러번 반복하기 때문에 비효율적일 때가 많다.
+
+아래는 재귀호출 버전 피보나치의 호출 과정인데, 반복되는 호출이 꽤 많다. O(2^n)으로, n이 커질수록 기하급수적으로 커진다.
+
+![https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https://blog.kakaocdn.net/dn/t3PF0/btqSgLZbXTp/dRqSxgLwa4padvt3qtAqNk/img.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https://blog.kakaocdn.net/dn/t3PF0/btqSgLZbXTp/dRqSxgLwa4padvt3qtAqNk/img.png)
+
+```python
+def fibo(x):
+    if x == 1 or x == 2:
+        return 1
+    return fibo(x - 1) + fibo(x - 2)
+```
+
+## Top Down 방식 : 위의 항부터
+
+1. 큰 항부터 쪼개서 작은 문제로 나눈다. → f(n-1), f(n-2)
+2. 문제 하나를 푼다. f(n-1) + f(n-2) = f(n)
+
+재귀호출과 함께 쓰되, 반복되는 호출을 제거하기 위해 메모이제이션을 쓰는 방식으로 푼다.
+
+**메모이제이션** : 동일한 계산을 반복해야 할 경우 한 번 계산한 결과를 메모리에 저장해 두었다가 꺼내 씀으로써 중복 계산을 방지할 수 있게 하는 기법
+
+```python
+# memo[] 배열 원소들을 -1로 초기화
+memo = [0] * 100
+
+# Top-Down 방식 : O(N)
+def fibo(x):
+    if x == 1 or x == 2:
+        return 1
+		
+		if memo[x] == 0:  # 처음 계산하는 경우
+				return fibo(x - 1) + fibo(x - 2)
+		else:  # 이미 계산되어있는 경우
+				return memo[x]
+
+fibo(6)
+```
+
+
+![](https://cdn-images-1.medium.com/max/720/1*rCch4Ju3PcPPMpvFireFyQ.png)
+
+
+![https://velog.velcdn.com/images/kimdukbae/post/c14e7275-a0c3-4ec2-b3d7-e885a2bb0757/image.png](https://velog.velcdn.com/images/kimdukbae/post/c14e7275-a0c3-4ec2-b3d7-e885a2bb0757/image.png)
+
+
+## Bottom up 방식 : 밑의 항부터
+
+1. 문제를 작은 항부터 차례대로 쪼갠다. → f(1), f(2), …
+2. 조금씩 더 큰 항으로 더해나가면서 문제를 하나하나 풀어나간다. → f(3) = f(1) + f(2)
+
+```python
+# 앞서 계산된 결과를 저장하기 위한 DP 테이블 초기화
+dp = [0] * 100
+dp[1] = 1
+dp[2] = 1
+n = 99
+
+# Bottom-Up 방식 : O(N)
+for i in range(3, n + 1):
+    dp[i] = dp[i - 1] + dp[i - 2]
+```
+
+![](https://cdn-images-1.medium.com/max/720/1*9YUE1V0fYhFujaXEcmX3wg.png)
+
+보통 DP라고 하면 메모이제이션(배열에 저장하는 방식) + 바텀업(반복문)이라고 생각하는게 편하다.   
+
+## 푸는 방법
+
+우선 이 문제가 DP문제인지를 파악해야 함.
+
+DP 문제의 조건
+
+- Overlapping Subproblem (부분 문제가 겹침) : 중복되는 연산이 생기는 경우
+- Optimal Substructure (최적 부분 구조) : 목표 항을 작은 항들의 값을 합하는것으로 구할 수 있는 경우
+
+DP 문제 풀이 과정
+
+1. **점화식** 구하기
+2. 테이블(메모이제이션 배열) 정의
+3. 초기값 할당
+
+일단 점화식을 찾기만 하면 구현은 굉장히 쉬운 편. 많이 푸는게 답!
 
 
 
 
-**참조:**
+# 참조
 - 종만북(알고리즘 문제 해결 전략)
 - [https://www.101computing.net/big-o-notation/](https://www.101computing.net/big-o-notation/)
 - [https://softwareengineering.stackexchange.com/questions/347748/can-sub-linear-still-be-a-straight-line](https://softwareengineering.stackexchange.com/questions/347748/can-sub-linear-still-be-a-straight-line)
@@ -1227,3 +1323,6 @@ class Main {
 - [https://baactree.tistory.com/26](https://baactree.tistory.com/26)
 - [https://blog.encrypted.gg/922](https://blog.encrypted.gg/922)
 - 쉽게 배우는 알고리즘
+- https://www.enjoyalgorithms.com/blog/top-down-memoization-vs-bottom-up-tabulation
+- [https://hongjw1938.tistory.com/47](https://hongjw1938.tistory.com/47)
+- [https://velog.io/@kimdukbae/다이나믹-프로그래밍-Dynamic-Programming](https://velog.io/@kimdukbae/%EB%8B%A4%EC%9D%B4%EB%82%98%EB%AF%B9-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-Dynamic-Programming)
