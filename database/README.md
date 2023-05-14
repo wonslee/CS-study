@@ -734,8 +734,19 @@ DB의 테이블 데이터들은 모두 블록 단위로 관리된다. 만약 쿼
 
 트랜잭션 과정중에 하나의 쿼리문이라도 오류가 있으면 전체를 **취소**(ROLLBACK)해야 한다.
 
-- COMMIT : 트랜잭션의 실행 결과를 데이터베이스에 최종적으로 반영하는 것, 즉 DB가 일관성 있는 상태이므로 정상 종료하겠다는 것
-- ROLLBACK : 실행 결과를 반영하지 않고 취소하여 원래 상태로 되돌리는 것
+### **트랜잭션 상태**
+
+![https://blog.kakaocdn.net/dn/bVjYMf/btsdjnClgRx/SqmbD1MmXwWcC5rqcmnab1/img.png](https://blog.kakaocdn.net/dn/bVjYMf/btsdjnClgRx/SqmbD1MmXwWcC5rqcmnab1/img.png)
+
+- Active: 트랜잭션이 실행중인 상태(SQL 실행)
+- Parital Commit : 트랜잭션의 마지막 연산까지 실행했지만, commit 연산이 실행되기 직전의 상태
+- Commited : 트랜잭션이 성공적으로 종료되고 commit 연산까지 실행 완료된 상태
+- Failed : 트랜잭션 실행에 오류가 발생한 상태
+- Aborted: 트랜잭션이 비정상적으로 종료되어 Rollback 연산을 수행한 상태
+
+1. Commit: 데이터베이스 내의 연산이 성공적으로 종료되어 연산에 의한 수정 내용을 지속적으로 유지하지 위한 명령어이다.
+
+2. Rollback: 데이터베이스 내의 연산이 비정상적으로 종료되거나 정상적으로 수행이 되었다 하더라도 수행되기 이전의 상태로 되돌리기 위해 연산 내용을 취소할 때 사용하는 명령어이다.
 
 실제 트랜잭션 코드
 
@@ -809,6 +820,43 @@ SELECT * FROM Student;
 
 트랜잭션이 성공적으로 완료(커밋)되었으면, 그 결과는 **영구적**으로 반영되어야 한다.
 
+## **트랜잭션에서 발생할 수 있는 문제들**
+
+- Dirty Read Problem
+
+한 트랜잭션 진행 중에 변경한 값을 다른 트랜잭션에서 읽을 때 발생한다. 커밋되지 않은 상태의 트랜잭션을 다른 트랜잭션에서 읽을 수 있을 때 발생하는 문제이다.
+
+![https://blog.kakaocdn.net/dn/caT0vV/btsdefE8jFW/gWkNmPBHxs2WEHuPIMDXcK/img.jpg](https://blog.kakaocdn.net/dn/caT0vV/btsdefE8jFW/gWkNmPBHxs2WEHuPIMDXcK/img.jpg)
+
+- Non-repeatable Read Problem
+
+한 트랜잭션에서 같은 값을 두 번 이상 읽었을 때 그 값이 다른 경우를 말한다. 한 트랜잭션 도중 다른 트랜잭션이 커밋되면 발생할 수 있는 문제이다.
+
+![https://blog.kakaocdn.net/dn/nnE4d/btsdeZ9SO6m/egzrKiAbNZxI9NP1n5PK1K/img.png](https://blog.kakaocdn.net/dn/nnE4d/btsdeZ9SO6m/egzrKiAbNZxI9NP1n5PK1K/img.png)
+
+- Phantom Read Problem
+
+한 트랜잭션에서 같은 쿼리문을 두 번 이상 실행했을 때 새로운 데이터가 조회되는 경우를 말한다. A 트랜잭션 도중 B 트랜잭션에서 update 쿼리를 수행하고 커밋하더라도 A 트랜잭션에서 그 결과를 볼 수 없지만, A 트랜잭션 도중 B 트랜잭션에서 insert 쿼리를 수행할 경우 A 트랜잭션에서 처음에 안보였던 새로운 데이터가 조회될 수 있다.
+
+![https://blog.kakaocdn.net/dn/k44CQ/btsdxh8Pw2A/KKReKUzHNvE6R8gW4Vrl10/img.png](https://blog.kakaocdn.net/dn/k44CQ/btsdxh8Pw2A/KKReKUzHNvE6R8gW4Vrl10/img.png)
+
+---
+
+## **Spring @Trasactional 어노테이션**
+
+스프링에서 @Transactional은 클래스나 메서드에 붙여줄 경우, 해당 범위 내 메서드가 트랜잭션이 되도록 보장해준다. 선언적 트랜잭션이라고도 하는데, 직접 객체를 만들 필요 없이 선언만으로도 관리를 용이하게 해주기 때문이다.
+
+@Transational이 클래스 혹은 메서드에 붙을 때, Spring은 해당 메서드에 대한 프록시를 만든다. 프록시 패턴은 디자인 패턴 중 하나로, 어떤 코드를 감싸면서 추가적인 연산을 수행하도록 강제하는 방법이다.
+
+트랜잭션의 경우, 트랜잭션의 시작과 연산 종류시의 커밋 과정이 필요하므로, 프록시를 생성해 해당 메서드의 앞뒤에 트랜잭션의 시작과 끝을 추가하는 것이다.
+
+또한, 스프링 컨테이너는 트랜잭션 범위의 영속성 컨텍스트 전략을 기본으로 사용한다.
+
+서비스 클래스에서 @Transaction을 사용할 경우, 해당 코드 내의 메서드를 호출할 때 영속성 컨텍스트가 생긴다는 뜻이다. 영속성 컨텍스트는 트랜잭션 AOP가 트랜잭션을 시작할 때 생겨나고, 메서드가 종료되어 AOP가 트랜잭션을 커밋할 경우 영속성 컨텍스트가 flush되면서 해당 내용이 반영된다. 이후 영속성 컨텍스트 역시 종료되는 것이다.
+
+![https://blog.kakaocdn.net/dn/8S3Rb/btsdhzC3bWK/7AQUKC0xscq66mkt47TFwK/img.png](https://blog.kakaocdn.net/dn/8S3Rb/btsdhzC3bWK/7AQUKC0xscq66mkt47TFwK/img.png)
+
+이러한 방식으로 영속성 컨텍스트를 관리해 주기 때문에, @Transaction을 쓸 경우 트랜잭션의 원칙을 정확히 지킬 수 있다.
 
 # TODO
 - 데이터 독립성? 응용 프로그램과 데이터의 관계

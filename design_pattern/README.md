@@ -706,4 +706,77 @@ Coffee 인터페이스를 만들었다. 이렇게 되면 Programmer는 Coffee In
 
 [https://steady-coding.tistory.com/383](https://steady-coding.tistory.com/383)   
 
-[https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-ISP-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-%EB%B6%84%EB%A6%AC-%EC%9B%90%EC%B9%99](https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-ISP-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-%EB%B6%84%EB%A6%AC-%EC%9B%90%EC%B9%99)
+[https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-ISP-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-%EB%B6%84%EB%A6%AC-%EC%9B%90%EC%B9%99](https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-ISP-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-%EB%B6%84%EB%A6%AC-%EC%9B%90%EC%B9%99)   
+
+```
+## 싱글톤 패턴이란?
+
+싱글톤(Singleton) 패턴의 정의는 단순하다. 인스턴스가 오직 1개만 생성되는 패턴을 의미한다.
+
+---
+
+### 싱글톤 패턴의 장단점
+> 장점
+1. 메모리 낭비를 방지할 수 있다.(한번만 생성하기때문에)
+>
+2. 싱글톤으로 만들어진 클래스와 다른 클래스의 인스턴스들의 데이터 공유가 쉽다.
+>(싱글톤 인스턴스가 전역으로 사용되는 인스턴스이기 때문에 다른 클래스의 인스턴스들이 접근하여 사용할 수 있다.)
+3. 인스턴스가 절대적으로 한개만 존재하는 것을 보증하기에 개발 시 실수를 줄일 수 있다.
+>
+4. 싱글톤 객체를 사용하지 않는 경우 인스턴스를 생성하지 않는다.
+>
+5. 싱글톤을 상속시킬 수 있다.
+
+> 단점
+1. 전역변수보다 사용하기가 불편하다.
+>
+2. 싱글톤의 역할이 커질수록 결합도가 높아져 객체 지향 설계 원칙에 어긋날 수 있다.(
+>
+3. 멀티쓰레드 환경에서 컨트롤이 어렵다.
+>
+4. 코드의 양이 많아진다.
+5. 자식클래스를 만들수 없다는 점과, 내부 상태를 변경하기 어렵다는 점이 있다.
+
+---
+### 싱글톤 사용 예제
+
+
+**이른 초기화**
+```
+public class Singleton {
+
+    private static Singleton instance = new Singleton();
+	
+    private Singleton() {} //생성자를 private로
+	
+    public static Singleton getInstance() {
+        return instance;
+    }
+}
+```
+
+- 이른 초기화는 클래스가 호출될 때 인스턴스를 생성하는 방법입니다. 다만 인스턴스를 사용하지 않아도 생성하기 때문에 효율성이 떨어집니다.
+
+
+**늦은 초기화**
+
+```
+public class Singleton {
+
+    private static Singleton instance;
+	
+    private Singleton () {} //생성자를 private로
+	
+    public static Singleton getInstance() {
+        if (instance == null){
+            instance = new Singleton();
+        }    
+        
+        return instance;
+    }
+}
+```
+- 늦은 초기화는 인스턴스를 실제로 사용할 시점에 생성하는 방법입니다. 인스턴스를 실제로 생성하지 않으면 생성하지 않기에 이른 초기화보다 효율성이 좋다.
+  하지만
+  두 스레드가 동시에 싱글톤 인스턴스에 접근하고 생성이 안된 것을 확인하여 생성한다면 중복으로 생성하는 경우가 생길 수 있다.(동시성 문제 synchronized 키워드를 통해 해결가능하지만 대략 50~200배 느려진다.)
+---
