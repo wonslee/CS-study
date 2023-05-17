@@ -280,7 +280,420 @@ public class Main {
         hello.hello(lion); // 어흥
     }
 }
-```
+```   
+
+## LSP (Liskov Substitution Principle) 리스코프 치환 원칙   
+> 리스코프 치환 원칙은 1988년 바바라 리스코프(Barbara Liskov)가 올바른 상속 관계의 특징을 정의하기 위해 발표한 것으로, **서브 타입은 언제나 기반 타입으로 교체할 수 있어야 한다**는 것을 뜻한다. 교체할 수 있다는 말은, 자식 클래스는 최소한 자신의 부모 클래스에서 가능한 행위는 수행이 보장되어야 한다는 의미이다. 즉, **부모 클래스의 인스턴스를 사용하는 위치에 자식 클래스의 인스턴스를 대신 사용했을 때 코드가 원래 의도대로 작동해야 한다**는 의미이다. 이것을 부모 클래스와 자식 클래스 사이의 행위가 일관성이 있다고 말한다.   
+
+### 리스코프 치환 원칙을 위반한 코드   
+```java
+public class Rectangle {
+    private int width;
+    private int height;
+
+    public void setWidth(final int width) {
+        this.width = width;
+    }
+
+    public void setHeight(final int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+    
+    public int getArea() {
+        return width * height;
+    }
+}
+```   
+
+위 `Rectangle` 객체를 상속받아서 정사각형 객체를 정의할 수 있다.   
+
+```java
+public class Square extends Rectangle {
+
+    @Override
+    public void setWidth(final int width) {
+        super.setWidth(width);
+        super.setHeight(width);
+    }
+
+    @Override
+    public void setHeight(final int height) {
+        super.setWidth(height);
+        super.setHeight(height);
+    }
+}
+```   
+
+다만, 정사각형은 가로와 세로의 길이가 같으므로 setWidth()나 setHeight()를 호출하면 가로와 세로를 모두 값을 바꿔줘야해서 메소드를 재정의했다.   
+
+`Rectangle`의 넓이를 구해보자.    
+```java
+public class Main
+{
+    public static void main(String[] args)
+    {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setWidth(10);
+        rectangle.setHeight(5);
+        
+        System.out.println(rectangle.getArea());
+    }
+}
+```   
+
+    50   
+
+`Rectangle`의 넓이를 구하는 소스는 이와 같다. 너비가 10, 높이가 5로 할당됐으므로 넓이 50이 정상적으로 반환된다.
+
+리스코프 치환 원칙에 의하면, 자식 객체는 부모 객체를 완전히 대체할 수 있다고 했으므로, `Rectangle`을 상속받은 `Square`로 대체하여 넓이를 구해보자.
+
+`Square`가 `Rectangle`을 완전히 대체했다면 동일한 결과인 50이 반환되어야 한다.   
+
+```java
+public class Main { 
+    public static void main(String[] args) {
+        Rectangle rectangle = new Square();
+        rectangle.setWidth(10);
+        rectangle.setHeight(5);
+	        
+        System.out.println(rectangle.getArea());
+    }
+}
+```   
+    25   
+
+어째서인지 넓이는 50이 아닌 25로 반환됐다. 자세히 살펴보니, 마지막에 수행된 setHeight(5)가 객체의 너비/높이를 모두 5로 할당했다. 그러니 넓이도 당연히 25가 출력될 수밖에 없었던 걸로 보인다. 즉, 이 객체는 리스코프 치환 원칙에 위배되는 코드다.
+
+곰곰히 생각해보면, 직사각형과 정사각형은 상속관계가 전혀 될 수 없다. 사각형의 특징을 서로 갖고있긴 하지만, 두 사각형 모두 사각형의 한 종류일 뿐으로, 하나가 다른 하나를 완전히 포함하지 못 하는 구조다.
+
+이렇게 잘못된 객체를 상속하거나, 올바르게 확장하지 못 할 경우 겉으로 보기엔 정상적이지만 올바른 객체는 아니다.   
+
+### 리스코프 치환 원칙을 준수한 코드   
+직사각형과 정사각형은 상속의 관계가 성립하기 어렵다. 따라서 이보다 상위 개념인 사각형 객체를 구현하고 정사각형, 직사각형이 이를 상속받으면 될 것이다.   
+
+```java
+public class Shape
+{
+    protected int width;
+    protected int height;
+    
+    public int getWidth()
+    {
+        return width;
+    }
+    
+    public int getHeight()
+    {
+        return height;
+    }
+    
+    public void setWidth(int width)
+    {
+        this.width = width;
+    }
+    
+    public void setHeight(int height)
+    {
+        this.height = height;
+    }
+    
+    public int getArea()
+    {
+        return width * height;
+    }
+}
+
+```   
+
+위와 같이 `Shape`라는 사각형 객체를 구현한다.   
+
+```java
+class Rectangle extends Shape
+{
+    public Rectangle(int width, int height)
+    {
+        setWidth(width);
+        setHeight(height);
+    }
+}
+
+class Square extends Shape
+{
+    public Square(int length)
+    {
+        setWidth(length);
+        setHeight(length);
+    }
+}
+```   
+
+`Shape`를 상속받는 두 사각형 `Rectangle`과 `Square` 객체는 위와 같다. `Rectangle` 객체는 인스턴스 생성 시 `width`와 `height`를 파라미터로 받으며, `Square`는 각 변의 길이가 동일하므로 `lenght` 하나만을 파라미터로 받는다.   
+
+```java
+public class Main
+{
+    public static void main(String[] args)
+    {
+        Shape rectangle = new Rectangle(10, 5);
+        Shape square = new Square(5);
+        System.out.println(rectangle.getArea());
+        System.out.println(square.getArea());
+    }
+}
+```   
+
+    50
+    25   
+
+이제 `Rectangle`과 `Square`가 상속 관계가 아니므로, 리스코프 치환 원칙을 더 이상 위반하지 않는다.   
+
+리스코프 치환 원칙은 상속되는 객체는 반드시 부모 객체를 완전히 대체해도 아무런 문제가 없도록 권고한다. 위의 직사각형과 정사각형의 케이스처럼 올바르지 못한 상속관계는 제거하고, 부모 객체의 동작을 완벽하게 대체할 수 있는 관계만 상속하도록 코드를 설계해야한다.
+
+리스코프 치환 원칙을 지키기 위해선 가급적 부모 객체의 일반 메소드를 그 의도와 다르게 오버라이딩 하지 않는 것이 중요하다.
+
+부모 객체의 오버라이딩은 주로 동일한 메소드를 자식 객체만의 동작을 추가하기 위해 한다는 걸 감안하면 매우 준수하기 까다로운 원칙.    
+
+## ISP (Interface Segregation Principle) 인터페이스 분리 원칙   
+> 범용적인 인터페이스 보다는 클라이언트가 실제로 사용하는 인터페이스를 만들어야 한다는 의미. 즉, 인터페이스를 사용에 맞게끔 각기 분리해야한다.    
+
+만약 인터페이스의 추상 메서드들을 범용적으로 이것저것 구현한다면, 그 인터페이스를 상속받은 클래스는 자신이 사용하지 않는 인터페이스마저 억지로 구현 해야 하는 상황이 올 수도 있다. 또한 사용하지도 않는 인터페이스의 추상 메소드가 변경된다면 클래스에서도 수정이 필요하게 된다.   
+
+즉, 인터페이스 분리 원칙이란 인터페이스를 잘게 분리함으로써, 클라이언트의 목적과 용도에 적합한 인터페이스 만을 제공하는 것이다.
+
+### ISP 원칙 위반 예제와 수정하기   
+스마트폰 클래스를 구현하기 위해 인터페이스로 스마트폰을 추상화 하였다.   
+```java
+interface ISmartPhone {
+    void call(String number); // 통화 기능
+    void message(String number, String text); // 문제 메세지 전송 기능
+    void wirelessCharge(); // 무선 충전 기능
+    void AR(); // 증강 현실(AR) 기능
+    void biometrics(); // 생체 인식 기능
+}
+```   
+
+만약 갤럭시 S20이나 S21 클래스를 구현한다면, 최신 스마트폰 기종인 만큼 객체의 동작 모두가 필요하므로 ISP 원칙을 만족하게 된다.   
+
+```java
+class S20 implements ISmartPhone {
+    public void call(String number) {
+    }
+
+    public void message(String number, String text) {
+    }
+
+    public void wirelessCharge() {
+    }
+
+    public void AR() {
+    }
+
+    public void biometrics() {
+    }
+}
+
+class S21 implements ISmartPhone {
+    public void call(String number) {
+    }
+
+    public void message(String number, String text) {
+    }
+
+    public void wirelessCharge() {
+    }
+
+    public void AR() {
+    }
+
+    public void biometrics() {
+    }
+}
+```   
+
+갤럭시 S3에는 무선 충전, 생체인식과 같은 기능은 포함되어 있지 않기 때문에 갤럭시 S3가 위의 인터페이스를 상속받는다면 문제가 생긴다.   
+
+인터페이스 규칙상 오버라이딩은 하되, 메서드 내부는 빈공간으로 두거나 예외를 발생토록 구성해야 한다.   
+
+```java
+class S3 implements ISmartPhone {
+    public void call(String number) {
+    }
+
+    public void message(String number, String text) {
+    }
+
+    public void wirelessCharge() {
+        System.out.println("지원 하지 않는 기능 입니다.");
+    }
+
+    public void AR() {
+        System.out.println("지원 하지 않는 기능 입니다.");
+    }
+
+    public void biometrics() {
+        System.out.println("지원 하지 않는 기능 입니다.");
+    }
+}
+```   
+
+해결 방법은 각각의 기능에 맞게 인터페이스를 잘게 분리하면 된다.   
+
+```java
+interface IPhone {
+    void call(String number); // 통화 기능
+    void message(String number, String text); // 문제 메세지 전송 기능
+}
+
+interface WirelessChargable {
+    void wirelessCharge(); // 무선 충전 기능
+}
+
+interface ARable {
+    void AR(); // 증강 현실(AR) 기능
+}
+
+interface Biometricsable {
+    void biometrics(); // 생체 인식 기능
+}
+
+class S21 implements IPhone, WirelessChargable, ARable, Biometricsable {
+    public void call(String number) {
+    }
+
+    public void message(String number, String text) {
+    }
+
+    public void wirelessCharge() {
+    }
+
+    public void AR() {
+    }
+
+    public void biometrics() {
+    }
+}
+
+class S3 implements IPhone {
+    public void call(String number) {
+    }
+
+    public void message(String number, String text) {
+    }
+}
+```   
+
+## DIP (Dependency inversion principle) 의존관계 역전 원칙   
+> 객체는 구체적인 객체가 아닌 추상화에 의존해야 한다는 법칙   
+![img.png](images/img.png)   
+ 
+
+아니 뭔소리야 도대체??? 예제로 알아보자.   
+```java
+class Programmer {
+  private Americano _americano;
+  
+  public Programmer() {
+    _americano = new Americano();
+  }
+  
+  public void drink() {
+    _americano.drink();
+  }
+}
+
+class Americano {
+  public void drink() {
+    System.out.println("Drink Americano");
+  }
+}
+```   
+
+여기 프로그래머와 아메리카노 클래스가 있다. 프로그래머는 커피를 달고 사므로 private 프로퍼티로 Americano를 가지고 있다. 또한 Programmer라는 클래스 내에서 `_americano.drink()`라고 Americano 클래스를 사용하고 있다. 이때 Americano는 Programmer에 의존 관계(Americano가 변하면 Programmer도 변해야한다.)가 생기게 된다. 지금 당장은 이 코드가 아무 문제가 없어보일 수 있다.
+
+만약 프로그래머가 아메리카노가 질려서 라떼를 마시고 싶다고 해보자. 그렇다면 위의 코드는 어떻게 바뀌어야 하는가?   
+
+```java
+class Programmer {
+  private Latte _latte; // 아메리카노 -> 라떼로 변경
+  
+  public Programmer() {
+    _latte = new Latte(); // 아메리카노 -> 라떼로 변경
+  }
+  
+  public void drink() {
+      _lattee.drinkLatte(); // 커피 종류마다 drink~ 메서드의 이름이 다르다면? 
+														//관리하기 어려울게 뻔하다.
+  }
+}
+
+class Americano {
+  public void drink() {
+    System.out.println("Drink Americano");
+  }
+}
+
+class Latte {
+  public void drinkLatte() { 
+    System.out.println("Drink Latte");
+  }
+}
+```   
+1. 의존 관계 많이 가질 경우 (라떼 말고도 카페모카, 아인슈페너 등등의 메뉴가 추가될 경우) 관리하기가 어렵다.
+2. 변경 사항이 있을 경우 이를 수정하기가 쉽지 않다.(라떼만 마시는 메서드 이름이 변할 경우 라떼, 프로그래머 클래스에서 사용되는 마시는 메서드 이름을 바꿔야 한다. 만약 모든 커피 클래스에 사이즈업 메서드가 추가된다면…?)   
+
+그러면 어떻게 해결할까?   
+```java
+interface Coffee { // 커피라는 인터페이스를 만든다.
+  public void drink();
+}
+
+class Americano implements Coffee {
+  @Override
+  public void drink() { 
+    System.out.println("Drink Americano");
+  }
+}
+
+class Latte implements Coffee {
+  @Override
+  public void drink() {
+    System.out.println("Drink Americano");
+  }
+}
+```   
+
+```java
+class Programmer {
+  private Coffee _coffee;
+  
+  public Programmer(Coffee coffee) { // 1. Programmer(Americano())
+    _coffee = coffee;
+  }
+  
+  public void drink() { // 2.
+    _coffee.drink();
+  }
+}
+```   
+
+Coffee 인터페이스를 만들었다. 이렇게 되면 Programmer는 Coffee Interface만 알고 있으면 된다. Coffee는 추상적 (구체적이지 않은 것) 이다.
+
+아메리카노, 라떼처럼 구체적인 것에 의존하게 되면 유지보수가 어렵기 때문에 Coffee처럼 `추상적인 것에 의존`해야한다는 것이 바.로 D I P 이다. (aka 의존성 역전 법칙 ㅎㅎ)   
+
+프로그래머가 아메리카노, 콜드 브루, 라떼, 바닐라 라떼의 존재를 아는가?
+
+아니! 전혀 모른다!!!!! 
+
+자자자, 여기서 Coffee 인터페이스를 상속받은 에스프레소를 추가한다고 해보자. Programmer 클래스에 변화가 생기는가? 아니, 전혀 아니다!
+
 
 ## 참고 자료   
 [https://velog.io/@haero_kim/SOLID-%EC%9B%90%EC%B9%99-%EC%96%B4%EB%A0%B5%EC%A7%80-%EC%95%8A%EB%8B%A4](https://velog.io/@haero_kim/SOLID-%EC%9B%90%EC%B9%99-%EC%96%B4%EB%A0%B5%EC%A7%80-%EC%95%8A%EB%8B%A4)   
@@ -289,4 +702,85 @@ public class Main {
 
 [https://selfish-developer.com/entry/SRP-Single-Responsibility-Principle](https://selfish-developer.com/entry/SRP-Single-Responsibility-Principle)   
 
-[https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-OCP-%EA%B0%9C%EB%B0%A9-%ED%8F%90%EC%87%84-%EC%9B%90%EC%B9%99](https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-OCP-%EA%B0%9C%EB%B0%A9-%ED%8F%90%EC%87%84-%EC%9B%90%EC%B9%99)
+[https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-OCP-%EA%B0%9C%EB%B0%A9-%ED%8F%90%EC%87%84-%EC%9B%90%EC%B9%99](https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-OCP-%EA%B0%9C%EB%B0%A9-%ED%8F%90%EC%87%84-%EC%9B%90%EC%B9%99)   
+
+[https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-LSP-%EB%A6%AC%EC%8A%A4%EC%BD%94%ED%94%84-%EC%B9%98%ED%99%98-%EC%9B%90%EC%B9%99](https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-LSP-%EB%A6%AC%EC%8A%A4%EC%BD%94%ED%94%84-%EC%B9%98%ED%99%98-%EC%9B%90%EC%B9%99)    
+
+[https://blog.itcode.dev/posts/2021/08/15/liskov-subsitution-principle](https://blog.itcode.dev/posts/2021/08/15/liskov-subsitution-principle)   
+
+[https://steady-coding.tistory.com/383](https://steady-coding.tistory.com/383)   
+
+[https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-ISP-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-%EB%B6%84%EB%A6%AC-%EC%9B%90%EC%B9%99](https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-ISP-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-%EB%B6%84%EB%A6%AC-%EC%9B%90%EC%B9%99)   
+
+```
+## 싱글톤 패턴이란?
+
+싱글톤(Singleton) 패턴의 정의는 단순하다. 인스턴스가 오직 1개만 생성되는 패턴을 의미한다.
+
+---
+
+### 싱글톤 패턴의 장단점
+> 장점
+1. 메모리 낭비를 방지할 수 있다.(한번만 생성하기때문에)
+>
+2. 싱글톤으로 만들어진 클래스와 다른 클래스의 인스턴스들의 데이터 공유가 쉽다.
+>(싱글톤 인스턴스가 전역으로 사용되는 인스턴스이기 때문에 다른 클래스의 인스턴스들이 접근하여 사용할 수 있다.)
+3. 인스턴스가 절대적으로 한개만 존재하는 것을 보증하기에 개발 시 실수를 줄일 수 있다.
+>
+4. 싱글톤 객체를 사용하지 않는 경우 인스턴스를 생성하지 않는다.
+>
+5. 싱글톤을 상속시킬 수 있다.
+
+> 단점
+1. 전역변수보다 사용하기가 불편하다.
+>
+2. 싱글톤의 역할이 커질수록 결합도가 높아져 객체 지향 설계 원칙에 어긋날 수 있다.(
+>
+3. 멀티쓰레드 환경에서 컨트롤이 어렵다.
+>
+4. 코드의 양이 많아진다.
+5. 자식클래스를 만들수 없다는 점과, 내부 상태를 변경하기 어렵다는 점이 있다.
+
+---
+### 싱글톤 사용 예제
+
+
+**이른 초기화**
+```
+public class Singleton {
+
+    private static Singleton instance = new Singleton();
+	
+    private Singleton() {} //생성자를 private로
+	
+    public static Singleton getInstance() {
+        return instance;
+    }
+}
+```
+
+- 이른 초기화는 클래스가 호출될 때 인스턴스를 생성하는 방법입니다. 다만 인스턴스를 사용하지 않아도 생성하기 때문에 효율성이 떨어집니다.
+
+
+**늦은 초기화**
+
+```
+public class Singleton {
+
+    private static Singleton instance;
+	
+    private Singleton () {} //생성자를 private로
+	
+    public static Singleton getInstance() {
+        if (instance == null){
+            instance = new Singleton();
+        }    
+        
+        return instance;
+    }
+}
+```
+- 늦은 초기화는 인스턴스를 실제로 사용할 시점에 생성하는 방법입니다. 인스턴스를 실제로 생성하지 않으면 생성하지 않기에 이른 초기화보다 효율성이 좋다.
+  하지만
+  두 스레드가 동시에 싱글톤 인스턴스에 접근하고 생성이 안된 것을 확인하여 생성한다면 중복으로 생성하는 경우가 생길 수 있다.(동시성 문제 synchronized 키워드를 통해 해결가능하지만 대략 50~200배 느려진다.)
+---
