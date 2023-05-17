@@ -11,6 +11,7 @@
 - [웹 통신의 전체적인 흐름](#웹-통신의-전체적인-흐름)
 - [Session과 JWT](#session과-jwt)
 - [HTTP 상태코드](#http-상태코드)
+- [세션, 세션 스티키, 세션 클러스터링, 세션 스토리지](#세션)
 </details>
 
 
@@ -1569,3 +1570,169 @@ HTTP/1.1 200 OK
 [https://surprisecomputer.tistory.com/47](https://surprisecomputer.tistory.com/47)
 
 [https://m.blog.naver.com/fbfbf1/222682972994](https://m.blog.naver.com/fbfbf1/222682972994)
+
+---
+
+### **세션 (Session)**
+
+### **세션을 사용하는 이유?**
+
+HTTP프로토콜의 특징이자 약점을 보완하기 위해 사용된다.
+
+1. Connectionless, Protocol 비연결지향
+
+클라이언트가 서버에 요청했을 때, 그 요청에 맞는 응답을 보낸 후 연결을 끊는 처리방식
+
+2. Stateless Protocol (상태정보 유지 안함)
+
+클라이언트의 상태정보를 가지지 않는 서버처리방식이다.
+
+클라이언트와 첫번째 통신에서 데이터를 주고받았다 해도, 두번째 통신에서 이전 데이터를 유지하지 않는다.
+
+하지만 실제로는 데이터유지가 필요한 경우가 많다.
+
+정보가 유지되지 않으면 매번 페이지 이동시 마다 로그인을 해야하거나 장바구니에서 상품을 선택했는데 구매페이지에서 상품의 정보가 사라지는 경우가 생길 것이다. 이러한 이유로 세션 또는 쿠키를 사용한다.
+
+### **세션이란?**
+
+사용자가 웹 브라우저를 통해 웹서버에 접속한 시점으로부터 웹 브라우저를 종료하여 연결을 끝내는 시점까지, 같은 사용자로부터 오는 일련의 요청을 하나의 상태로 보고, 그 상태를 일정하게 유지하는 기술이다. 즉 방문자가 웹 서버에 접속해있는 상태를 하나의 단위로 보고 그것을 세션이라고 한다.
+
+### **세션 특징**
+
+- 웹서버에 웹 컨터이너의 상태를 유지하기 위한 정보를 저장
+- 각 클라이언트의 고유세션ID를 부여한다. 이 세션ID로 클라이언트를 구분하여 각 클라이언트 요구에 맞는 서비스를 제공한다.
+
+### **세션 동작순서**
+
+1. 클라이언트 요청 (사용자가 웹사이트 접근)
+
+2. 서버는 접근 클라이언트의 Request-Header 필드인 cookie를 확인하여, 클라이언트가 해당 세션ID를 보냈는지 확인
+
+3. 세션ID가 존재하지 않는다면, 서버는 세션ID를 생성해 클라이언트에게 전송.
+
+4. 서버에서 클라이언트로 준 세션ID를 쿠키를 사용해 서버에 저장한다.
+
+5. 클라이언트는 재접속시, 이 쿠키를 이용하여 세션ID값을 서버에 전달한다.
+
+세션은 쿠키에 비해 보안이 좋지만 서버에 저장되어 서버자원을 사용하기 때문에 사용자가 많을 경우 소보되는 자원이 상당하다. 만약 트래픽이 많을 때 서버를 늘리는 Scale-out을 했을 때, 세션을 어떻게 공유하여 정합성 이슈를 해결할까?
+
+※ 데이터 정합성 : 어떤 데이터들이 값이 서로 일치하는 상태
+
+---
+
+### **Load Balancing(로드 밸런싱)**
+
+![https://blog.kakaocdn.net/dn/bIKZnT/btsf6G7oU7h/49Idp9Q5N2E5PTsOFQHxnk/img.jpg](https://blog.kakaocdn.net/dn/bIKZnT/btsf6G7oU7h/49Idp9Q5N2E5PTsOFQHxnk/img.jpg)
+
+- 트래픽이 많을 때 여러 대의 서버가 분산처리하여 서버의 로드율을 증가, 부하량, 속도 저하 등을 고려하여 분산 처리하여 해결해주는 서비스이다.
+- 로드밸런싱을 해주는 소프트웨어 혹은 하드웨어 장비를 로드밸런서(Load Balancer)라고 한다.
+
+### **동작 방식**
+
+1. 네트워크 상단에 가상서버가 존재하여 서버로 들어오는 패킷을 리얼 서버로 균일하게 트래픽을 분산시킨다.
+
+2. 서버에 장애가 발생하면 이를 감지하여 정상적으로 작동하는 서버로 트래픽을 분산시킨다.
+
+**장점**
+
+- 로드밸런싱을 이용하면 한 서버가 다운되더라도 이중화시킨 다른 서버에서 서비스를 지속하여, 서비스들이 문제를 인지하지 못하게 할 수 있다.
+- 단지 노드를 추가하는 것만으로 서비스가 확장성을 가질 수 있다.
+
+**단점**
+
+- 로드밸런서를 사용할 때 어려운 문제 중 하나는 세션 데이터를 관리하는 것이다.
+- 클라이언트의 연결 정보를 저장하는 세션이 로드밸런싱을 통해 하나의 서버 장비에 저장되는 경우, 추후 다른 서버로 접속하게 된다면 해당 클라이언트의 세션이 유지되지 않는다.
+
+이러한 문제를 해결하기 위해 세션을 고정하는 Sticky Session을 사용한다.
+
+---
+
+### **Sticky Session**
+
+![https://blog.kakaocdn.net/dn/cwhyO8/btsgeyUa7RD/Sx9RLxkWKkmw8BTyKRVL80/img.png](https://blog.kakaocdn.net/dn/cwhyO8/btsgeyUa7RD/Sx9RLxkWKkmw8BTyKRVL80/img.png)
+
+로드밸런서가 세션 기간 동안 동일한 클라이언트의 request를 항상 동일한 서버로 라우팅 해주는 기능이다.
+
+예를 들어, User1 이 1번부터 3번까지의 서버 중 1번 서버에 세션을 생성하였다면, 이후에 User1이 보내는 모든 요청은 1번 서버로만 보내지게 된다. 즉, Load Balancer는 User가 첫 번째 세션을 생성한 서버로 모든 요청을 리다이렉트 하여 고정된 세션만 사용하게 한다.
+
+이를 위해서 로드 밸런서는 요청을 받으면 가장 먼저 요청에 쿠키가 존재하는지 확인한다. 쿠키가 있으면 해당 요청이 쿠키에 지정된 서버로 전송된다. 쿠키가 없는 경우, 로드밸런서가 기존 로드 밸런싱 알고리즘을 기반으로 서버를 선정한다.
+
+**장점**
+
+- 여러 서버들은 세션 데이터를 교환할 필요가 없다.
+- 정합성 이슈에서 자유로워 진다.
+
+**단점**
+
+- 특정 서버에 과부하가 발생할 수 있으며, 트래픽이 균등하게 배분될 수 없다.
+- 로드밸런싱으로 인해 트래픽이 분산되긴 하지만, Sticky Session을 사용했을 때 특정 서버에 몰린 사람들만 활발하게 활동하는 경우 해당 서버만 과부하가 걸릴 수 있다.
+
+![https://blog.kakaocdn.net/dn/CEheY/btsgaNLScOc/IXPnWGYv53ymqcmFUkYvdk/img.png](https://blog.kakaocdn.net/dn/CEheY/btsgaNLScOc/IXPnWGYv53ymqcmFUkYvdk/img.png)
+
+- 특정 서버에 과부하가 걸리는 경우 로드 밸런서는 이를 감지하고 그 서버로 향하는 트래픽을 다른 서버로 다시 라우팅 하는데, 이럴 경우 기존 세션 데이터가 유실된다. 즉 이용하던 유저는 재로그인 등을 해야한다는 것이다.
+
+![https://blog.kakaocdn.net/dn/c5dzcl/btsgb6xC6vn/yLRDdzrnH1ZkGZ13Ors1rk/img.png](https://blog.kakaocdn.net/dn/c5dzcl/btsgb6xC6vn/yLRDdzrnH1ZkGZ13Ors1rk/img.png)
+
+그렇다면 정합성 이슈를 해결하고, 가용성과 트래픽 분산까지 확보할 수 있는 세션 관리 방식은 없나?
+
+있다. 바로 세션 클러스터링 방식이다!
+
+---
+
+### **Session Clustering**
+
+다중 서버 환경에서 로드밸런서를 통해 어떤 서버로 접속하든지 세션이 동일하게 유지되도록 설정해주는 것이다.
+
+세션 클러스터링에는 여러 방법이 있다.
+
+그 예중 하나인 'DeltaManager'을 활용한 All-to-all Session Replication을 보겠다.
+
+### **All-to-all Session Replication**
+
+all-to-all 세션 복제란 하나의 세션 저장소에 변경되는 요소가 발생하면 변경된 사항이 다른 모든 세션에 복제가 된다는 것을 말한다.
+
+![https://blog.kakaocdn.net/dn/bfXWdP/btsf4foVors/Juj4SsPy7TvzbH1vQaIYUk/img.png](https://blog.kakaocdn.net/dn/bfXWdP/btsf4foVors/Juj4SsPy7TvzbH1vQaIYUk/img.png)
+
+그림과 같이 세션을 복제한다면 유저가 이후에 어떤 서버에 접속하더라도 로그인 정보가 세션에서 복제되어 있으므로 정합성 이슈가 해결 가능하다. 이로써 서버 하나에 장애가 발생하더라도 서비스는 중단되지 않고 운영 가능하다. 하지만 Tomcat의 all-to-all 세션 복제 방식은 고려해야 할 단점들이 존재한다.
+
+모든 서버가 동일한 세션 객체를 가져야 하기 때문에 많은 메모리가 필요하다. 또한 세션 저장소에 데이터가 저장될 때마다 모든 서버에 값을 입력해야 하므로 서버 수에 비례하여 네트워크 트래픽이 증가하는 등 성능 저하가 발생하게 된다. 그래므로 이 방식은 소규모 클러스터에서 좋은 효율을 보여준다. 4개 이상의 서버를 가진 대규모 클러스터들에는 추천하지 않는 방식이라고 한다.
+
+그러면 이를 해결할 수 있는 방법은 없나?
+
+이를 해결하기 위한 방식으로 'BackupManager'을 활용한 primary-secondary 세션 복제 방식을 제시한다.
+
+### **primary-secondary Session Replication**
+
+![https://blog.kakaocdn.net/dn/bmwL2w/btsgbKaDEeN/rlchICLwBGpDX4Oa0zp5j1/img.png](https://blog.kakaocdn.net/dn/bmwL2w/btsgbKaDEeN/rlchICLwBGpDX4Oa0zp5j1/img.png)
+
+서버 1(primary)과 서버 2 (secondary)에 세션 객체의 key-value 전체를 복제해두고 그 외의 서버에는 세션의 key에 해당하는 값만을 복제하는 방식으로, 객체 전체를 복제했던 방식인 all-to-all 방식보다는 시간이 절약된다는 장점이 존재한다. 하지만 primary 서버와 secondary 서버를 제외한 서버에 세션 정보를 요청하게 되는 경우 위의 그림과 같이 세션 key에 해당하는 세션 객체를 얻기 위해 primary 서버에 질의하는 괒어이 추가적으로 필요하게 된다. 따라서 이 방법 역시 성능적 한계는 여전히 존재한다.
+
+---
+
+### **Session Storage**
+
+그나마 세션의 정합성 문제를 해결하기 위해 가장 많이 채택되는 방법으로 session storage를 두는 것이다. Redis, Memcached 등의 세션 저장소가 사용된다.
+
+![https://blog.kakaocdn.net/dn/FSzG4/btsf9B55xS8/Y0bZI1GJOb8PszZk8hg3Jk/img.png](https://blog.kakaocdn.net/dn/FSzG4/btsf9B55xS8/Y0bZI1GJOb8PszZk8hg3Jk/img.png)
+
+보이는 바와 같이 세션 스토리지가 분리되면, 서버가 아무리 늘어난다고 할 지라도 세션 스토리지에 대한 정보만 각각의 서버에 입력해주면 세션을 공유할 수 있게 된다.
+
+이러한 방식을 사용한다면 로드밸런싱 알고리즘만 잘 구현되어 있다는 가정 하에 Sticky Session처럼 트래픽이 비정상적으로 몰리는 현상을 고려하지 않아도 된다.
+
+또한 서버가 하나 장애가 발생하더라도 별도의 세션 저장소가 존재하기 때문에 서비스를 계속해서 제공할 수 있다. 즉 가용성을 확보할 수 있다. 뿐만 아니라 근본적으로 해결하고자 했던 정합성 문제도 해결할 수 있다.
+
+무엇보다도 세션 저장소가 하나이기 때문에 데이터 정합성 해결을 위한 별도의 세션 복제를 할 필요가 없어서 이에 대한 성능적인 문제도 해결이 가능하다.
+
+하지만 세션 저장소도 세션 객체를 복제해야 할 필요가 있다. 이는 데이터 정합성 문제를 해결하기 위한 것이 아닌, 세션 저장소에 장애가 발생하면 모든 세션이 이용이 불가하다는 뜻이기 때문에 가용성을 확보하기 위해 동일한 세션 저장소 하나를 더 구성하여 복제하는 것이다.
+
+---
+
+참고:
+
+[https://hyuntaeknote.tistory.com/6](https://hyuntaeknote.tistory.com/6)
+
+[https://binco.tistory.com/entry/LoadBalancing-StickySession-SessionClustering](https://binco.tistory.com/entry/LoadBalancing-StickySession-SessionClustering)
+
+[https://cheershennah.tistory.com/135](https://cheershennah.tistory.com/135)
+
+[https://velog.io/@guswlsapdlf/%EC%84%B8%EC%85%98-%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%8C%85](https://velog.io/@guswlsapdlf/%EC%84%B8%EC%85%98-%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%8C%85)
