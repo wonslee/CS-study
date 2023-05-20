@@ -581,6 +581,23 @@ void func(Animal a){
 
 - 상속받은 속성과 연산 외에 새로운 속성과 연산을 추가하여 사용 가능하다.
 - 클래스를 재사용함으로써 소프트웨어 재사용성을 증대시키는 중요한 개념이다.
+  
+![](https://velog.velcdn.com/images/hs1430/post/1ba411dd-9007-40ca-bd81-78fb728f03ca/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/9b26096b-caab-44a7-9880-a2b64cfb7df9/image.png)
+
+위의 두가지 클래스를 보면
+model, color, wheels 기능으로 moveForward()와 moveBackward 가 완전히 동일한 코드임에도 불구하고 계속 반복되고 있다는 점을 확인할 수 있다.
+
+![](https://velog.velcdn.com/images/hs1430/post/57436316-1851-4578-a16d-226f862a257e/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/5412c2e2-1d7c-4976-85a5-e84503c57a5a/image.png)
+
+![](https://velog.velcdn.com/images/hs1430/post/8ca59f30-fe99-4bba-b021-38866d8d89a3/image.png)
+
+한두개가 겹치는 경우는 괜찮을지라도 수가 증가하게되면 문제가 발생한다.
+
+이러한 경우 vehicle클래스를 만들어 이를 상속받게 하면 된다.
 
 ## 다형성
 
@@ -602,6 +619,11 @@ void func(Animal a){
 객체지향 애플리케이션이라는 협력 공동체의 일원으로써 객체는 협력적이기도 하지만, 동시에 충분히 **자율적**, **독립적**이어야 한다. 객체의 자율성은 객체의 내부와 외부를 명확하게 구분하는 것으로부터 나온다. 객체의 사적(private)인 부분은 객체 스스로 관리하고 외부에서 일체 간섭할 수 없도록 차단해야 한다.
 
 즉, 객체끼리는 서로 무엇을 수행하는지는 알 수 있지만 그걸 어떻게 수행하는지는 알 수 없다.
+
+**캡슐화를 하는 이유**
+
+- 데이터 보호(data protection) – 외부로부터 클래스에 정의된 속성과 기능들을 보호
+- 데이터 은닉(data hiding) – 내부의 동작을 감추고 외부에는 필요한 부분만 노출
 
 
 > 훌륭한 객체지향 설계는 외부에 행동만을 제공하고 **데이터는 행동 뒤로 감춰야 한다**.
