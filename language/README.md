@@ -7,6 +7,7 @@
 - [오버로딩 vs 오버라이딩](#오버로딩-vs-오버라이딩)
 - [제어자](#제어자)
 - [Generic](#generic)
+- [Enum](#enum)
 - [Final](#final)
 - [람다 & 스트림](#lambda--stream)
 - [synchronized와 volatile 그리고 Atomic](#synchronized와-volatile-그리고-Atomic)
@@ -1256,6 +1257,15 @@ Number 클래스 또는 Number 클래스의 하위 타입 클래스만 사용할
 
 [https://jehuipark.github.io/java/java-generic](https://jehuipark.github.io/java/java-generic)
 ---
+
+# Enum
+## Enum 쓰는 이유
+
+- 문자열과 비교해, **IDE의 적극적인 지원**을 받을 수 있다 (자동 완성, 오타 검증)
+- 허용 가능한 값들을 제한
+- **리팩토링시 변경 범위가 최소화**
+  - 내용의 변경이 필요하더라도, Enum 코드외에 수정할 필요가 없다.
+- Java의 Enum은 완전한 기능을 갖춘 **클래스**이다.
 
 # **Final**
 
