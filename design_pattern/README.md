@@ -2,6 +2,7 @@
 <summary>Table of Contents</summary>
 
 - [SOLID](#solid)
+- [factory pattern](#factory-pattern)
 
 </details>
 
@@ -712,7 +713,7 @@ Coffee 인터페이스를 만들었다. 이렇게 되면 Programmer는 Coffee In
 
 [https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-ISP-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-%EB%B6%84%EB%A6%AC-%EC%9B%90%EC%B9%99](https://inpa.tistory.com/entry/OOP-%F0%9F%92%A0-%EC%95%84%EC%A3%BC-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-ISP-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-%EB%B6%84%EB%A6%AC-%EC%9B%90%EC%B9%99)   
 
-```
+
 ## 싱글톤 패턴이란?
 
 싱글톤(Singleton) 패턴의 정의는 단순하다. 인스턴스가 오직 1개만 생성되는 패턴을 의미한다.
@@ -722,22 +723,16 @@ Coffee 인터페이스를 만들었다. 이렇게 되면 Programmer는 Coffee In
 ### 싱글톤 패턴의 장단점
 > 장점
 1. 메모리 낭비를 방지할 수 있다.(한번만 생성하기때문에)
->
 2. 싱글톤으로 만들어진 클래스와 다른 클래스의 인스턴스들의 데이터 공유가 쉽다.
 >(싱글톤 인스턴스가 전역으로 사용되는 인스턴스이기 때문에 다른 클래스의 인스턴스들이 접근하여 사용할 수 있다.)
 3. 인스턴스가 절대적으로 한개만 존재하는 것을 보증하기에 개발 시 실수를 줄일 수 있다.
->
 4. 싱글톤 객체를 사용하지 않는 경우 인스턴스를 생성하지 않는다.
->
 5. 싱글톤을 상속시킬 수 있다.
 
 > 단점
 1. 전역변수보다 사용하기가 불편하다.
->
 2. 싱글톤의 역할이 커질수록 결합도가 높아져 객체 지향 설계 원칙에 어긋날 수 있다.(
->
 3. 멀티쓰레드 환경에서 컨트롤이 어렵다.
->
 4. 코드의 양이 많아진다.
 5. 자식클래스를 만들수 없다는 점과, 내부 상태를 변경하기 어렵다는 점이 있다.
 
@@ -783,4 +778,315 @@ public class Singleton {
 - 늦은 초기화는 인스턴스를 실제로 사용할 시점에 생성하는 방법입니다. 인스턴스를 실제로 생성하지 않으면 생성하지 않기에 이른 초기화보다 효율성이 좋다.
   하지만
   두 스레드가 동시에 싱글톤 인스턴스에 접근하고 생성이 안된 것을 확인하여 생성한다면 중복으로 생성하는 경우가 생길 수 있다.(동시성 문제 synchronized 키워드를 통해 해결가능하지만 대략 50~200배 느려진다.)
----
+---   
+
+
+
+# factory pattern
+## 템플릿 메서드 패턴이란?
+> 특정 작업을 처리하는 일부분을 서브 클래스로 캡슐화하여 전체적인 구조는 바꾸지 않으면서 특정 단계에서 수행하는 내용을 바꾸는 패턴
+ 
+### 예시
+```java
+//추상 클래스 선생님
+abstract class Teacher{
+	
+    public void start_class() {
+        inside();
+        attendance();
+        teach();
+        outside();
+    }
+	
+    // 공통 메서드
+    public void inside() {
+        System.out.println("선생님이 강의실로 들어옵니다.");
+    }
+    
+    public void attendance() {
+        System.out.println("선생님이 출석을 부릅니다.");
+    }
+    
+    public void outside() {
+        System.out.println("선생님이 강의실을 나갑니다.");
+    }
+    
+    // 추상 메서드
+    abstract void teach();
+}
+ 
+// 국어 선생님
+class Korean_Teacher extends Teacher{
+    
+    @Override
+    public void teach() {
+        System.out.println("선생님이 국어를 수업합니다.");
+    }
+}
+ 
+//수학 선생님
+class Math_Teacher extends Teacher{
+
+    @Override
+    public void teach() {
+        System.out.println("선생님이 수학을 수업합니다.");
+    }
+}
+
+//영어 선생님
+class English_Teacher extends Teacher{
+
+    @Override
+    public void teach() {
+        System.out.println("선생님이 영어를 수업합니다.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Korean_Teacher kr = new Korean_Teacher(); //국어
+        Math_Teacher mt = new Math_Teacher(); //수학
+        English_Teacher en = new English_Teacher(); //영어
+        
+        kr.start_class();
+        System.out.println("----------------------------");
+        mt.start_class();
+        System.out.println("----------------------------");
+        en.start_class();
+    }
+}
+```
+
+## 팩토리 메서드 패턴
+> 객체 생성을 공장(Factory) 클래스로 캡슐화 처리하여 대신 생성하게 하는 생성 디자인 패턴이다.    
+ 
+### 팩토리 메서드 패턴 VS 템플릿 메서드 패턴
+> 인스턴스를 생성하는 공장을 Template Method 패턴으로 구성한 것이 Factory Method 패턴이다.
+
+### 팩토리 메서드 패턴 사용 시기
+* 클래스 생성과 사용의 처리 로직을 분리하여 결합도를 낮추고자 할 때
+* 코드가 동작해야 하는 객체의 유형과 종속성을 캡슐화를 통해 정보 은닉 처리 할 경우
+* 라이브러리 혹은 프레임워크 사용자에게 구성 요소를 확장하는 방법을 제공하려는 경우
+* 기존 객체를 재구성하는 대신 기존 객체를 재사용하여 리소스를 절약하고자 하는 경우
+  * 상황에 따라 적절한 객체를 생성하는 코드는 자주 중복될 수 있다. 그리고 객체 생성 방식의 변화는 해당되는 모든 코드 부분을 변경해야 하는 문제가 발생한다.
+  * 따라서 객체의 생성 코드를 별도의 클래스 / 메서드로 분리 함으로써 객체 생성의 변화에 대해 대비를 하기 위해 팩토리 메서드 패턴을 이용한다고 보면 된다.
+  * 특정 기능의 구현은 별개의 클래스로 제공되는 것이 바람직한 설계이기 때문이다.
+
+### 장점
+* 생성자(Creator)와 구현 객체(concrete product)의 강한 결합을 피할 수 있다.
+* 팩토리 메서드를 통해 객체의 생성 후 공통으로 할 일을 수행하도록 지정해줄 수 있다.
+* 캡슐화, 추상화를 통해 생성되는 객체의 구체적인 타입을 감출 수 있다.
+* 단일 책임 원칙 준수 : 객체 생성 코드를 한 곳 (패키지, 클래스 등)으로 이동하여 코드를 유지보수하기 쉽게 할수 있으므로 원칙을 만족
+* 개방/폐쇄 원칙 준수 : 기존 코드를 수정하지 않고 새로운 유형의 제품 인스턴스를 * 프로그램에 도입할 수 있어 원칙을 만족 (확장성 있는 전체 프로젝트 구성이 가능)
+* 생성에 대한 인터페이스 부분과 생성에 대한 구현 부분을 따로 나뉘었기 때문에 패키지 분리하여 개별로 여러 개발자가 협업을 통해 개발   
+
+### 단점
+* 각 제품 구현체마다 팩토리 객체들을 모두 구현해주어야 하기 때문에, 구현체가 늘어날때 마다 팩토리 클래스가 증가하여 서브 클래스 수가 폭발한다.
+* 코드의 복잡성이 증가한다.
+
+### 1. 심플 팩토리 메서드 적용
+```java
+// 제품 객체
+class Ship {
+  String name, color, capacity;
+
+  @Override
+  public String toString() {
+    return String.format("Ship { name: '%s', color: '%s', logo: '%s' }\n", name, color, capacity);
+  }
+}
+
+class ContainerShip extends Ship {
+  ContainerShip() {
+    name = "ContainerShip";
+    capacity = "20t";
+    color = "green";
+  }
+}
+
+class OilTankerShip extends Ship {
+  OilTankerShip() {
+    name = "OilTankerShip";
+    capacity = "15t";
+    color = "blue";
+  }
+}
+```
+
+```java
+// 공장 객체
+class ShipFactory {
+
+  final Ship orderShip(String name, String email) {
+    validate(name, email);
+
+    Ship ship = createShip(name); // 선박 객체 생성
+
+    sendEmailTo(email, ship);
+
+    return ship;
+  }
+
+  private Ship createShip(String name) {
+    Ship ship = null;
+    if (name.equalsIgnoreCase("ContainerShip")) {
+      ship = new ContainerShip();
+    } else if (name.equalsIgnoreCase("OilTankerShip")) {
+      ship = new OilTankerShip();
+    }
+    return ship;
+  }
+
+  private void validate(String name, String email) {
+    if (name == null) {
+      throw new IllegalArgumentException("배 이름을 지어주세요");
+    }
+    if (email == null) {
+      throw new IllegalArgumentException("이메일을 남겨주세요");
+    }
+  }
+
+  private void sendEmailTo(String email, Ship ship) {
+    System.out.println(ship.name + " 다 만들었다고 " + email + "로 메일을 보냈습니다.");
+  }
+}
+```
+
+```java
+class Client {
+    public static void main(String[] args) {
+        ShipFactory factory = new ShipFactory();
+
+        Ship containerShip = factory.orderShip("ContainerShip", "inpa.naver.com");
+        System.out.println(containerShip);
+
+        Ship oilTankerShip = factory.orderShip("OilTankerShip", "inpa.naver.com");
+        System.out.println(oilTankerShip);
+    }
+}
+```   
+
+하지만 아무리 객체 생성을 공장 클래스로 위임했더라도, 공장 클래스 내에서 여전히 분기 로직이 잔존해 있다.
+
+즉, 확장엔 열려있고 수정엔 닫힌 개방-폐쇄 원칙을 만족하지 못하게 된다. 따라서 새로운 종류의 배를 만든다거나 배를 만드는 공정을 변경할 수 있으면서도 기존에 작성했던 코드를 유지할 수 있는 구조로 변경해야 한다.
+
+### 2. 추상 팩토리 메서드 패턴 적용
+잔존해 있는 분기문을 제거하고 객체 지향으로 팩토리를 구성해보자.
+
+먼저 ShipFactory 클래스를 추상 클래스로 변환하고 Ship 인스턴스 생성을 책임지는 createShip() 메서드를 추상 메서드로 추상화 시킨다. 그리고 각 선박 종류에 맞게 ShipFactory 클래스를 상속하는 서브 팩토리 클래스들을 만들고 createShip() 추상 메서드를 각 객체 특징에 맞게 재정의 하도록 한다.
+
+즉, orderShip() 메서드의 공통 코드는 냅두고 Ship 인스턴스를 만드는 작업 코드는 서브 클래스가 결정하도록 하는 것이다. (어찌 보면 템플릿 메서드와 결이 비슷하다 라고 볼 수 있다)
+
+또한 공장 생성 메소드 내부에서는 필요한 동작을 자유롭게 구현할 수 있는데, 인자를 받거나 상태에 따라서 생성할 객체를 바꿀 수도 있다. 이렇게 하면 좀 더 다양한 기능을 수행하거나 수정에 용이한 구조를 만들어 낼 수 있다
+
+```java
+class Ship {
+    String name, color, capacity;
+
+    @Override
+    public String toString() {
+        return String.format("Ship { name: '%s', color: '%s', logo: '%s' }\n", name, color, capacity);
+    }
+}
+
+class ContainerShip extends Ship {
+    ContainerShip(String name, String capacity, String color) {
+        this.name = name;
+        this.capacity = capacity;
+        this.color = color;
+    }
+}
+
+class OilTankerShip extends Ship {
+    OilTankerShip(String name, String capacity, String color) {
+        this.name = name;
+        this.capacity = capacity;
+        this.color = color;
+    }
+}
+```
+
+```java
+abstract class ShipFactory {
+
+    // 객체 생성 전처리 / 후처리 메서드 (상속 불가)
+    final Ship orderShip(String email) {
+        validate(email);
+
+        Ship ship = createShip(); // 선박 객체 생성
+
+        sendEmailTo(email, ship);
+
+        return ship;
+    }
+
+    // 팩토리 메서드
+    abstract protected Ship createShip();
+
+    private void validate(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("이메일을 남겨주세요");
+        }
+    }
+
+    private void sendEmailTo(String email, Ship ship) {
+        System.out.println(ship.name + " 다 만들었다고 " + email + "로 메일을 보냈습니다.");
+    }
+}
+
+class ContainerShipFactory extends ShipFactory {
+    @Override
+    protected Ship createShip() {
+        return new ContainerShip("ContainerShip", "20t", "green");
+    }
+}
+
+class OilTankerShipFactory extends ShipFactory {
+    @Override
+    protected Ship createShip() {
+        return new OilTankerShip("OilTankerShip", "15t", "blue");
+    }
+}
+```
+
+```java
+class Client {
+    public static void main(String[] args) {
+        // 전용 선박 생산 공장 객체를 통해 선박을 생성
+        Ship containerShip = new ContainerShipFactory().orderShip("inpa.naver.com");
+        System.out.println(containerShip);
+
+        Ship oilTankerShip = new OilTankerShipFactory().orderShip("inpa.naver.com");
+        System.out.println(oilTankerShip);
+    }
+}
+```
+
+선박 타입명을 입력값으로 줘서 분기문을 통해 선박 제품을 생성하는 것이 아닌, 전용 선박 생산 공장 객체를 통해 선박을 생성함으로써, 수정에 닫혀있고 확장에 열려있는 구조를 구성할 수 있게 된다.
+
+만일 BattleShip 이라는 새로운 종류의 선박 제품을 추가한다라고 가정하면, 간단하게 제품 객체와 공장 객체를 각각 정의하고 상속 시키기만 하면 기존에 작성 했던 코드 수정없이 확장된다.   
+
+```java
+// 제품 객체
+class BattleShip extends Ship {
+    BattleShip(String name, String capacity, String color) {
+        this.name = name;
+        this.capacity = capacity;
+        this.color = color;
+    }
+}
+
+// 제품을 생성하는 공장 객체
+class BattleShipFactory extends ShipFactory {
+    @Override
+    protected Ship createShip() {
+        return new BattleShip("BattleShip", "10t", "black");
+    }
+}
+```
+
+### 참고
+[https://coding-factory.tistory.com/712](https://coding-factory.tistory.com/712)
+[https://velog.io/@ellyheetov/Factory-Pattern](https://velog.io/@ellyheetov/Factory-Pattern)
+[https://blog.naver.com/PostView.naver?blogId=seek316&logNo=222076874847&from=search&redirect=Log&widgetTypeCall=true&directAccess=false](https://blog.naver.com/PostView.naver?blogId=seek316&logNo=222076874847&from=search&redirect=Log&widgetTypeCall=true&directAccess=false)   
+[https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-%ED%8C%A9%ED%86%A0%EB%A6%AC-%EB%A9%94%EC%84%9C%EB%93%9CFactory-Method-%ED%8C%A8%ED%84%B4-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EB%B0%B0%EC%9B%8C%EB%B3%B4%EC%9E%90](https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-%ED%8C%A9%ED%86%A0%EB%A6%AC-%EB%A9%94%EC%84%9C%EB%93%9CFactory-Method-%ED%8C%A8%ED%84%B4-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EB%B0%B0%EC%9B%8C%EB%B3%B4%EC%9E%90)
