@@ -3,6 +3,7 @@
 
 - [SOLID](#solid)
 - [factory pattern](#factory-pattern)
+- [observer pattern](#옵저버-패턴observer-pattern)
 
 </details>
 
@@ -1090,3 +1091,217 @@ class BattleShipFactory extends ShipFactory {
 [https://velog.io/@ellyheetov/Factory-Pattern](https://velog.io/@ellyheetov/Factory-Pattern)
 [https://blog.naver.com/PostView.naver?blogId=seek316&logNo=222076874847&from=search&redirect=Log&widgetTypeCall=true&directAccess=false](https://blog.naver.com/PostView.naver?blogId=seek316&logNo=222076874847&from=search&redirect=Log&widgetTypeCall=true&directAccess=false)   
 [https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-%ED%8C%A9%ED%86%A0%EB%A6%AC-%EB%A9%94%EC%84%9C%EB%93%9CFactory-Method-%ED%8C%A8%ED%84%B4-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EB%B0%B0%EC%9B%8C%EB%B3%B4%EC%9E%90](https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-%ED%8C%A9%ED%86%A0%EB%A6%AC-%EB%A9%94%EC%84%9C%EB%93%9CFactory-Method-%ED%8C%A8%ED%84%B4-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EB%B0%B0%EC%9B%8C%EB%B3%B4%EC%9E%90)
+
+---
+# **옵저버 패턴(Observer Pattern)**
+
+옵저버 패턴은 객체의 상태 변화를 관찰하는 관찰자들, 즉 옵저버들의 목록을 객체에 등록하여 상태 변화가 있을 때마다 메서드 등을 통해 객체가 직접 목록의 각 옵저버에게 통지하도록 하는 디자인 패턴이다.
+
+서로의 정보를 주고받는 과정에서 정보의 단위가 클수록, 객체들의 규모가 클수록 복잡성이 증가하게 된다. 이때 가이드라인을 제시해줄 수 있는 것이 옵저버 패턴이다. (보통 1 대 1 or 1 대 N 관계에서 사용)
+
+옵저버 패턴을 활용하면 다른 객체의 상태 변화를 별도의 함수 호출 없이 즉각적으로 알 수 있기 때문에 이벤트에 대한 처리를 자주해야 하는 프로그램이라면 매우 효율적인 프로그램을 작성할 수 있다.
+
+---
+
+### **적용 사례**
+
+> 잡지사 : 구독자
+>
+
+위와 같은 예시로 인해 발행/구독 모델로 알려져있기도 한다.
+
+구독자, 고객들은 정보를 얻거나 받아야 하는 주체와 관계를 형성하게 된다. 관계가 지속되다가 정보를 원하지 않으면 해제할 수도 있다. (잡지 구독을 취소하거나 우유 배달을 중지하는 것과 같다)
+
+**이때, 객체와의 관계를 맺고 끊는 상태 변경 정보를 Observer에 알려줘서 관리하는 것을 말한다.**
+
+!https://blog.kakaocdn.net/dn/c85b1W/btsnaTyGvij/W7ZcykpeKEta7omXvF2sdK/img.jpg
+
+위 사진은 잡지사(Publisher)와 구독자(Subscriber) 관계를 통해 옵저버 패턴 구현 예시이다.
+
+잡지사에서 정보를 제공하면 년 정기구독자(AnnalSubscriber)와 이벤트 고객(EventSubscriber)에게 이러한 정보를 업데이트하는 옵저버 패턴을 구현했다.
+
+### **Publisher 인터페이스**
+
+- Observer들을 관리하는 메소드를 가지고 있다.
+- 옵저버 등록(add), 제외(delete), 옵저버들에게 정보를 알려줌(notifyObserver)
+
+```java
+public interface Publisher {
+    public void add(Observer observer);
+    public void delete(Observer observer);
+    public void notifyObserver();
+}
+```
+
+### **Observer 인터페이스**
+
+- 정보를 업데이트(update)
+
+```java
+public interface Observer {
+    public void update(String title, String news);
+}
+```
+
+### **NewsMachine 클래스**
+
+- Publisher를 구현한 클래스로, 정보를 제공해주는 퍼블리셔가 됨
+
+```java
+public class NewsMachine implements Publisher {
+	private ArrayList<Observer> observers;
+    private String title;
+    private String news;
+
+    public NewsMachine() {
+    	observers = new ArrayList<>();
+    }
+
+    @Override
+    public void add(Observer observer) {
+    	observers.add(observer);
+    }
+
+    @Override
+    public void delete(Observer observer) {
+    	int index = observers.indexOf(observer);
+    	observers.remove(index);
+    }
+
+    @Override
+    public void notifyObserver() {
+    	for (Observer Observer : observers) {
+        	observer.update(title, news);
+        }
+    }
+
+    public void setNewsInfo(String title, String news) {
+    	this.title = title;
+        this.news = news;
+        notifyObserver();
+    }
+
+    public String getTitle() {
+    	return title;
+    }
+
+    public String getNews() {
+    	return news;
+    }
+}
+```
+
+### **AnnualSubscriber, EventSubscriber 클래스**
+
+- Observer를 구현한 클래스들로, notifyObserver()를 호출하면서 알려줄 때마다 Update가 호출된다.
+
+```java
+public AnnualSubscriber implement Observer {
+
+    private String newsString;
+
+    private Publisher publisher;
+
+    public AnnualSubscriber(Publisher publisher) {
+    	this.publisher = publisher;
+        publisher.add(this);
+    }
+
+    @Override
+    public void update(String title, String news) {
+    	this.newsString = title + " \n--------\n " + news;
+        display();
+    }
+
+    private void display() {
+    	System.out.println("\n\n오늘의 뉴스\n============================\n\n" + newsString);
+    }
+}
+```
+
+```java
+public class EventSubscriber implements Observer {
+
+private String newsString;
+
+    private Publisher publisher;
+
+    public EventSubscriber(Publisher publisher) {
+    	this.publisher = publisher;
+        publisher.add(this);
+    }
+
+    @Override
+    public void update(String title, String news) {
+    	newsString = title + "\n------------------------------------\n" + news;
+        display();
+    }
+
+    private void display() {
+    	System.out.println("\n\n=== 이벤트 유저 ===");
+        System.out.println("\n\n" + newsString);
+    }
+}
+```
+
+### **main 함수**
+
+```java
+public class MainClass {
+	public static void main(String[] args) {
+    	NewsMachine newsMachine = new NewsMachine();
+        AnnualSubscriber annualSubscriber = new AnnualSubscriber(newsMachine);
+        EventSubscriber eventSubscriber = new EventSubscriber(newsMachine);
+
+        newsMachine.setNewsInfo("오늘의 한파", "전국 영하 18도 입니다.");
+        newsMachine.setNewsInfo("벛꽃 축제합니다", "다같이 벚꽃보러~");
+    }
+}
+```
+
+### **결과**
+
+```java
+오늘의 뉴스
+============================
+
+오늘의 한파
+--------
+전국 영하 18도 입니다.
+
+=== 이벤트 유저 ===
+
+오늘의 뉴스
+------------------------------------
+전국 영하 18도 입니다.
+
+오늘의 뉴스
+============================
+
+벛꽃 축제합니다
+--------
+다같이 벚꽃보러~
+
+=== 이벤트 유저 ===
+
+벛꽃 축제합니다
+------------------------------------
+다같이 벚꽃보러~
+```
+
+---
+
+### **정리**
+
+- 옵저버 패턴은, 한 객체의 상태가 바뀌면 그 객체에 의존하는 다른 객체들에게 연락이 가고, 자동으로 정보가 갱신되는 1:N 관계(혹은 1대1)를 정의한다.
+- 인터페이스를 통해 연결하여 느슨한 결합성을 유지하며, Publisher와 Observer 인터페이스를 적용한다.
+- 안드로이드 개발시, OnClickListener와 같은 것들이 옵저버 패턴이 적용된 것 (버튼-Publsiher을 클릭했을 때 상태 변화를 옵저버인 OnClickListener로 알려주도록 함)
+- JAVA에서 기본으로 옵저버 패턴을 적용한 것들을 기본으로 제공해준다(Observer 인터페이스, Observable 클래스)
+
+---
+
+참고: https://zerocodings.com/22
+
+https://velog.io/@octo__/%EC%98%B5%EC%A0%80%EB%B2%84-%ED%8C%A8%ED%84%B4Observer-Pattern
+
+https://gyoogle.dev/blog/design-pattern/Observer%20Pattern.html
