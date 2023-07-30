@@ -4,7 +4,7 @@
 - [ 전공자로서 알아야 할 기본 **CS 지식 52개** + 각자 관심 있는 **기술 α개** ]를 공부, 발표, 토론하고 정리해둔 공간입니다.  
 - 주목적은 **면접 대비**이고, 향후 다른 개발자들과 **소통**하여 좋은 영향을 주고 받을 수 있게 되는 것이 또 하나의 목표입니다.
 - 컴퓨터학부생 4명 (Java Spring 3명, Kotlin Android 1명)이 진행했습니다. 
-
+- 2023.01.16 ~ 2023.08.02
 
 ## Guide
 
@@ -18,7 +18,7 @@
 
   <img src="https://user-images.githubusercontent.com/72124326/221341370-066b6e11-41cd-4e7e-ac7d-1d70544e940c.png" width="50%" height="50%">
 
-## Contents (진행중)
+## Contents
 - [data structure (자료구조)](https://github.com/wonseok2877/CS-study/tree/master/data_structure)
   - Array
   - Linked List
