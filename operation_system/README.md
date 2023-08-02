@@ -116,6 +116,53 @@ CPU가 동시에 여러개의 프로세스를 실행시키는 것처럼 보이�
 > 1. 스레드 하나가 프로세스 내 자원을 망쳐버린다면 모든 프로세스가 종료될 수 있다.
 > 2. 자원을 공유하기 때문에 필연적으로 ***동기화 문제***가 발생할 수밖에 없다.
 
+## 동시성과 동시성 이슈
+
+### 동시성과 병렬성
+![](https://velog.velcdn.com/images/dyllis/post/e309dae5-fe30-449e-ba56-55d60cfb8d14/그림2.png)
+
+**동시**(Concurrent) : 
+	
+	동시에 실행되는 것처럼 보이는 것
+	
+	싱글 코어에서 Context Switching을 통해 여러개의 스레드를 번갈아가며 실행
+	
+	적절하게 시간을 나눠 자원을 공유하고 있으므로 물리적으로 정확히 같은 시간대에 동시에 수행되는 것은 아니다. 따라서 병렬성은 만족하지 않는다.
+	
+	멀티 프로세서나 멀티 코어 구조가 발전하기 전에는 싱글 프로세서로 재빠르게 프로세스를 전환하여 
+ 	concurrent하게 동작하지만 parallel하게 동작하는 것처럼 보이도록 하였다.
+
+**병렬**(Parallel)
+	
+	실제로 동시에 실행되는 것
+	
+	멀티코어에서 물리적으로 작업을 나눠서 실행
+	
+	먼저 시작된 task 가 끝나지 않아도 또 다른 task 를 시작할 수 있다. 
+ 	즉, 동시성을 만족한다. 또한 같은 시간대에 각 task 가 동시에 수행되므로 병렬성을 만족한다.
+
+![](https://github.com/Seogeurim/CS-study/raw/main/contents/operating-system/materials/동시성.jpeg)
+
+### 동시성 이슈
+
+동시성은 자원을 공유해서 단점도 존재한다. 그게 바로 동시성(concurrency) 이슈이다.
+
+여러 스레드가 동시에 하나의 자원을 공유하고 있기 때문에 **같은 자원을 두고** **경쟁상태(raceCondition)** 문제가 발생하는 것이다.
+
+멀티 쓰레드 환경이라고 하더라도 단순히 '조회'만 하는 것이라면 동시성 문제가 발생하지 않는다. 문제는 동시에 동일한 자원에 접근해서 **수정**(추가, 삭제)을 했을 때 발생한다.
+
+또한 동시성 문제는 지역 변수에서 발생하지 않는다. 지역 변수는 쓰레드마다 각각 다른 메모리 영역이 할당되기 때문이다. 동시성 문제가 발생하는 곳은 **같은 인스턴스 필드(주로 싱글톤)** 또는 **static 같은 공용 필드**에 접근할 때 발생한다.
+
+동시성 문제는 결국 같은 공간에 여러 쓰레드가 동시에 수정을 하면서 일어나는 일이기 때문에, 
+수정을 하는 공간을 분리(Thread Local)해주거나 수정을 기다려주는 방식(synchronize)으로 해결한다.
+
+참고 : 
+[1](https://vagabond95.me/posts/concurrency_vs_parallelism/)
+[2](https://github.com/Seogeurim/CS-study/blob/830643c08333fb6d4df11c7c6c3b8ecf70264e23/contents/operating-system/README.md)
+[3](https://beststar-1.tistory.com/24)
+[https://velog.io/@mooh2jj/멀티-스레드의-동시성-이슈](https://velog.io/@mooh2jj/%EB%A9%80%ED%8B%B0-%EC%8A%A4%EB%A0%88%EB%93%9C%EC%9D%98-%EB%8F%99%EC%8B%9C%EC%84%B1-%EC%9D%B4%EC%8A%88)
+
+
 ## 동기와 비동기 vs 블락킹과 논블락킹
 [참고 자료 1](https://inpa.tistory.com/entry/%F0%9F%91%A9%E2%80%8D%F0%9F%92%BB-%EB%8F%99%EA%B8%B0%EB%B9%84%EB%8F%99%EA%B8%B0-%EB%B8%94%EB%A1%9C%ED%82%B9%EB%85%BC%EB%B8%94%EB%A1%9C%ED%82%B9-%EA%B0%9C%EB%85%90-%EC%A0%95%EB%A6%AC) [참고 자료 2](https://evan-moon.github.io/2019/09/19/sync-async-blocking-non-blocking/#%EB%8F%99%EA%B8%B0-%EB%B0%A9%EC%8B%9D--%EB%85%BC%EB%B8%94%EB%A1%9D%ED%82%B9-%EB%B0%A9%EC%8B%9D) [참고 자료 3](http://homoefficio.github.io/2017/02/19/Blocking-NonBlocking-Synchronous-Asynchronous/) [참고 자료 4](https://velog.io/@codemcd/Sync-VS-Async-Blocking-VS-Non-Blocking-sak6d01fhx)   
 
